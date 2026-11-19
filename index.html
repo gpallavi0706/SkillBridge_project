@@ -20,12 +20,18 @@
   <div id="landing-view" class="landing-wrapper">
     <!-- Landing Navigation -->
     <header class="landing-nav" role="banner">
-      <a href="#" class="brand-logo-group" onclick="window.SkillBridge.navigateTo('welcome'); return false;">
-        <div class="brand-icon-box">
-          <i class="ph ph-compass-tool"></i>
+      <div class="flex items-center gap-4">
+        <a href="#" class="brand-logo-group" onclick="window.SkillBridge.navigateTo('welcome'); return false;">
+          <div class="brand-icon-box">
+            <i class="ph ph-compass-tool"></i>
+          </div>
+          <span>SkillBridge</span>
+        </a>
+        <div class="network-status-badge hidden sm:inline-flex" title="Live dynamic student peer community network">
+          <span class="network-status-dot-pulse"></span>
+          <span>Peer Network: <strong>Live Constellation</strong></span>
         </div>
-        <span>SkillBridge</span>
-      </a>
+      </div>
 
       <nav class="landing-nav-links" aria-label="Main Navigation">
         <a href="#features">Features</a>
@@ -268,6 +274,12 @@
         </div>
 
         <div class="topbar-actions-group">
+          <!-- Peer Network Live Constellation Badge -->
+          <div class="network-status-badge hidden lg:inline-flex" title="Active student community constellation network">
+            <span class="network-status-dot-pulse"></span>
+            <span>Peer Network: <strong>Live</strong></span>
+          </div>
+
           <!-- Backend & Database Status Badge -->
           <button id="backend-status-btn" class="btn btn-xs btn-outline" onclick="window.SkillBridge.openDbModal()" title="View MySQL & FastAPI Connection Status">
             <span id="backend-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f59e0b; margin-right:4px;"></span>
@@ -691,14 +703,26 @@
           </div>
 
           <div class="panel-card mb-4">
-            <h3 class="font-bold text-md mb-3">Appearance</h3>
+            <h3 class="font-bold text-md mb-3">Appearance & Dynamic Background</h3>
             <div class="flex justify-between items-center py-2 border-b">
               <div>
-                <div class="font-semibold text-sm">Dark Navy Mode</div>
-                <div class="text-xs text-muted">Toggle dark high-contrast interface.</div>
+                <div class="font-semibold text-sm">Dark Cosmic Theme</div>
+                <div class="text-xs text-muted">Deep space theme with glassmorphism panels.</div>
               </div>
               <label class="cursor-pointer">
                 <input type="checkbox" id="setting-theme-toggle">
+              </label>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b">
+              <div>
+                <div class="font-semibold text-sm flex items-center gap-2">
+                  <span class="network-status-dot-pulse"></span>
+                  <span>Peer Network Constellation</span>
+                </div>
+                <div class="text-xs text-muted">Active community canvas with floating student nodes, threads & mouse magnetism.</div>
+              </div>
+              <label class="cursor-pointer">
+                <input type="checkbox" id="setting-constellation-toggle" checked onchange="window.SkillBridge.toggleConstellationBackground(this.checked)">
               </label>
             </div>
           </div>

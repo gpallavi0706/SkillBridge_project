@@ -248,37 +248,86 @@ class SkillBridgeApp {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.resetTransform?.();
+      ctx.scale(dpr, dpr);
+    };
+    resize();
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Responsive node count based on screen width
-    const nodeCount = Math.max(26, Math.min(50, Math.floor(width / 34)));
-
-    // Collegiate peer identities representing Alex's student network
-    const peerLabels = [
-      'Alex (You)', 'Priya S.', 'Marcus V.', 'Elena R.', 'David K.', 'Aisha P.',
-      'Liam O.', 'Sophia W.', 'Chen L.', 'Rahul M.', 'Zoe T.', 'Lucas B.'
+    // Rich roster of collegiate peer identities in Alex's community network
+    const peerIdentities = [
+      { name: 'Alex (You)', role: 'Lead Match', color: '#38bdf8', isUser: true, radius: 6.0 },
+      { name: 'Priya S.', role: 'AI / ML', color: '#818cf8', radius: 4.5 },
+      { name: 'Marcus V.', role: 'Cloud DevOps', color: '#34d399', radius: 4.5 },
+      { name: 'Elena R.', role: 'Data Science', color: '#c084fc', radius: 4.5 },
+      { name: 'David K.', role: 'UI/UX Design', color: '#f59e0b', radius: 4.5 },
+      { name: 'Aisha P.', role: 'Cybersecurity', color: '#38bdf8', radius: 4.2 },
+      { name: 'Chen L.', role: 'Go / Backend', color: '#818cf8', radius: 4.2 },
+      { name: 'Sophia W.', role: 'Flutter Mobile', color: '#34d399', radius: 4.2 },
+      { name: 'Rahul M.', role: 'Web3 & Rust', color: '#c084fc', radius: 4.2 },
+      { name: 'Liam O.', role: 'Open Source', color: '#38bdf8', radius: 4.0 },
+      { name: 'Zoe T.', role: 'NLP Systems', color: '#f59e0b', radius: 4.0 },
+      { name: 'Lucas B.', role: 'FastAPI Dev', color: '#34d399', radius: 4.0 },
+      { name: 'Kavya N.', role: 'Algorithms', color: '#818cf8', radius: 4.0 },
+      { name: 'Devon C.', role: 'Robotics & IoT', color: '#c084fc', radius: 4.0 },
+      { name: 'Ananya G.', role: 'Product Lead', color: '#38bdf8', radius: 4.0 }
     ];
 
+    const nodeCount = Math.max(38, Math.min(65, Math.floor(width / 26)));
     const nodes = [];
+
     for (let i = 0; i < nodeCount; i++) {
-      const isLead = i < peerLabels.length;
+      const isLead = i < peerIdentities.length;
+      const identity = isLead ? peerIdentities[i] : null;
+
+      // Noticeable, lively drift speed so background is unmistakably moving
+      const baseVx = (Math.random() - 0.5) * 0.85;
+      const baseVy = (Math.random() - 0.5) * 0.85;
+      const minDrift = Math.random() > 0.5 ? 0.35 : -0.35;
+
+      const colors = ['#38bdf8', '#818cf8', '#34d399', '#c084fc', '#93c5fd'];
+      const nodeColor = identity ? identity.color : colors[i % colors.length];
+
       nodes.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.42,
-        vy: (Math.random() - 0.5) * 0.42,
-        radius: i === 0 ? 3.6 : (isLead ? 2.6 : Math.random() * 1.5 + 1.2),
-        label: isLead ? peerLabels[i] : null,
-        isUser: i === 0,
-        color: i === 0 ? '#38bdf8' : (isLead ? '#818cf8' : '#94a3b8'),
-        alpha: isLead ? 0.75 : 0.38
+        vx: baseVx + minDrift,
+        vy: baseVy + minDrift,
+        radius: identity ? identity.radius : (Math.random() * 1.6 + 2.0),
+        label: identity ? identity.name : null,
+        role: identity ? identity.role : null,
+        isUser: identity ? !!identity.isUser : false,
+        color: nodeColor,
+        alpha: identity ? 0.95 : 0.65
+      });
+    }
+
+    // Twinkling ambient micro-stars for celestial space depth
+    const microStars = [];
+    for (let s = 0; s < 30; s++) {
+      microStars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 1.2 + 0.6,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.03 + 0.015
       });
     }
 
     let mouse = { x: -1000, y: -1000, active: false };
+    let pulseTick = 0;
 
     window.addEventListener('mousemove', (e) => {
       mouse.x = e.clientX;
@@ -292,43 +341,66 @@ class SkillBridgeApp {
       mouse.y = -1000;
     });
 
+    window.addEventListener('resize', () => {
+      resize();
+      if (prefersReducedMotion) drawStatic();
+    }, { passive: true });
+
     const drawStatic = () => {
       ctx.clearRect(0, 0, width, height);
+
+      // Lines
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 125) {
+          if (dist < 140) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 125) * 0.18})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 140) * 0.35})`;
+            ctx.lineWidth = 1.0;
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
             ctx.stroke();
           }
         }
       }
+
+      // Nodes
       for (const n of nodes) {
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
         ctx.fillStyle = n.color;
-        ctx.globalAlpha = n.alpha;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = n.color;
         ctx.fill();
-        ctx.globalAlpha = 1.0;
+        ctx.shadowBlur = 0;
+
         if (n.label) {
-          ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-          ctx.fillStyle = n.isUser ? '#38bdf8' : '#cbd5e1';
-          ctx.fillText(n.label, n.x + 6, n.y + 3);
+          ctx.save();
+          ctx.font = (n.isUser ? 'bold 11px' : '10px') + ' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+          const text = n.label + (n.role ? ` • ${n.role}` : '');
+          const tw = ctx.measureText(text).width;
+          ctx.fillStyle = 'rgba(8, 14, 30, 0.88)';
+          ctx.strokeStyle = n.color;
+          ctx.lineWidth = 1;
+          const px = n.x + 8;
+          const py = n.y - 10;
+          if (ctx.roundRect) {
+            ctx.beginPath();
+            ctx.roundRect(px, py, tw + 14, 20, 6);
+            ctx.fill();
+            ctx.stroke();
+          } else {
+            ctx.fillRect(px, py, tw + 14, 20);
+            ctx.strokeRect(px, py, tw + 14, 20);
+          }
+          ctx.fillStyle = n.isUser ? '#38bdf8' : '#f1f5f9';
+          ctx.fillText(text, px + 7, py + 14);
+          ctx.restore();
         }
       }
     };
-
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      if (prefersReducedMotion) drawStatic();
-    }, { passive: true });
 
     if (prefersReducedMotion) {
       drawStatic();
@@ -337,28 +409,50 @@ class SkillBridgeApp {
 
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
+      pulseTick += 0.035;
 
-      // Node physics and connections
+      // 1. Draw ambient twinkling celestial micro-stars
+      for (const star of microStars) {
+        star.phase += star.speed;
+        const starAlpha = 0.35 + Math.sin(star.phase) * 0.25;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(224, 242, 254, ${starAlpha})`;
+        ctx.fill();
+      }
+
+      // 2. Node movement, physics & inter-node network threads
       for (let i = 0; i < nodes.length; i++) {
         const n1 = nodes[i];
         n1.x += n1.vx;
         n1.y += n1.vy;
 
-        if (n1.x < 0 || n1.x > width) n1.vx *= -1;
-        if (n1.y < 0 || n1.y > height) n1.vy *= -1;
+        // Bounce smoothly off boundaries
+        if (n1.x < 15) { n1.x = 15; n1.vx = Math.abs(n1.vx); }
+        if (n1.x > width - 15) { n1.x = width - 15; n1.vx = -Math.abs(n1.vx); }
+        if (n1.y < 15) { n1.y = 15; n1.vy = Math.abs(n1.vy); }
+        if (n1.y > height - 15) { n1.y = height - 15; n1.vy = -Math.abs(n1.vy); }
 
-        // Mouse connection threads
+        // Mouse connection threads & subtle magnetic attraction
         if (mouse.active) {
           const mdx = mouse.x - n1.x;
           const mdy = mouse.y - n1.y;
           const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-          if (mdist < 145) {
+
+          if (mdist < 175) {
+            const mAlpha = (1 - mdist / 175) * 0.7;
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - mdist / 145) * 0.35})`;
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(56, 189, 248, ${mAlpha})`;
+            ctx.lineWidth = 1.4;
             ctx.moveTo(n1.x, n1.y);
             ctx.lineTo(mouse.x, mouse.y);
             ctx.stroke();
+
+            // Subtle magnetic pull toward cursor for interactivity
+            if (mdist < 130 && mdist > 25) {
+              n1.x += (mdx / mdist) * 0.35;
+              n1.y += (mdy / mdist) * 0.35;
+            }
           }
         }
 
@@ -369,13 +463,13 @@ class SkillBridgeApp {
           const dy = n1.y - n2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 125) {
-            const alpha = (1 - dist / 125) * 0.22;
+          if (dist < 145) {
+            const lineAlpha = (1 - dist / 145);
             ctx.beginPath();
             ctx.strokeStyle = (n1.isUser || n2.isUser)
-              ? `rgba(56, 189, 248, ${alpha * 1.5})`
-              : `rgba(129, 140, 248, ${alpha})`;
-            ctx.lineWidth = (n1.isUser || n2.isUser) ? 1.1 : 0.75;
+              ? `rgba(56, 189, 248, ${lineAlpha * 0.75})`
+              : `rgba(129, 140, 248, ${lineAlpha * 0.45})`;
+            ctx.lineWidth = (n1.isUser || n2.isUser) ? 1.6 : 1.0;
             ctx.moveTo(n1.x, n1.y);
             ctx.lineTo(n2.x, n2.y);
             ctx.stroke();
@@ -383,28 +477,90 @@ class SkillBridgeApp {
         }
       }
 
-      // Draw node dots & labels
+      // 3. Draw Mouse Beacon Indicator if active
+      if (mouse.active) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#38bdf8';
+        ctx.shadowBlur = 14;
+        ctx.shadowColor = '#38bdf8';
+        ctx.fill();
+
+        const mousePulseRing = 14 + Math.sin(pulseTick * 2.5) * 3;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, mousePulseRing, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 4. Draw node dots, pulsing halos & community labels
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
 
+        // Pulsing radar halo around Alex (User)
         if (n.isUser) {
+          const userHaloRadius = n.radius + 8 + Math.sin(pulseTick * 2.2) * 4.5;
+          ctx.save();
           ctx.beginPath();
-          ctx.arc(n.x, n.y, n.radius + 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(56, 189, 248, 0.22)';
+          ctx.arc(n.x, n.y, userHaloRadius, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, userHaloRadius * 0.65, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
+          ctx.fill();
+          ctx.restore();
+        } else if (n.label) {
+          // Subtle glowing halo for lead peer teammates
+          const peerHalo = n.radius + 3 + Math.sin(pulseTick + i) * 1.5;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, peerHalo, 0, Math.PI * 2);
+          ctx.fillStyle = `${n.color}22`;
           ctx.fill();
         }
 
+        // Main node circle
+        ctx.save();
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
         ctx.fillStyle = n.color;
         ctx.globalAlpha = n.alpha;
+        ctx.shadowBlur = n.isUser ? 16 : 9;
+        ctx.shadowColor = n.color;
         ctx.fill();
-        ctx.globalAlpha = 1.0;
+        ctx.restore();
 
+        // High-contrast floating identity pill badge
         if (n.label) {
+          ctx.save();
           ctx.font = (n.isUser ? 'bold 11px' : '10px') + ' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-          ctx.fillStyle = n.isUser ? '#38bdf8' : 'rgba(203, 213, 225, 0.72)';
-          ctx.fillText(n.label, n.x + 7, n.y + 3);
+          const text = n.label + (n.role ? ` • ${n.role}` : '');
+          const tw = ctx.measureText(text).width;
+          const px = n.x + 10;
+          const py = n.y - 10;
+
+          ctx.fillStyle = 'rgba(8, 14, 30, 0.9)';
+          ctx.strokeStyle = n.color;
+          ctx.lineWidth = 1;
+          if (ctx.roundRect) {
+            ctx.beginPath();
+            ctx.roundRect(px, py, tw + 14, 20, 6);
+            ctx.fill();
+            ctx.stroke();
+          } else {
+            ctx.fillRect(px, py, tw + 14, 20);
+            ctx.strokeRect(px, py, tw + 14, 20);
+          }
+
+          ctx.fillStyle = n.isUser ? '#38bdf8' : '#f1f5f9';
+          ctx.shadowBlur = 0;
+          ctx.fillText(text, px + 7, py + 14);
+          ctx.restore();
         }
       }
 
@@ -1443,10 +1599,36 @@ class SkillBridgeApp {
       themeToggle.checked = document.body.classList.contains('dark-theme');
     }
 
+    // Sync constellation toggle
+    const constToggle = document.getElementById('setting-constellation-toggle');
+    const canvas = document.getElementById('constellation-canvas');
+    if (constToggle && canvas) {
+      constToggle.checked = canvas.style.display !== 'none';
+    }
+
     // Sync LinkedIn setting input
     const linkedinInput = document.getElementById('setting-linkedin-input');
     if (linkedinInput) {
       linkedinInput.value = this.studentData.linkedinUrl || (this.studentData.links && this.studentData.links.linkedin) || '';
+    }
+  }
+
+  toggleConstellationBackground(isEnabled) {
+    const canvas = document.getElementById('constellation-canvas');
+    if (!canvas) return;
+    if (isEnabled) {
+      canvas.style.display = 'block';
+      if (!this.constellationAnimId) {
+        this.initConstellationCanvas();
+      }
+      this.showToast('Peer Network Constellation active', 'info');
+    } else {
+      canvas.style.display = 'none';
+      if (this.constellationAnimId) {
+        cancelAnimationFrame(this.constellationAnimId);
+        this.constellationAnimId = null;
+      }
+      this.showToast('Constellation background paused', 'info');
     }
   }
 

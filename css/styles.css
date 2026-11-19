@@ -1830,12 +1830,12 @@ body.dark-theme .chatbot-messages-area {
 /* ========================================================
    COSMIC SPACE THEME & GLASSMORPHISM ENHANCEMENTS
    ======================================================== */
-body, .app-shell-layout {
+body {
   background-color: #060914 !important;
   background-image: 
-    radial-gradient(circle at 18% 22%, rgba(56, 189, 248, 0.14) 0%, transparent 45%),
-    radial-gradient(circle at 82% 70%, rgba(168, 85, 247, 0.16) 0%, transparent 50%),
-    radial-gradient(circle at 50% 12%, rgba(99, 102, 241, 0.12) 0%, transparent 55%),
+    radial-gradient(circle at 18% 22%, rgba(56, 189, 248, 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 82% 70%, rgba(168, 85, 247, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 50% 12%, rgba(99, 102, 241, 0.14) 0%, transparent 55%),
     url('../images/space-bg.jpg') !important;
   background-attachment: fixed !important;
   background-size: cover !important;
@@ -1844,8 +1844,16 @@ body, .app-shell-layout {
   color: #f8fafc !important;
 }
 
-.app-main-viewport, .welcome-hero, .welcome-view-wrap {
+.app-shell-layout,
+.landing-wrapper,
+#landing-view,
+#app-shell,
+.app-main-viewport,
+.welcome-hero,
+.welcome-view-wrap,
+.main-workspace {
   background: transparent !important;
+  background-color: transparent !important;
 }
 
 .topbar-header {
@@ -1862,9 +1870,9 @@ body, .app-shell-layout {
   border-right: 1px solid rgba(147, 197, 253, 0.14) !important;
 }
 
-/* Glassmorphism Cards */
-.card, .stat-card, .table-card, .modal-card, .welcome-card, .chatbot-widget-panel, .pagination-container {
-  background: rgba(13, 20, 38, 0.85) !important;
+/* Glassmorphism Cards & Containers */
+.card, .stat-card, .table-card, .modal-card, .welcome-card, .chatbot-widget-panel, .pagination-container, .feature-card, .hero-stats-banner, .landing-footer {
+  background: rgba(13, 20, 38, 0.82) !important;
   backdrop-filter: blur(14px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
   border: 1px solid rgba(147, 197, 253, 0.18) !important;
@@ -2083,25 +2091,56 @@ body, .app-shell-layout {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
-  opacity: 0.65;
-  transition: opacity 0.5s ease;
+  opacity: 1 !important;
+  display: block !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
   #constellation-canvas {
-    opacity: 0.35;
+    opacity: 0.65 !important;
   }
 }
 
-/* Make sure foreground elements stay above the constellation canvas */
+/* Foreground elements stay clickable and above canvas */
 .landing-wrapper,
+.app-shell-layout,
 .app-layout-shell,
 .modal-container,
 .chatbot-floating-widget {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+}
+
+.network-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.18);
+  transition: all 0.2s ease;
+}
+
+.network-status-dot-pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: constellationPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes constellationPulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 14px #38bdf8; }
+  100% { transform: scale(0.9); opacity: 0.7; }
 }
 
 /* ========================================================
