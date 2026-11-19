@@ -26,8 +26,8 @@ Write-Host " SkillBridge Local Server Running at $prefix" -ForegroundColor Green
 Write-Host " Press Ctrl+C in this terminal to stop the server" -ForegroundColor Yellow
 Write-Host "==========================================================" -ForegroundColor Cyan
 
-# Open in default browser
-Start-Process $prefix
+# Open in default browser (uncomment if running manually)
+# Start-Process $prefix
 
 $currentDir = Get-Location
 
