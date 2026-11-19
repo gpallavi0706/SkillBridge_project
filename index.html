@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillBridge | Interactive Student Opportunities Hub</title>
+  <meta name="description" content="Verified student internships, collegiate hackathons, open source mentorships, and peer collaboration.">
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Phosphor Icons for crisp, lightweight, accessible UI symbols -->
+  <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+</head>
+<body>
+
+  <!-- ========================================================
+       1. WELCOME / LANDING PAGE VIEW
+       ======================================================== -->
+  <div id="landing-view" class="landing-wrapper">
+    <!-- Landing Navigation -->
+    <header class="landing-nav" role="banner">
+      <a href="#" class="brand-logo-group" onclick="window.SkillBridge.navigateTo('welcome'); return false;">
+        <div class="brand-icon-box">
+          <i class="ph ph-compass-tool"></i>
+        </div>
+        <span>SkillBridge</span>
+      </a>
+
+      <nav class="landing-nav-links" aria-label="Main Navigation">
+        <a href="#features">Features</a>
+        <a href="#" onclick="window.SkillBridge.openSignInModal('student'); return false;">Opportunities</a>
+        <a href="#" onclick="window.SkillBridge.openSignInModal('student'); return false;">Mentorship</a>
+        <button class="btn btn-outline btn-sm" onclick="window.SkillBridge.openSignInModal('admin')">
+          <i class="ph ph-shield-check"></i> Coordinator Login
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="window.SkillBridge.openSignInModal('student')">
+          <i class="ph ph-sign-in"></i> Student Sign In
+        </button>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <main role="main">
+      <section class="hero-section" aria-labelledby="hero-heading">
+        <div class="hero-pill-badge">
+          <i class="ph ph-seal-check"></i> 100% Direct Official Sources • Verified Programs 2026-2027
+        </div>
+        <h1 id="hero-heading" class="hero-title">
+          Bridge your skills to <span class="hero-gradient-text">world-class student opportunities</span>.
+        </h1>
+        <p class="hero-subtitle">
+          Explore curated internships, global collegiate hackathons, and paid open source mentorships (GSoC, LFX, Outreachy). Track every application milestone in one place.
+        </p>
+
+        <div class="hero-cta-group">
+          <button class="btn btn-primary" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student');">
+            <i class="ph ph-rocket-launch"></i> Launch Student Demo
+          </button>
+          <button class="btn btn-outline" onclick="window.SkillBridge.openSignInModal('student')">
+            <i class="ph ph-user-circle"></i> Sign In to Account
+          </button>
+        </div>
+
+        <!-- Platform Stats Banner -->
+        <div class="hero-stats-banner" aria-label="Platform Statistics">
+          <div class="stat-item-block">
+            <div class="stat-item-value">10,250+</div>
+            <div class="stat-item-label">Naukri & Global Jobs</div>
+          </div>
+          <div class="stat-item-block">
+            <div class="stat-item-value">100%</div>
+            <div class="stat-item-label">Direct Verified Sources</div>
+          </div>
+          <div class="stat-item-block">
+            <div class="stat-item-value">4.9/5</div>
+            <div class="stat-item-label">Student Match Accuracy</div>
+          </div>
+          <div class="stat-item-block">
+            <div class="stat-item-value">Free</div>
+            <div class="stat-item-label">Open Access For All</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Features Section -->
+      <section id="features" class="features-container" aria-labelledby="features-heading">
+        <div class="section-heading-box">
+          <h2 id="features-heading">Engineered for ambitious student builders</h2>
+          <p class="text-muted">A cohesive platform designed to remove friction from student recruiting and hackathons.</p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="ph ph-seal-check"></i>
+            </div>
+            <h3>Verified High-Signal Listings</h3>
+            <p>Every opportunity links directly to official organizers—including Google Summer of Code, Major League Hacking, AICTE, and Linux Foundation.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="ph ph-target"></i>
+            </div>
+            <h3>Intelligent Skill Match Index</h3>
+            <p>SkillBridge analyzes your active technical skills (React, Python, Go, Docker) against listing criteria to generate transparent match scores.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="ph ph-kanban"></i>
+            </div>
+            <h3>Application Milestone Tracker</h3>
+            <p>Monitor your progress from initial application to technical review, interviews, and verified offers with built-in status timelines.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="ph ph-users-three"></i>
+            </div>
+            <h3>Student Teammate Finder</h3>
+            <p>Form balanced teams for premier collegiate hackathons like HackMIT and Microsoft Imagine Cup with peers across global universities.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="ph ph-robot"></i>
+            </div>
+            <h3>Career Guidance Assistant</h3>
+            <p>BridgeBot provides actionable, rule-based tips for resumes, interview prep, open source roadmaps, and hackathon pitching.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="ph ph-shield-check"></i>
+            </div>
+            <h3>Privacy & Trust First</h3>
+            <p>No fake salaries, spam recruiters, or scraped non-existent jobs. Transparent disclosures and sample data tags where applicable.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Landing Footer -->
+    <footer class="landing-footer" role="contentinfo">
+      <p>© 2026 SkillBridge Project. Open educational prototype. All opportunity links lead to authentic external sources.</p>
+    </footer>
+  </div>
+
+  <!-- ========================================================
+       2. AUTHENTICATED APPLICATION SHELL
+       ======================================================== -->
+  <div id="app-shell" class="app-shell-layout hidden">
+    <!-- Dark Navy Sidebar -->
+    <aside id="app-sidebar" class="app-sidebar" aria-label="Main Application Sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="sidebar-brand-title" onclick="window.SkillBridge.navigateTo('dashboard'); return false;">
+          <div class="brand-icon-box">
+            <i class="ph ph-compass-tool"></i>
+          </div>
+          <span>SkillBridge</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav-list" aria-label="Application Sections">
+        <a href="#" class="sidebar-nav-item active" data-view="dashboard" data-nav-target="dashboard">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-squares-four"></i>
+            <span>Dashboard</span>
+          </div>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="opportunities" data-nav-target="opportunities">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-compass"></i>
+            <span>Opportunities</span>
+          </div>
+          <span id="badge-saved-count" class="sidebar-badge" title="Saved opportunities">0</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="applications" data-nav-target="applications">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-clipboard-text"></i>
+            <span>Applications</span>
+          </div>
+          <span id="badge-applied-count" class="sidebar-badge" title="Tracked applications">0</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="recommendations" data-nav-target="recommendations">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-sparkle"></i>
+            <span>Recommendations</span>
+          </div>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="skills" data-nav-target="skills">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-code"></i>
+            <span>Skills Matrix</span>
+          </div>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="teammates" data-nav-target="teammates">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-users-three"></i>
+            <span>Teammates</span>
+          </div>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="profile" data-nav-target="profile">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-user"></i>
+            <span>Profile</span>
+          </div>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="dbms" data-nav-target="dbms">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-database text-primary"></i>
+            <span>DBMS Lab (8 Topics)</span>
+          </div>
+          <span class="sidebar-badge" style="background:#2563eb; color:#ffffff;">8</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="settings" data-nav-target="settings">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-gear"></i>
+            <span>Settings</span>
+          </div>
+        </a>
+
+        <a href="#" class="sidebar-nav-item text-danger" data-view="logout" data-nav-target="logout">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-sign-out"></i>
+            <span>Logout</span>
+          </div>
+        </a>
+      </nav>
+
+      <!-- Sidebar User Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-user-pill">
+          <div id="user-avatar-initials" class="user-avatar-circle">AC</div>
+          <div class="sidebar-user-meta">
+            <div id="user-display-name" class="sidebar-user-name">Alex Chen</div>
+            <div id="user-role-badge" class="sidebar-user-role">Student</div>
+          </div>
+        </div>
+        <button class="btn-icon btn-ghost text-muted" onclick="window.SkillBridge.openLogoutModal()" title="Sign Out" aria-label="Sign out">
+          <i class="ph ph-sign-out"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="app-main-area">
+      <!-- Top Bar -->
+      <header class="app-topbar" role="banner">
+        <div class="flex items-center gap-3">
+          <button id="mobile-sidebar-toggle" class="btn-icon btn-ghost" aria-label="Toggle navigation menu">
+            <i class="ph ph-list" style="font-size: 1.35rem;"></i>
+          </button>
+          <div class="topbar-search-box">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="search" class="topbar-search-input" placeholder="Quick search opportunities..." oninput="window.SkillBridge.handleSearchInput(this.value); if(window.SkillBridge.currentView !== 'opportunities') window.SkillBridge.navigateTo('opportunities');" aria-label="Search opportunities">
+          </div>
+        </div>
+
+        <div class="topbar-actions-group">
+          <!-- Backend & Database Status Badge -->
+          <button id="backend-status-btn" class="btn btn-xs btn-outline" onclick="window.SkillBridge.openDbModal()" title="View MySQL & FastAPI Connection Status">
+            <span id="backend-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f59e0b; margin-right:4px;"></span>
+            <span id="backend-status-text">MySQL Status</span>
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.SkillBridge.navigateTo('opportunities')">
+            <i class="ph ph-compass"></i> Explore All
+          </button>
+          <button class="btn-icon btn-ghost" onclick="window.SkillBridgeChatbot.toggleChat()" title="Open Career Assistant" aria-label="Open Career Assistant">
+            <i class="ph ph-robot" style="font-size: 1.25rem;"></i>
+          </button>
+          <div class="user-avatar-circle" onclick="window.SkillBridge.navigateTo('profile')" style="cursor: pointer;" title="View Profile">
+            AC
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Workspace Content -->
+      <main id="main-workspace" class="main-scroll-content" role="main">
+
+        <!-- ========================================================
+             VIEW 1: DASHBOARD
+             ======================================================== -->
+        <section id="view-dashboard" class="app-view-panel" aria-labelledby="dash-greeting-heading">
+          <!-- Greeting Banner -->
+          <div class="dashboard-greeting-banner">
+            <div class="dash-banner-content">
+              <div class="dash-banner-badge">
+                <i class="ph ph-graduation-cap"></i> Academic Cohort 2026 • Spring Recruiting
+              </div>
+              <h2 id="dash-greeting-heading">Welcome back, <span id="dash-greeting-name">Alex</span>! 👋</h2>
+              <p>Your skill compatibility index is active. You have 3 recommended opportunities matching your React & Python skills.</p>
+            </div>
+            <button class="btn btn-primary" onclick="window.SkillBridge.navigateTo('opportunities')">
+              <i class="ph ph-compass"></i> Browse Opportunities
+            </button>
+          </div>
+
+          <!-- Metric Stat Counters -->
+          <div class="metrics-row-grid" aria-label="Key Performance Indicators">
+            <div class="metric-card">
+              <div class="metric-icon-circle icon-blue">
+                <i class="ph ph-compass"></i>
+              </div>
+              <div>
+                <div class="metric-label">Verified Opportunities</div>
+                <div id="stat-total-opps" class="metric-val">10,252</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-circle icon-emerald">
+                <i class="ph ph-bookmark-simple"></i>
+              </div>
+              <div>
+                <div class="metric-label">Saved Opportunities</div>
+                <div id="stat-saved-opps" class="metric-val">3</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-circle icon-purple">
+                <i class="ph ph-paper-plane-tilt"></i>
+              </div>
+              <div>
+                <div class="metric-label">Active Applications</div>
+                <div id="stat-applied-opps" class="metric-val">4</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-circle icon-amber">
+                <i class="ph ph-code"></i>
+              </div>
+              <div>
+                <div class="metric-label">Verified Skills</div>
+                <div id="stat-skills-count" class="metric-val">8</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard 2-Column Layout -->
+          <div class="dashboard-grid-layout">
+            <!-- Left Column: Recommendations & Recent Applications -->
+            <div class="dash-left-column">
+              <!-- Recommended for You -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <h3><i class="ph ph-sparkle text-primary"></i> Recommended for Your Skills</h3>
+                  <a href="#" onclick="window.SkillBridge.navigateTo('recommendations'); return false;" class="text-xs font-semibold">View All</a>
+                </div>
+                <div id="dash-recommended-grid" class="cards-grid-layout">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <!-- Recent Applications Tracker Table -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <h3><i class="ph ph-clock-counter-clockwise text-primary"></i> Recent Applications</h3>
+                  <a href="#" onclick="window.SkillBridge.navigateTo('applications'); return false;" class="text-xs font-semibold">Track Board</a>
+                </div>
+                <div style="overflow-x: auto;">
+                  <table class="custom-table" aria-label="Recent Applications Table">
+                    <thead>
+                      <tr>
+                        <th>Program / Role</th>
+                        <th>Applied Date</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dash-recent-apps-body">
+                      <!-- Rendered dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Skills & Quick Actions -->
+            <div class="dash-right-column">
+              <!-- Verified Skills Widget -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <h3><i class="ph ph-lightning text-primary"></i> Active Skill Profile</h3>
+                  <button class="btn btn-xs btn-outline" onclick="window.SkillBridge.openAddSkillModal()">
+                    <i class="ph ph-plus"></i> Add
+                  </button>
+                </div>
+                <div id="dash-skills-chips" class="flex flex-wrap gap-2 mb-4">
+                  <!-- Skill tags dynamically rendered -->
+                </div>
+                <button class="btn btn-outline btn-sm w-full" onclick="window.SkillBridge.navigateTo('skills')">
+                  <i class="ph ph-sliders"></i> Open Skills Matrix
+                </button>
+              </div>
+
+              <!-- Quick Guidance Assistant Callout -->
+              <div class="panel-card" style="background: linear-gradient(180deg, rgba(37, 99, 235, 0.05), transparent);">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="feature-icon-wrapper" style="width: 36px; height: 36px; margin: 0; font-size: 1.15rem;">
+                    <i class="ph ph-robot"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold">BridgeBot Assistant</h4>
+                    <span class="text-xs text-muted">Rule-based guidance</span>
+                  </div>
+                </div>
+                <p class="text-xs text-secondary mb-3">Need resume feedback, interview advice, or open-source contributor roadmaps?</p>
+                <button class="btn btn-primary btn-sm w-full" onclick="window.SkillBridgeChatbot.toggleChat()">
+                  <i class="ph ph-chat-circle-dots"></i> Ask Career Question
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 2: OPPORTUNITIES DIRECTORY
+             ======================================================== -->
+        <section id="view-opportunities" class="app-view-panel hidden" aria-labelledby="opps-heading">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 id="opps-heading" class="text-xl font-bold">Verified Opportunities Hub</h2>
+              <p class="text-muted text-sm">Direct, authentic links to official internships, hackathons, and open source mentorships.</p>
+            </div>
+            <div id="opp-results-count" class="text-xs font-semibold text-muted">12 listings found</div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="opportunities-filter-bar">
+            <div class="filter-search-row">
+              <div class="flex-1">
+                <input type="search" id="opp-search-input" class="input-text" placeholder="Search by title, organization, or keywords (e.g. Google, MLH, Remote, Python)..." oninput="window.SkillBridge.handleSearchInput(this.value)">
+              </div>
+              <div class="flex gap-2">
+                <select id="filter-type-select" class="input-select" style="width: 140px;" onchange="window.SkillBridge.handleTypeChange(this.value)">
+                  <option value="all">All Locations</option>
+                  <option value="remote">Remote</option>
+                  <option value="hybrid">Hybrid</option>
+                  <option value="in-person">In-Person</option>
+                </select>
+
+                <select id="filter-skill-select" class="input-select" style="width: 150px;" onchange="window.SkillBridge.handleSkillFilterChange(this.value)">
+                  <option value="all">All Skills</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center flex-wrap gap-2">
+              <div class="category-pills-row" role="tablist" aria-label="Opportunity categories">
+                <button class="category-filter-btn active" data-cat="all" onclick="window.SkillBridge.handleCategoryClick('all')">All Programs</button>
+                <button class="category-filter-btn" data-cat="internship" onclick="window.SkillBridge.handleCategoryClick('internship')">Internships</button>
+                <button class="category-filter-btn" data-cat="hackathon" onclick="window.SkillBridge.handleCategoryClick('hackathon')">Hackathons</button>
+                <button class="category-filter-btn" data-cat="open source" onclick="window.SkillBridge.handleCategoryClick('open source')">Open Source</button>
+                <button class="category-filter-btn" data-cat="fellowships" onclick="window.SkillBridge.handleCategoryClick('fellowships')">Fellowships</button>
+              </div>
+
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="filter-saved-checkbox" onchange="window.SkillBridge.toggleSavedFilter(this.checked)">
+                <span>Show Saved Only</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Cards Grid -->
+          <div id="opportunities-grid" class="cards-grid-layout" aria-live="polite">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Pagination Bar for 10,000+ Naukri & LinkedIn Listings -->
+          <div id="opp-pagination" class="pagination-container" aria-label="Opportunities pagination">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 3: APPLICATIONS TRACKER
+             ======================================================== -->
+        <section id="view-applications" class="app-view-panel hidden" aria-labelledby="apps-heading">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 id="apps-heading" class="text-xl font-bold">Application Milestone Board</h2>
+              <p class="text-muted text-sm">Track your submission stages, interview milestones, and official feedback.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="window.SkillBridge.navigateTo('opportunities')">
+              <i class="ph ph-plus"></i> Add Opportunity Application
+            </button>
+          </div>
+
+          <div id="applications-list-container">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 4: RECOMMENDATIONS
+             ======================================================== -->
+        <section id="view-recommendations" class="app-view-panel hidden" aria-labelledby="rec-heading">
+          <div class="mb-4">
+            <h2 id="rec-heading" class="text-xl font-bold">Smart Opportunity Recommendations</h2>
+            <p class="text-muted text-sm">Opportunities ranked dynamically based on your verified skills and target role preferences.</p>
+          </div>
+
+          <div class="panel-card mb-4" style="background: var(--blue-50); border-color: var(--blue-200);">
+            <div class="flex items-center gap-3">
+              <i class="ph ph-info text-primary" style="font-size: 1.5rem;"></i>
+              <div class="text-xs">
+                <strong>How match scores are calculated:</strong> We compare required technologies against your active skills list (70%), weight your proficiency score (20%), and factor your desired work mode (10%).
+              </div>
+            </div>
+          </div>
+
+          <div id="recommendations-grid" class="cards-grid-layout">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 5: SKILLS MATRIX
+             ======================================================== -->
+        <section id="view-skills" class="app-view-panel hidden" aria-labelledby="skills-heading">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 id="skills-heading" class="text-xl font-bold">Technical Skills Matrix</h2>
+              <p class="text-muted text-sm">Manage your competencies to unlock higher opportunity match ratings.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="window.SkillBridge.openAddSkillModal()">
+              <i class="ph ph-plus"></i> Add New Skill
+            </button>
+          </div>
+
+          <div id="skills-matrix-grid" class="skills-matrix-grid">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 6: TEAMMATES FINDER
+             ======================================================== -->
+        <section id="view-teammates" class="app-view-panel hidden" aria-labelledby="teammates-heading">
+          <div class="mb-4">
+            <h2 id="teammates-heading" class="text-xl font-bold">Student Teammate Collaboration</h2>
+            <p class="text-muted text-sm">Connect with collegiate builders looking for partners in premier hackathons and open-source programs.</p>
+          </div>
+
+          <div id="teammates-grid" class="cards-grid-layout">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 7: PROFILE
+             ======================================================== -->
+        <section id="view-profile" class="app-view-panel hidden" aria-labelledby="profile-heading">
+          <div class="panel-card mb-4">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="user-avatar-circle" style="width: 64px; height: 64px; font-size: 1.5rem;">AC</div>
+              <div>
+                <h2 id="prof-name" class="text-xl font-bold">Alex Chen</h2>
+                <div id="prof-email" class="text-sm text-muted">alex.chen@university.edu</div>
+                <div class="flex gap-2 mt-1">
+                  <span class="badge badge-primary"><i class="ph ph-seal-check"></i> Verified Student</span>
+                  <span class="badge badge-subtle">Class of <span id="prof-grad-year">2026</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-grid-layout">
+              <div>
+                <h3 class="font-bold text-sm mb-2 text-primary">Academic Background</h3>
+                <div class="form-group mb-2">
+                  <span class="text-xs text-muted block">University:</span>
+                  <strong id="prof-uni" class="text-sm">Pacific Institute of Technology</strong>
+                </div>
+                <div class="form-group mb-2">
+                  <span class="text-xs text-muted block">Degree:</span>
+                  <strong id="prof-degree" class="text-sm">B.S. in Computer Science</strong>
+                </div>
+                <div class="form-group mb-2">
+                  <span class="text-xs text-muted block">Cumulative GPA:</span>
+                  <strong id="prof-gpa" class="text-sm">3.84 / 4.00</strong>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-bold text-sm mb-2 text-primary">Career Goals & Roles</h3>
+                <div id="prof-target-roles" class="flex flex-wrap gap-2 mb-3">
+                  <!-- Target roles rendered -->
+                </div>
+                <h3 class="font-bold text-sm mb-1 text-primary">Student Bio</h3>
+                <p id="prof-bio" class="text-xs text-secondary leading-relaxed">
+                  Junior CS student passionate about distributed systems and open source.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resume Simulation Card -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h3><i class="ph ph-file-pdf text-primary"></i> Attached Resume (Demo Preview)</h3>
+              <span class="badge badge-success"><i class="ph ph-check"></i> ATS Verified</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-slate-100 rounded-md">
+              <div class="flex items-center gap-3">
+                <i class="ph ph-file-text text-primary" style="font-size: 2rem;"></i>
+                <div>
+                  <div class="font-bold text-sm">Alex_Chen_Resume_2026.pdf</div>
+                  <div class="text-xs text-muted">142 KB • Updated 2 weeks ago</div>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-xs" onclick="window.SkillBridge.showToast('Resume download simulation triggered', 'info')">
+                <i class="ph ph-download-simple"></i> Download
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 8: SETTINGS
+             ======================================================== -->
+        <section id="view-settings" class="app-view-panel hidden" aria-labelledby="settings-heading">
+          <div class="mb-4">
+            <h2 id="settings-heading" class="text-xl font-bold">Settings & Preferences</h2>
+            <p class="text-muted text-sm">Manage appearance, notifications, and client data state.</p>
+          </div>
+
+          <div class="panel-card mb-4">
+            <h3 class="font-bold text-md mb-3">Appearance</h3>
+            <div class="flex justify-between items-center py-2 border-b">
+              <div>
+                <div class="font-semibold text-sm">Dark Navy Mode</div>
+                <div class="text-xs text-muted">Toggle dark high-contrast interface.</div>
+              </div>
+              <label class="cursor-pointer">
+                <input type="checkbox" id="setting-theme-toggle">
+              </label>
+            </div>
+          </div>
+
+          <div class="panel-card mb-4">
+            <h3 class="font-bold text-md mb-3">Demo Data & Storage</h3>
+            <div class="flex justify-between items-center py-2 border-b">
+              <div>
+                <div class="font-semibold text-sm">Reset Demo State</div>
+                <div class="text-xs text-muted">Restore default opportunities, skills, and sample applications.</div>
+              </div>
+              <button class="btn btn-outline btn-sm text-danger" onclick="window.SkillBridge.resetDefaultData()">
+                <i class="ph ph-arrow-counter-clockwise"></i> Reset State
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 9: ADMIN COORDINATOR PORTAL
+             ======================================================== -->
+        <section id="view-admin" class="app-view-panel hidden" aria-labelledby="admin-heading">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 id="admin-heading" class="text-xl font-bold">University Opportunity Coordinator Portal</h2>
+              <p class="text-muted text-sm">Manage verified listings, add accredited hackathons, and review student application metrics.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="window.SkillBridge.openAddOppModal()">
+              <i class="ph ph-plus-circle"></i> Publish Verified Listing
+            </button>
+          </div>
+
+          <div class="panel-card">
+            <table class="custom-table" aria-label="Admin Opportunities Directory">
+              <thead>
+                <tr>
+                  <th>Opportunity Title & Host</th>
+                  <th>Category</th>
+                  <th>Mode</th>
+                  <th>Verification</th>
+                  <th>Official URL</th>
+                </tr>
+              </thead>
+              <tbody id="admin-opps-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             VIEW 10: DBMS CURRICULUM LAB & QUERY ENGINE (8 TOPICS)
+             ======================================================== -->
+        <section id="view-dbms" class="app-view-panel hidden" aria-labelledby="dbms-heading">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <div class="badge badge-primary mb-1"><i class="ph ph-database"></i> MySQL Workbench & FastAPI Engine</div>
+              <h2 id="dbms-heading" class="text-xl font-bold">DBMS Academic Curriculum & Query Lab</h2>
+              <p class="text-muted text-sm">Interactive demonstration of the 8 core Database Management System topics with live MySQL execution.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="window.SkillBridge.runCurrentTopicQuery()">
+              <i class="ph ph-play"></i> Execute Query Live
+            </button>
+          </div>
+
+          <!-- 8 Topic Selection Tabs -->
+          <div class="panel-card mb-4 p-3" style="background: var(--bg-card);">
+            <div class="text-xs font-bold text-muted uppercase tracking-wide mb-2">Select DBMS Topic:</div>
+            <div class="category-pills-row" id="dbms-topic-chips" role="tablist">
+              <button class="category-filter-btn active" data-topic="1" onclick="window.SkillBridge.selectDbmsTopic(1)">1. DDL & DML Insert/Delete</button>
+              <button class="category-filter-btn" data-topic="2" onclick="window.SkillBridge.selectDbmsTopic(2)">2. DML Update & TCL</button>
+              <button class="category-filter-btn" data-topic="3" onclick="window.SkillBridge.selectDbmsTopic(3)">3. Built-in Functions</button>
+              <button class="category-filter-btn" data-topic="4" onclick="window.SkillBridge.selectDbmsTopic(4)">4. Simple Querying</button>
+              <button class="category-filter-btn" data-topic="5" onclick="window.SkillBridge.selectDbmsTopic(5)">5. Aggregates & GROUP BY</button>
+              <button class="category-filter-btn" data-topic="6" onclick="window.SkillBridge.selectDbmsTopic(6)">6. Nested Sub-Queries</button>
+              <button class="category-filter-btn" data-topic="7" onclick="window.SkillBridge.selectDbmsTopic(7)">7. Relational Joins</button>
+              <button class="category-filter-btn" data-topic="8" onclick="window.SkillBridge.selectDbmsTopic(8)">8. Database Views</button>
+            </div>
+          </div>
+
+          <!-- Active Topic Details & SQL Code -->
+          <div class="panel-card mb-4">
+            <div class="panel-card-header">
+              <div>
+                <h3 id="dbms-active-topic-title" class="text-md font-bold">1. Data Definition & Manipulation Commands</h3>
+                <div id="dbms-active-topic-desc" class="text-xs text-muted mt-1">Demonstrates CREATE TABLE with constraints, ALTER TABLE, INSERT, and DELETE operations.</div>
+              </div>
+              <span id="dbms-active-badge" class="badge badge-success"><i class="ph ph-seal-check"></i> MySQL 8.0</span>
+            </div>
+
+            <!-- SQL Display Box -->
+            <div class="mb-3">
+              <div class="flex justify-between items-center text-xs font-semibold mb-1 text-muted">
+                <span><i class="ph ph-code"></i> Executable SQL Statement:</span>
+                <button class="btn btn-ghost btn-xs" onclick="navigator.clipboard.writeText(document.getElementById('dbms-active-sql').innerText); window.SkillBridge.showToast('SQL copied to clipboard!', 'info');">
+                  <i class="ph ph-copy"></i> Copy SQL
+                </button>
+              </div>
+              <pre id="dbms-active-sql" style="background:#0f172a; color:#38bdf8; padding:1rem; border-radius:8px; font-family:Consolas, monospace; font-size:0.8rem; overflow-x:auto; line-height:1.5; max-height:220px;"></pre>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t text-xs text-muted">
+              <span id="dbms-row-count-indicator">Rows returned: 0</span>
+              <span class="flex items-center gap-1"><i class="ph ph-database text-primary"></i> Target: skillbridge_db</span>
+            </div>
+          </div>
+
+          <!-- Live Results Table Container -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h3><i class="ph ph-table text-primary"></i> Query Output Dataset</h3>
+              <button class="btn btn-xs btn-outline" onclick="window.SkillBridge.runCurrentTopicQuery()">
+                <i class="ph ph-arrow-clockwise"></i> Refresh Dataset
+              </button>
+            </div>
+            <div id="dbms-results-wrapper" style="overflow-x: auto; max-height: 400px;">
+              <table id="dbms-results-table" class="custom-table" aria-label="DBMS Query Results">
+                <thead id="dbms-results-thead"></thead>
+                <tbody id="dbms-results-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       3. INTERACTIVE CHATBOT PANEL ("BRIDGEBOT")
+       ======================================================== -->
+  <!-- Floating Launch Button -->
+  <button id="chatbot-toggle-btn" class="chatbot-floating-toggle" aria-label="Open Career Guidance Assistant" title="Open Career Guidance Assistant">
+    <i class="ph ph-robot"></i>
+    <span id="chatbot-badge" class="chatbot-badge-counter">1</span>
+  </button>
+
+  <!-- Expandable Chat Panel -->
+  <aside id="chatbot-widget" class="chatbot-widget-panel" aria-label="BridgeBot Career Advisor" aria-hidden="true">
+    <div class="chatbot-header">
+      <div class="chatbot-header-title">
+        <div class="chatbot-bot-avatar">
+          <i class="ph ph-robot"></i>
+        </div>
+        <div>
+          <div class="font-bold text-sm">BridgeBot Career Advisor</div>
+          <div class="text-xs text-muted">Client-side demo mentor</div>
+        </div>
+      </div>
+      <button id="chatbot-close-btn" class="btn-icon btn-ghost text-muted" aria-label="Close Chat">
+        <i class="ph ph-x"></i>
+      </button>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="chatbot-messages" class="chatbot-messages-area" role="log" aria-live="polite">
+      <!-- Chat bubbles appended dynamically -->
+    </div>
+
+    <!-- Quick Prompt Suggestion Chips -->
+    <div id="chatbot-quick-prompts" class="bot-quick-prompts-bar">
+      <button class="chat-prompt-chip highlight-chip" data-prompt="Show nearby opportunities in my city">📍 Nearby Opportunities</button>
+      <button class="chat-prompt-chip" data-prompt="Show high paying tech jobs">💰 ₹15+ LPA Tech Jobs</button>
+      <button class="chat-prompt-chip" data-prompt="Show fresher and entry level openings">🎓 Fresher Openings</button>
+      <button class="chat-prompt-chip" data-prompt="Show remote developer jobs">🌐 Remote Jobs</button>
+      <button class="chat-prompt-chip" data-prompt="Match opportunities with my skills">🎯 Match My Skills</button>
+      <button class="chat-prompt-chip" data-prompt="How do I prepare for coding interviews?">Interview Prep</button>
+      <button class="chat-prompt-chip" data-prompt="What makes a great student tech resume?">Resume Tips</button>
+    </div>
+
+    <!-- Input Form -->
+    <form id="chatbot-form" class="chatbot-input-bar">
+      <input type="text" id="chatbot-input" class="chatbot-input-field" placeholder="Ask a career or opportunity question..." autocomplete="off">
+      <button type="submit" class="btn btn-primary btn-sm" aria-label="Send message">
+        <i class="ph ph-paper-plane-right"></i>
+      </button>
+    </form>
+  </aside>
+
+  <!-- ========================================================
+       4. MODALS
+       ======================================================== -->
+
+  <!-- Sign In Modal -->
+  <div id="signin-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="signin-modal-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeSignInModal()"></div>
+    <div class="modal-card">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeSignInModal()" aria-label="Close Sign In Dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="signin-modal-title">Sign In to SkillBridge</h2>
+        <p>Access your personalized student dashboard, saved opportunities, and milestone tracking.</p>
+      </div>
+
+      <!-- Demo Mode Notice -->
+      <div class="demo-mode-notice-banner">
+        <i class="ph ph-shield-warning"></i>
+        <div>
+          <strong>Demo Mode Simulation:</strong> Client-side authentication for preview purposes. Never enter real passwords or confidential credentials. Real passwords are never transmitted.
+        </div>
+      </div>
+
+      <!-- Quick Demo Fill Helpers -->
+      <div class="demo-quick-fill-box">
+        <button type="button" class="btn btn-outline btn-xs flex-1" onclick="window.SkillBridge.fillDemoCredentials('student')">
+          <i class="ph ph-user"></i> Fill Student Demo
+        </button>
+        <button type="button" class="btn btn-outline btn-xs flex-1" onclick="window.SkillBridge.fillDemoCredentials('admin')">
+          <i class="ph ph-shield-check"></i> Fill Admin Demo
+        </button>
+      </div>
+
+      <!-- Role Selector Tabs -->
+      <div class="auth-tabs-row" role="tablist">
+        <button type="button" id="tab-role-student" class="auth-tab-btn active" onclick="window.SkillBridge.setSignInRole('student')">
+          <i class="ph ph-student"></i> Student Login
+        </button>
+        <button type="button" id="tab-role-admin" class="auth-tab-btn" onclick="window.SkillBridge.setSignInRole('admin')">
+          <i class="ph ph-shield"></i> Admin Login
+        </button>
+      </div>
+
+      <div id="signin-error-box" class="form-error-alert hidden" role="alert"></div>
+
+      <!-- Sign In Form -->
+      <form id="signin-form" onsubmit="window.SkillBridge.handleSignInSubmit(event)">
+        <input type="hidden" id="signin-role-hidden" value="student">
+
+        <div class="form-group">
+          <label for="signin-email" class="form-label">Email Address</label>
+          <input type="email" id="signin-email" class="input-text" placeholder="e.g. alex.chen@university.edu" autocomplete="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="signin-password" class="form-label">Password</label>
+          <div class="input-password-wrapper">
+            <input type="password" id="signin-password" class="input-text" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="pwd-toggle-btn" onclick="window.SkillBridge.togglePasswordVisibility()" aria-label="Toggle password visibility">
+              <i id="pwd-toggle-icon" class="ph ph-eye"></i>
+            </button>
+          </div>
+          <span class="text-xs text-muted mt-1 block">Demo password requirement: 6+ characters.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full mt-2">
+          <i class="ph ph-sign-in"></i> Sign In to Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Opportunity Quick View Details Popup Modal -->
+  <div id="opp-details-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="detail-opp-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeOppDetailsModal()"></div>
+    <div class="modal-card modal-card-lg">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeOppDetailsModal()" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <div class="flex items-center gap-3">
+          <div class="company-logo-avatar" id="detail-org-avatar" style="width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">G</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="badge badge-primary" id="detail-cat-badge">Full-Time</span>
+              <span class="badge badge-verified" id="detail-verified-badge"><i class="ph ph-seal-check"></i> Verified Listing</span>
+            </div>
+            <h2 class="modal-title text-xl font-bold" id="detail-opp-title" style="color: #ffffff;">Software Development Engineer</h2>
+            <div class="text-sm font-medium" id="detail-org-name" style="color: #93c5fd;">Google India</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body space-y-4 pt-2">
+        <!-- 4-Stat Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="detail-stat-pill">
+            <div class="text-xs text-muted mb-1"><i class="ph ph-map-pin"></i> Location</div>
+            <div class="font-bold text-sm" id="detail-location">Bengaluru, Karnataka</div>
+          </div>
+          <div class="detail-stat-pill">
+            <div class="text-xs text-muted mb-1"><i class="ph ph-currency-inr"></i> Package / CTC</div>
+            <div class="font-bold text-sm" id="detail-salary" style="color: #34d399;">₹ 18.5 LPA</div>
+          </div>
+          <div class="detail-stat-pill">
+            <div class="text-xs text-muted mb-1"><i class="ph ph-briefcase"></i> Work Mode</div>
+            <div class="font-bold text-sm" id="detail-work-type">Hybrid</div>
+          </div>
+          <div class="detail-stat-pill">
+            <div class="text-xs text-muted mb-1"><i class="ph ph-calendar"></i> Deadline</div>
+            <div class="font-bold text-sm" id="detail-deadline">2026-12-31</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-sm mb-1" style="color: #93c5fd;"><i class="ph ph-article"></i> Role Overview</h4>
+          <p class="text-sm" id="detail-description" style="color: #cbd5e1; line-height: 1.6;"></p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-sm mb-1" style="color: #93c5fd;"><i class="ph ph-graduation-cap"></i> Eligibility & Qualifications</h4>
+          <p class="text-sm" id="detail-eligibility" style="color: #cbd5e1; line-height: 1.6;"></p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-sm mb-2" style="color: #93c5fd;"><i class="ph ph-code"></i> Required Tech Skills</h4>
+          <div class="flex flex-wrap gap-2" id="detail-skills-list"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer flex items-center justify-between gap-3 pt-4 mt-3" style="border-top: 1px solid rgba(148, 163, 184, 0.18);">
+        <button class="btn btn-outline btn-sm" id="detail-bot-btn" onclick="window.SkillBridge.askBotAboutJob()">
+          <i class="ph ph-chat-circle-dots"></i> Ask BridgeBot Interview Tips
+        </button>
+        <div class="flex items-center gap-2">
+          <button class="btn btn-outline btn-sm" id="detail-track-btn" onclick="window.SkillBridge.trackCurrentModalOpp()">
+            <i class="ph ph-paper-plane-tilt"></i> Add to Tracker
+          </button>
+          <a id="detail-apply-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+            Apply on Official Portal <i class="ph ph-arrow-square-out"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply / Track Modal -->
+  <div id="apply-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="apply-modal-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeApplyModal()"></div>
+    <div class="modal-card">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeApplyModal()" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="apply-modal-title">Track Application</h2>
+        <p id="modal-apply-org" class="text-primary font-semibold">Google Open Source</p>
+      </div>
+
+      <div class="p-3 bg-slate-100 rounded-md mb-3 text-xs">
+        <div class="font-bold text-sm mb-1" id="modal-apply-title">Google Summer of Code (GSoC)</div>
+        <p class="text-muted mb-2">Applications for this opportunity are submitted through the organizer's verified portal.</p>
+        <a id="modal-apply-source-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-xs">
+          <i class="ph ph-arrow-square-out"></i> Open Official Application Portal
+        </a>
+      </div>
+
+      <form onsubmit="window.SkillBridge.submitApplicationForm(event)">
+        <div class="form-group">
+          <label for="modal-apply-status" class="form-label">Current Application Stage</label>
+          <select id="modal-apply-status" class="input-select">
+            <option value="Applied">1. Applied (Submitted)</option>
+            <option value="Under Review">2. Under Review / Screening</option>
+            <option value="Interviewing">3. Interviewing / Assessment</option>
+            <option value="Offer Received">4. Offer Received / Accepted</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="modal-apply-date" class="form-label">Date Submitted</label>
+          <input type="date" id="modal-apply-date" class="input-text" required>
+        </div>
+
+        <div class="form-group">
+          <label for="modal-apply-notes" class="form-label">Personal Tracking Notes</label>
+          <textarea id="modal-apply-notes" class="input-textarea" rows="3" placeholder="e.g. Submitted resume and proposal draft. Recruiter follow-up expected in 2 weeks."></textarea>
+        </div>
+
+        <div class="flex gap-2 mt-4">
+          <button type="button" class="btn btn-outline flex-1" onclick="window.SkillBridge.closeApplyModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary flex-1">Save to Tracker</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Skill Modal -->
+  <div id="add-skill-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="add-skill-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeAddSkillModal()"></div>
+    <div class="modal-card">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeAddSkillModal()" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="add-skill-title">Add Technical Skill</h2>
+        <p>Skills dynamically adjust your match index across verified opportunities.</p>
+      </div>
+
+      <form onsubmit="window.SkillBridge.submitAddSkill(event)">
+        <div class="form-group">
+          <label for="new-skill-name" class="form-label">Skill / Technology Name</label>
+          <input type="text" id="new-skill-name" class="input-text" placeholder="e.g. Next.js, Rust, Kubernetes, Figma" required>
+        </div>
+
+        <div class="form-group">
+          <label for="new-skill-category" class="form-label">Category</label>
+          <select id="new-skill-category" class="input-select">
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="DevOps">DevOps & Cloud</option>
+            <option value="AI / ML">AI & Machine Learning</option>
+            <option value="Database">Database & Storage</option>
+            <option value="General">General / Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="new-skill-level" class="form-label">Proficiency Level</label>
+          <select id="new-skill-level" class="input-select">
+            <option value="Beginner">Beginner (Learning syntax & foundations)</option>
+            <option value="Intermediate" selected>Intermediate (Built projects / components)</option>
+            <option value="Advanced">Advanced (Production experience / open source PRs)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full mt-2">
+          <i class="ph ph-plus"></i> Add to Profile
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Add Opportunity Modal -->
+  <div id="add-opp-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="admin-add-opp-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeAddOppModal()"></div>
+    <div class="modal-card">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeAddOppModal()" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="admin-add-opp-title">Publish Verified Opportunity</h2>
+        <p>Curate a new student opportunity with official verification link.</p>
+      </div>
+
+      <form onsubmit="window.SkillBridge.submitAddOpportunity(event)">
+        <div class="form-group">
+          <label for="admin-opp-title" class="form-label">Program or Role Title</label>
+          <input type="text" id="admin-opp-title" class="input-text" placeholder="e.g. Fall Open Source Fellowship" required>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-opp-org" class="form-label">Host Organization</label>
+          <input type="text" id="admin-opp-org" class="input-text" placeholder="e.g. Apache Software Foundation" required>
+        </div>
+
+        <div class="flex gap-2">
+          <div class="form-group flex-1">
+            <label for="admin-opp-cat" class="form-label">Category</label>
+            <select id="admin-opp-cat" class="input-select">
+              <option value="Internship">Internship</option>
+              <option value="Hackathon">Hackathon</option>
+              <option value="Open Source">Open Source</option>
+              <option value="Fellowships">Fellowships</option>
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="admin-opp-type" class="form-label">Location Type</label>
+            <select id="admin-opp-type" class="input-select">
+              <option value="Remote">Remote</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="In-Person">In-Person</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-opp-url" class="form-label">Official Source URL</label>
+          <input type="url" id="admin-opp-url" class="input-text" placeholder="https://official-program.org" required>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-opp-skills" class="form-label">Required Skills (Comma separated)</label>
+          <input type="text" id="admin-opp-skills" class="input-text" placeholder="e.g. Python, Git, Docker">
+        </div>
+
+        <div class="form-group">
+          <label for="admin-opp-desc" class="form-label">Brief Description</label>
+          <textarea id="admin-opp-desc" class="input-textarea" rows="2" placeholder="Summary of eligibility and program scope"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full mt-2">
+          <i class="ph ph-check"></i> Publish to SkillBridge
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Database & Backend Connection Modal -->
+  <div id="db-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="db-modal-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeDbModal()"></div>
+    <div class="modal-card" style="max-width: 520px;">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeDbModal()" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="db-modal-title"><i class="ph ph-database text-primary"></i> MySQL Workbench & FastAPI Status</h2>
+        <p>Connect your local MySQL database with Python FastAPI backend.</p>
+      </div>
+
+      <div id="db-status-banner" class="p-3 rounded-md mb-3 flex items-center justify-between" style="background: #fef3c7; border: 1px solid #fde68a;">
+        <div class="flex items-center gap-2">
+          <span id="db-modal-dot" style="width: 10px; height: 10px; border-radius: 50%; background: #d97706;"></span>
+          <strong id="db-modal-status-text" class="text-xs" style="color: #92400e;">Checking connection...</strong>
+        </div>
+        <button class="btn btn-xs btn-outline" onclick="window.SkillBridge.testBackendConnection()">
+          <i class="ph ph-arrow-clockwise"></i> Test Again
+        </button>
+      </div>
+
+      <div class="text-xs text-secondary mb-3">
+        <h4 class="font-bold text-sm mb-1 text-primary">How to connect in 3 steps:</h4>
+        <ol style="padding-left: 1.25rem; line-height: 1.6;">
+          <li><strong>Import in MySQL Workbench:</strong> Open MySQL Workbench, click <em>File &gt; Open SQL Script...</em>, select <code>backend/schema.sql</code>, and click ⚡ (Execute) to create <code>skillbridge_db</code> and seed data.</li>
+          <li><strong>Check Credentials:</strong> In <code>backend/.env</code>, confirm your <code>DB_PASSWORD</code> matches your MySQL root password.</li>
+          <li><strong>Start FastAPI:</strong> In terminal, run:
+            <pre style="background: #1e293b; color: #f8fafc; padding: 6px 10px; border-radius: 4px; margin: 4px 0;">cd backend&#10;.\run.ps1</pre>
+          </li>
+        </ol>
+      </div>
+
+      <div class="p-2 bg-slate-100 rounded text-xs text-muted mb-3">
+        <div><strong>Host:</strong> localhost:3306 &bull; <strong>DB:</strong> skillbridge_db</div>
+        <div><strong>FastAPI:</strong> http://localhost:8000 &bull; <strong>Docs:</strong> http://localhost:8000/docs</div>
+      </div>
+
+      <button class="btn btn-primary w-full" onclick="window.SkillBridge.closeDbModal()">
+        Got It
+      </button>
+    </div>
+  </div>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logout-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="logout-dialog-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeLogoutModal()"></div>
+    <div class="modal-card" style="max-width: 400px; text-align: center;">
+      <div style="font-size: 2.5rem; color: var(--rose-600); margin-bottom: 0.75rem;">
+        <i class="ph ph-sign-out"></i>
+      </div>
+      <h2 id="logout-dialog-title" class="font-bold text-lg mb-2">Sign out of SkillBridge?</h2>
+      <p class="text-muted text-sm mb-4">Your saved opportunities and tracked applications will remain safely preserved in local storage.</p>
+      <div class="flex gap-2">
+        <button class="btn btn-outline flex-1" onclick="window.SkillBridge.closeLogoutModal()">Cancel</button>
+        <button class="btn btn-primary flex-1" onclick="window.SkillBridge.confirmLogout()">Confirm Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack -->
+  <div id="toast-container" class="toast-stack-container" aria-live="assertive"></div>
+
+  <!-- Application Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/naukri_data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

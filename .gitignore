@@ -1,0 +1,14 @@
+# Ignore MySQL binary database folder (huge 170MB internal files)
+backend/db_data/
+db_data/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.env.local
+
+# Operating System files
+Thumbs.db
+Desktop.ini
+.DS_Store

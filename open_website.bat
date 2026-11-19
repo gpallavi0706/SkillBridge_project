@@ -1,0 +1,3 @@
+@echo off
+echo Opening SkillBridge in your default browser...
+start "" "%~dp0index.html"

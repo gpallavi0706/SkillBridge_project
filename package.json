@@ -1,0 +1,19 @@
+{
+  "name": "skillbridge",
+  "version": "1.0.0",
+  "description": "Interactive Student Opportunities Website - Bridging Skills, Internships, Hackathons, and Mentorship",
+  "main": "index.html",
+  "scripts": {
+    "start": "powershell -ExecutionPolicy Bypass -File serve.ps1"
+  },
+  "keywords": [
+    "students",
+    "opportunities",
+    "internships",
+    "hackathons",
+    "open-source",
+    "skill-matching"
+  ],
+  "author": "SkillBridge Contributors",
+  "license": "MIT"
+}
