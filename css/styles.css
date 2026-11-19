@@ -1828,15 +1828,15 @@ body.dark-theme .chatbot-messages-area {
 }
 
 /* ========================================================
-   COSMIC SPACE THEME & GLASSMORPHISM ENHANCEMENTS
+   CAREER TRAJECTORY FLOW - GESTALT GROWTH MOMENTUM
+   Clean, modern deep slate background with periwinkle vector gradients
    ======================================================== */
 body {
-  background-color: #060914 !important;
+  background-color: #0b0f19 !important;
   background-image: 
-    radial-gradient(circle at 18% 22%, rgba(56, 189, 248, 0.16) 0%, transparent 45%),
-    radial-gradient(circle at 82% 70%, rgba(168, 85, 247, 0.18) 0%, transparent 50%),
-    radial-gradient(circle at 50% 12%, rgba(99, 102, 241, 0.14) 0%, transparent 55%),
-    url('../images/space-bg.jpg') !important;
+    radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 65%),
+    radial-gradient(circle at 12% 85%, rgba(129, 140, 248, 0.14) 0%, transparent 55%),
+    radial-gradient(circle at 88% 65%, rgba(79, 70, 229, 0.16) 0%, transparent 60%) !important;
   background-attachment: fixed !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -2083,8 +2083,10 @@ body {
 }
 
 /* ========================================================
-   PEER NETWORK CONSTELLATION CANVAS
+   CAREER TRAJECTORY FLOW: UPWARD PERIWINKLE WAVE VECTORS
+   Gestalt Growth Momentum: Continuous upward vector currents
    ======================================================== */
+#trajectory-canvas,
 #constellation-canvas {
   position: fixed;
   top: 0;
@@ -2098,8 +2100,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  #trajectory-canvas,
   #constellation-canvas {
-    opacity: 0.65 !important;
+    opacity: 0.75 !important;
   }
 }
 
@@ -2118,12 +2121,12 @@ body {
   align-items: center;
   gap: 0.45rem;
   padding: 0.35rem 0.85rem;
-  background: rgba(14, 165, 233, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(129, 140, 248, 0.14);
+  border: 1px solid rgba(165, 180, 252, 0.45);
   border-radius: var(--radius-full);
   font-size: 0.78rem;
-  color: #38bdf8;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.18);
+  color: #a5b4fc;
+  box-shadow: 0 0 14px rgba(129, 140, 248, 0.22);
   transition: all 0.2s ease;
 }
 
@@ -2132,14 +2135,14 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 8px #38bdf8;
-  animation: constellationPulse 1.8s infinite ease-in-out;
+  background: #818cf8;
+  box-shadow: 0 0 10px #818cf8;
+  animation: periwinklePulse 2s infinite ease-in-out;
 }
 
-@keyframes constellationPulse {
+@keyframes periwinklePulse {
   0% { transform: scale(0.9); opacity: 0.7; }
-  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 14px #38bdf8; }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 16px #a5b4fc; }
   100% { transform: scale(0.9); opacity: 0.7; }
 }
 
