@@ -7,7 +7,10 @@ echo ========================================================
 echo.
 
 cd /d "%~dp0"
-echo Uploading project files (10,000+ jobs, space theme, backend)...
+echo Staging and committing any recent updates...
+git add -A
+git commit -m "Update SkillBridge: Career Trajectory Flow periwinkle background, Quick View modal, verified links" 2>nul
+echo Uploading project files to GitHub...
 git push -u origin main --force
 
 echo.
