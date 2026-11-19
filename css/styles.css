@@ -2109,11 +2109,68 @@ body {
 /* Foreground elements stay clickable and above canvas */
 .landing-wrapper,
 .app-shell-layout,
-.app-layout-shell,
-.modal-container,
-.chatbot-floating-widget {
+.app-layout-shell {
   position: relative;
   z-index: 2;
+}
+
+/* Modals must ALWAYS be fixed to the viewport with high z-index */
+.modal-container {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.modal-container.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(6, 10, 22, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 99998 !important;
+}
+
+.modal-card {
+  position: relative !important;
+  z-index: 100000 !important;
+  background: rgba(13, 20, 38, 0.96) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(147, 197, 253, 0.25) !important;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.75), 0 0 35px rgba(129, 140, 248, 0.2) !important;
+  border-radius: var(--radius-lg);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.chatbot-floating-widget {
+  position: fixed !important;
+  bottom: 1.5rem !important;
+  right: 1.5rem !important;
+  z-index: 9990 !important;
 }
 
 .network-status-badge {

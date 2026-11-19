@@ -2033,8 +2033,17 @@ ORDER BY total_offers DESC, gpa DESC;`,
 
   // Open Opportunity Details Quick View Popup
   openOppDetailsModal(oppId) {
-    const opp = this.opportunities.find(o => o.id === oppId);
-    if (!opp) return;
+    let opp = this.opportunities.find(o => String(o.id) === String(oppId));
+    if (!opp && window.SkillBridgeNaukriJobs) {
+      opp = window.SkillBridgeNaukriJobs.find(o => String(o.id) === String(oppId));
+    }
+    if (!opp && window.SkillBridgeData && window.SkillBridgeData.opportunities) {
+      opp = window.SkillBridgeData.opportunities.find(o => String(o.id) === String(oppId));
+    }
+    if (!opp) {
+      console.warn('[SkillBridge] Opportunity not found for ID:', oppId);
+      return;
+    }
 
     this.currentModalOpp = opp;
 
@@ -2054,8 +2063,8 @@ ORDER BY total_offers DESC, gpa DESC;`,
     const skillsList = document.getElementById('detail-skills-list');
     const applyLink = document.getElementById('detail-apply-link');
 
-    if (titleEl) titleEl.textContent = opp.title;
-    if (orgEl) orgEl.textContent = opp.organization;
+    if (titleEl) titleEl.textContent = opp.title || 'Student Opportunity';
+    if (orgEl) orgEl.textContent = opp.organization || 'Verified Partner';
     if (avatarEl) avatarEl.textContent = (opp.organization || 'G').charAt(0).toUpperCase();
 
     // Configure verified company website link
@@ -2099,6 +2108,11 @@ ORDER BY total_offers DESC, gpa DESC;`,
 
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
+    modal.style.display = 'flex';
+    modal.style.opacity = '1';
+    modal.style.visibility = 'visible';
+    modal.style.pointerEvents = 'auto';
+    document.body.style.overflow = 'hidden';
   }
 
   closeOppDetailsModal() {
@@ -2106,6 +2120,11 @@ ORDER BY total_offers DESC, gpa DESC;`,
     if (modal) {
       modal.classList.remove('active');
       modal.setAttribute('aria-hidden', 'true');
+      modal.style.display = '';
+      modal.style.opacity = '';
+      modal.style.visibility = '';
+      modal.style.pointerEvents = '';
+      document.body.style.overflow = '';
     }
   }
 

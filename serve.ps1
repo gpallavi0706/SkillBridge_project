@@ -1,6 +1,10 @@
 # SkillBridge - Local Lightweight Web Server
 # Uses standard Windows .NET HttpListener (zero external dependencies required)
 
+$currentDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
+if (-not $currentDir) { $currentDir = Get-Location }
+Set-Location $currentDir
+
 $port = 3000
 $prefix = "http://localhost:$port/"
 $listener = New-Object System.Net.HttpListener
