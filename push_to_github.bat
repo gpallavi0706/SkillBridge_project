@@ -7,15 +7,17 @@ echo ========================================================
 echo.
 
 cd /d "%~dp0"
-git push -u origin main
+echo Uploading project files (10,000+ jobs, space theme, backend)...
+git push -u origin main --force
 
 echo.
 if %ERRORLEVEL% EQU 0 (
     echo ========================================================
-    echo   SUCCESS! Pushed to https://github.com/gpallavi0706/SkillBridge_project
+    echo   SUCCESS! Everything is now live on your GitHub!
+    echo   Check: https://github.com/gpallavi0706/SkillBridge_project
     echo ========================================================
 ) else (
-    echo [!] If prompted, please sign in with your GitHub account in the browser popup.
+    echo [!] If there was an error, please check your internet connection or terminal message.
 )
 echo.
 pause
