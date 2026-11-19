@@ -20,11 +20,15 @@ class SkillBridgeApp {
     };
     this.pendingApplyOpp = null;
     this.currentDbmsTopic = 1;
+    this.hackathonTeams = [];
+    this.teammatesSubTab = 'teams'; // 'teams' | 'peers'
+    this.constellationAnimId = null;
   }
 
   init() {
     // Default to cosmic dark space theme
     document.body.classList.add('dark-theme');
+    this.initConstellationCanvas();
     this.loadState();
     this.bindGlobalEvents();
     this.setupAuthWatcher();
@@ -167,16 +171,43 @@ class SkillBridgeApp {
         this.saveStudentState();
       }
 
+      // Ensure LinkedIn profile link is available
+      if (this.studentData && !this.studentData.linkedinUrl) {
+        this.studentData.linkedinUrl = (SkillBridgeData.defaultStudent && SkillBridgeData.defaultStudent.linkedinUrl) || 'https://www.linkedin.com/in/alex-chen-2026';
+      }
+
       // Base opportunities merged with 10,240 authentic Naukri & LinkedIn tech jobs
       let allOpps = JSON.parse(JSON.stringify(SkillBridgeData.opportunities || []));
       if (window.SkillBridgeNaukriJobs && Array.isArray(window.SkillBridgeNaukriJobs)) {
         allOpps = allOpps.concat(window.SkillBridgeNaukriJobs);
       }
       this.opportunities = allOpps;
+
+      // Load Hackathon Teams state (persisting user-created or joined teams)
+      const savedTeams = localStorage.getItem('skillbridge_hackathon_teams');
+      if (savedTeams) {
+        try {
+          this.hackathonTeams = JSON.parse(savedTeams);
+        } catch (e) {
+          this.hackathonTeams = JSON.parse(JSON.stringify(SkillBridgeData.hackathonTeams || []));
+        }
+      } else {
+        this.hackathonTeams = JSON.parse(JSON.stringify(SkillBridgeData.hackathonTeams || []));
+        this.saveHackathonTeamsState();
+      }
     } catch (e) {
       console.error('Error initializing opportunities, reverting to defaults:', e);
       this.studentData = JSON.parse(JSON.stringify(SkillBridgeData.defaultStudent));
       this.opportunities = JSON.parse(JSON.stringify(SkillBridgeData.opportunities));
+      this.hackathonTeams = JSON.parse(JSON.stringify(SkillBridgeData.hackathonTeams || []));
+    }
+  }
+
+  saveHackathonTeamsState() {
+    try {
+      localStorage.setItem('skillbridge_hackathon_teams', JSON.stringify(this.hackathonTeams));
+    } catch (e) {
+      console.warn('Could not save hackathon teams to localStorage:', e);
     }
   }
 
@@ -209,6 +240,186 @@ class SkillBridgeApp {
         this.navigateTo('welcome');
       }
     });
+  }
+
+  // 1. Peer Network Constellation Interactive Canvas Background
+  initConstellationCanvas() {
+    const canvas = document.getElementById('constellation-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Responsive node count based on screen width
+    const nodeCount = Math.max(26, Math.min(50, Math.floor(width / 34)));
+
+    // Collegiate peer identities representing Alex's student network
+    const peerLabels = [
+      'Alex (You)', 'Priya S.', 'Marcus V.', 'Elena R.', 'David K.', 'Aisha P.',
+      'Liam O.', 'Sophia W.', 'Chen L.', 'Rahul M.', 'Zoe T.', 'Lucas B.'
+    ];
+
+    const nodes = [];
+    for (let i = 0; i < nodeCount; i++) {
+      const isLead = i < peerLabels.length;
+      nodes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.42,
+        vy: (Math.random() - 0.5) * 0.42,
+        radius: i === 0 ? 3.6 : (isLead ? 2.6 : Math.random() * 1.5 + 1.2),
+        label: isLead ? peerLabels[i] : null,
+        isUser: i === 0,
+        color: i === 0 ? '#38bdf8' : (isLead ? '#818cf8' : '#94a3b8'),
+        alpha: isLead ? 0.75 : 0.38
+      });
+    }
+
+    let mouse = { x: -1000, y: -1000, active: false };
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.active = true;
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      mouse.active = false;
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    const drawStatic = () => {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 125) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 125) * 0.18})`;
+            ctx.lineWidth = 0.8;
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      for (const n of nodes) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+        ctx.fillStyle = n.color;
+        ctx.globalAlpha = n.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+        if (n.label) {
+          ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+          ctx.fillStyle = n.isUser ? '#38bdf8' : '#cbd5e1';
+          ctx.fillText(n.label, n.x + 6, n.y + 3);
+        }
+      }
+    };
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      if (prefersReducedMotion) drawStatic();
+    }, { passive: true });
+
+    if (prefersReducedMotion) {
+      drawStatic();
+      return;
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Node physics and connections
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        n1.x += n1.vx;
+        n1.y += n1.vy;
+
+        if (n1.x < 0 || n1.x > width) n1.vx *= -1;
+        if (n1.y < 0 || n1.y > height) n1.vy *= -1;
+
+        // Mouse connection threads
+        if (mouse.active) {
+          const mdx = mouse.x - n1.x;
+          const mdy = mouse.y - n1.y;
+          const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+          if (mdist < 145) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - mdist / 145) * 0.35})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+
+        // Inter-node network constellation lines
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const dx = n1.x - n2.x;
+          const dy = n1.y - n2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 125) {
+            const alpha = (1 - dist / 125) * 0.22;
+            ctx.beginPath();
+            ctx.strokeStyle = (n1.isUser || n2.isUser)
+              ? `rgba(56, 189, 248, ${alpha * 1.5})`
+              : `rgba(129, 140, 248, ${alpha})`;
+            ctx.lineWidth = (n1.isUser || n2.isUser) ? 1.1 : 0.75;
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw node dots & labels
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+
+        if (n.isUser) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.radius + 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.22)';
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+        ctx.fillStyle = n.color;
+        ctx.globalAlpha = n.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+
+        if (n.label) {
+          ctx.font = (n.isUser ? 'bold 11px' : '10px') + ' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+          ctx.fillStyle = n.isUser ? '#38bdf8' : 'rgba(203, 213, 225, 0.72)';
+          ctx.fillText(n.label, n.x + 7, n.y + 3);
+        }
+      }
+
+      this.constellationAnimId = requestAnimationFrame(animate);
+    };
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (this.constellationAnimId) cancelAnimationFrame(this.constellationAnimId);
+      } else {
+        if (!prefersReducedMotion) this.constellationAnimId = requestAnimationFrame(animate);
+      }
+    });
+
+    this.constellationAnimId = requestAnimationFrame(animate);
   }
 
   initChatbot() {
@@ -463,6 +674,28 @@ class SkillBridgeApp {
       rolesContainer.innerHTML = (student.preferences.targetRoles || []).map(r => `
         <span class="badge badge-primary"><i class="ph ph-briefcase"></i> ${this.escape(r)}</span>
       `).join('');
+    }
+
+    // Render Clickable LinkedIn Profile Link
+    const linkedinContainer = document.getElementById('prof-linkedin-wrapper');
+    if (linkedinContainer) {
+      const url = student.linkedinUrl || (student.links && student.links.linkedin);
+      if (url && url.trim()) {
+        linkedinContainer.innerHTML = `
+          <a href="${this.escape(url)}" target="_blank" rel="noopener noreferrer" class="badge-linkedin" title="Open verified LinkedIn profile">
+            <i class="ph ph-linkedin-logo"></i> LinkedIn Profile <i class="ph ph-arrow-square-out text-xs"></i>
+          </a>
+          <button class="btn btn-xs btn-ghost text-muted p-1" onclick="window.SkillBridge.openLinkedInModal()" title="Edit LinkedIn Link">
+            <i class="ph ph-pencil-simple"></i>
+          </button>
+        `;
+      } else {
+        linkedinContainer.innerHTML = `
+          <button class="btn btn-xs btn-outline flex items-center gap-1 text-xs" onclick="window.SkillBridge.openLinkedInModal()">
+            <i class="ph ph-plus"></i> Add LinkedIn Profile
+          </button>
+        `;
+      }
     }
   }
 
@@ -750,8 +983,149 @@ class SkillBridgeApp {
     container.innerHTML = scored.map(opp => this.createOpportunityCardHtml(opp, false, true)).join('');
   }
 
-  // 7. Teammates View
+  // 7. Teammates & Hackathon Teams View
   renderTeammates() {
+    this.renderHackathonTeams();
+    this.renderIndividualPeers();
+
+    // Update counts
+    const teamsCountEl = document.getElementById('hackathon-teams-count');
+    if (teamsCountEl) teamsCountEl.textContent = (this.hackathonTeams || []).length;
+
+    const peersCountEl = document.getElementById('individual-peers-count');
+    if (peersCountEl) peersCountEl.textContent = (SkillBridgeData.teammates || []).length;
+  }
+
+  switchTeammatesTab(tabName) {
+    this.teammatesSubTab = tabName;
+    const subTeams = document.getElementById('subpanel-hackathon-teams');
+    const subPeers = document.getElementById('subpanel-individual-peers');
+    const btnTeams = document.getElementById('tab-sub-teams');
+    const btnPeers = document.getElementById('tab-sub-peers');
+
+    if (tabName === 'teams') {
+      if (subTeams) subTeams.classList.remove('hidden');
+      if (subPeers) subPeers.classList.add('hidden');
+      if (btnTeams) {
+        btnTeams.classList.remove('btn-outline');
+        btnTeams.classList.add('btn-primary');
+      }
+      if (btnPeers) {
+        btnPeers.classList.remove('btn-primary');
+        btnPeers.classList.add('btn-outline');
+      }
+    } else {
+      if (subTeams) subTeams.classList.add('hidden');
+      if (subPeers) subPeers.classList.remove('hidden');
+      if (btnPeers) {
+        btnPeers.classList.remove('btn-outline');
+        btnPeers.classList.add('btn-primary');
+      }
+      if (btnTeams) {
+        btnTeams.classList.remove('btn-primary');
+        btnTeams.classList.add('btn-outline');
+      }
+    }
+  }
+
+  renderHackathonTeams(teamsToRender = null) {
+    const container = document.getElementById('hackathon-teams-grid');
+    if (!container) return;
+
+    const teams = teamsToRender || this.hackathonTeams || [];
+    if (teams.length === 0) {
+      container.innerHTML = `
+        <div class="panel-card text-center py-8" style="grid-column: 1 / -1;">
+          <i class="ph ph-users-three text-muted text-3xl mb-2"></i>
+          <h4 class="font-bold text-sm">No Hackathon Teams Found</h4>
+          <p class="text-xs text-muted mb-3">Be the first to create a collegiate squad for upcoming hackathons!</p>
+          <button class="btn btn-primary btn-sm" onclick="window.SkillBridge.openCreateTeamModal()">
+            <i class="ph ph-plus"></i> Create Hackathon Team
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    const currentUserName = (this.studentData && this.studentData.name) || 'Alex Chen';
+
+    container.innerHTML = teams.map(team => {
+      const openSpots = Math.max(0, team.maxSize - (team.members || []).length);
+      const isMember = (team.members || []).some(m => m.name.toLowerCase() === currentUserName.toLowerCase() || m.isUser);
+
+      let actionBtnHtml = '';
+      if (isMember) {
+        actionBtnHtml = `
+          <button class="btn btn-outline btn-sm flex-1 text-danger" onclick="window.SkillBridge.leaveHackathonTeam('${team.id}')" title="Leave this team">
+            <i class="ph ph-sign-out"></i> Leave Team
+          </button>
+          <span class="badge badge-primary flex items-center gap-1"><i class="ph ph-check"></i> Joined</span>
+        `;
+      } else if (openSpots > 0) {
+        actionBtnHtml = `
+          <button class="btn btn-primary btn-sm w-full" onclick="window.SkillBridge.joinHackathonTeam('${team.id}')">
+            <i class="ph ph-user-plus"></i> Join Team (${openSpots} spot${openSpots > 1 ? 's' : ''} left)
+          </button>
+        `;
+      } else {
+        actionBtnHtml = `
+          <button class="btn btn-outline btn-sm w-full opacity-50 cursor-not-allowed" disabled>
+            <i class="ph ph-lock-key"></i> Team Full (${team.maxSize}/${team.maxSize})
+          </button>
+        `;
+      }
+
+      return `
+        <div class="team-card">
+          <div>
+            <div class="team-card-header">
+              <div>
+                <h3 class="team-name">${this.escape(team.name)}</h3>
+                <div class="team-hackathon-name">
+                  <i class="ph ph-trophy text-amber-400"></i> ${this.escape(team.hackathon)}
+                </div>
+              </div>
+              <span class="team-open-badge ${openSpots === 0 ? 'full' : ''}">
+                <i class="ph ${openSpots > 0 ? 'ph-sparkle' : 'ph-users'}"></i>
+                ${openSpots > 0 ? `${openSpots} of ${team.maxSize} Spots Open` : 'Team Full'}
+              </span>
+            </div>
+
+            <div class="team-pitch-box">
+              <span class="font-semibold text-primary block text-xs mb-0.5"><i class="ph ph-lightbulb"></i> Project Pitch:</span>
+              ${this.escape(team.pitch)}
+            </div>
+
+            <div class="team-section-title">Current Squad (${(team.members || []).length}/${team.maxSize})</div>
+            <div class="team-members-list">
+              ${(team.members || []).map(m => `
+                <div class="team-member-item">
+                  <div class="team-member-left">
+                    <div class="team-member-avatar" style="background-color: ${m.avatarColor || '#3b82f6'};">${this.escape(m.initials || m.name.charAt(0))}</div>
+                    <div>
+                      <div class="team-member-name">${this.escape(m.name)}${m.name.toLowerCase() === currentUserName.toLowerCase() || m.isUser ? ' (You)' : ''}</div>
+                      <div class="team-member-role">${this.escape(m.role || 'Member')}</div>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="team-section-title">Skills Sought</div>
+            <div class="team-skills-wrap">
+              ${(team.skillsSought || []).map(s => `<span class="skill-tag skill-tag-sm">${this.escape(s)}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="team-card-actions">
+            ${actionBtnHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  renderIndividualPeers() {
     const container = document.getElementById('teammates-grid');
     if (!container) return;
 
@@ -787,12 +1161,292 @@ class SkillBridgeApp {
     `).join('');
   }
 
+  filterHackathonTeams() {
+    const searchInput = document.getElementById('team-search-input');
+    const hackathonSelect = document.getElementById('team-hackathon-select');
+    const openSpotsOnly = document.getElementById('team-open-spots-only');
+
+    const search = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    const hackathon = hackathonSelect ? hackathonSelect.value : 'all';
+    const spotsOnly = openSpotsOnly ? openSpotsOnly.checked : false;
+
+    const filtered = (this.hackathonTeams || []).filter(team => {
+      // Search text
+      if (search) {
+        const inName = team.name.toLowerCase().includes(search);
+        const inPitch = team.pitch.toLowerCase().includes(search);
+        const inSkills = (team.skillsSought || []).some(s => s.toLowerCase().includes(search));
+        if (!inName && !inPitch && !inSkills) return false;
+      }
+
+      // Hackathon filter
+      if (hackathon !== 'all') {
+        if (team.hackathon !== hackathon) return false;
+      }
+
+      // Open spots
+      if (spotsOnly) {
+        const spots = team.maxSize - (team.members || []).length;
+        if (spots <= 0) return false;
+      }
+
+      return true;
+    });
+
+    this.renderHackathonTeams(filtered);
+  }
+
+  openCreateTeamModal() {
+    const modal = document.getElementById('create-team-modal');
+    if (modal) {
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      const nameInput = document.getElementById('new-team-name');
+      if (nameInput) setTimeout(() => nameInput.focus(), 100);
+    }
+  }
+
+  closeCreateTeamModal() {
+    const modal = document.getElementById('create-team-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  submitCreateTeam(e) {
+    if (e) e.preventDefault();
+    const nameEl = document.getElementById('new-team-name');
+    const hackathonEl = document.getElementById('new-team-hackathon');
+    const pitchEl = document.getElementById('new-team-pitch');
+    const maxSizeEl = document.getElementById('new-team-max-size');
+    const leadRoleEl = document.getElementById('new-team-lead-role');
+    const skillsEl = document.getElementById('new-team-skills');
+
+    const name = nameEl ? nameEl.value.trim() : '';
+    const hackathon = hackathonEl ? hackathonEl.value : 'Smart India Hackathon 2026';
+    const pitch = pitchEl ? pitchEl.value.trim() : '';
+    const maxSize = maxSizeEl ? parseInt(maxSizeEl.value, 10) : 4;
+    const leadRole = leadRoleEl && leadRoleEl.value.trim() ? leadRoleEl.value.trim() : 'Frontend & UI Lead';
+    const skills = skillsEl ? skillsEl.value.split(',').map(s => s.trim()).filter(Boolean) : ['React', 'TypeScript'];
+
+    if (!name || !pitch) {
+      this.showToast('Please provide a team name and project pitch.', 'error');
+      return;
+    }
+
+    const currentUserName = (this.studentData && this.studentData.name) || 'Alex Chen';
+
+    const newTeam = {
+      id: `team-${Date.now()}`,
+      name,
+      hackathon,
+      hackathonSlug: hackathon.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      pitch,
+      lead: currentUserName,
+      maxSize,
+      skillsSought: skills,
+      members: [
+        {
+          name: currentUserName,
+          role: leadRole,
+          avatarColor: '#38bdf8',
+          initials: 'AC',
+          isUser: true
+        }
+      ],
+      deadline: '2026 Rolling Registration',
+      status: 'Recruiting'
+    };
+
+    this.hackathonTeams.unshift(newTeam);
+    this.saveHackathonTeamsState();
+    this.closeCreateTeamModal();
+
+    if (nameEl) nameEl.value = '';
+    if (pitchEl) pitchEl.value = '';
+    if (skillsEl) skillsEl.value = '';
+
+    this.showToast(`Team "${name}" successfully registered for ${hackathon}!`, 'success');
+    this.renderHackathonTeams();
+
+    const teamsCountEl = document.getElementById('hackathon-teams-count');
+    if (teamsCountEl) teamsCountEl.textContent = this.hackathonTeams.length;
+  }
+
+  joinHackathonTeam(teamId) {
+    const team = (this.hackathonTeams || []).find(t => t.id === teamId);
+    if (!team) return;
+
+    const currentUserName = (this.studentData && this.studentData.name) || 'Alex Chen';
+    const isMember = (team.members || []).some(m => m.name.toLowerCase() === currentUserName.toLowerCase() || m.isUser);
+
+    if (isMember) {
+      this.showToast(`You are already a member of ${team.name}.`, 'info');
+      return;
+    }
+
+    const openSpots = team.maxSize - team.members.length;
+    if (openSpots <= 0) {
+      this.showToast(`Sorry, ${team.name} is already full.`, 'error');
+      return;
+    }
+
+    team.members.push({
+      name: currentUserName,
+      role: 'Full-Stack Developer',
+      avatarColor: '#38bdf8',
+      initials: 'AC',
+      isUser: true
+    });
+
+    this.saveHackathonTeamsState();
+    this.showToast(`You have joined ${team.name} for ${team.hackathon}!`, 'success');
+    this.renderHackathonTeams();
+  }
+
+  leaveHackathonTeam(teamId) {
+    const team = (this.hackathonTeams || []).find(t => t.id === teamId);
+    if (!team) return;
+
+    const currentUserName = (this.studentData && this.studentData.name) || 'Alex Chen';
+    team.members = (team.members || []).filter(m => m.name.toLowerCase() !== currentUserName.toLowerCase() && !m.isUser);
+
+    this.saveHackathonTeamsState();
+    this.showToast(`You left ${team.name}.`, 'info');
+    this.renderHackathonTeams();
+  }
+
+  // LinkedIn Profile Settings & Validation
+  validateLinkedInUrl(url) {
+    if (!url || !url.trim()) return { isValid: false, isEmpty: true };
+    const cleaned = url.trim();
+    const regex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_\-\u0080-\uffff]+\/?$/i;
+    if (!regex.test(cleaned)) {
+      return {
+        isValid: false,
+        error: 'Please enter a valid LinkedIn URL (e.g., https://www.linkedin.com/in/username)'
+      };
+    }
+    const formatted = cleaned.startsWith('http') ? cleaned : `https://${cleaned}`;
+    return { isValid: true, formattedUrl: formatted };
+  }
+
+  saveLinkedInSettings() {
+    const input = document.getElementById('setting-linkedin-input');
+    const msg = document.getElementById('setting-linkedin-msg');
+    if (!input) return;
+
+    const rawUrl = input.value.trim();
+    if (!rawUrl) {
+      this.removeLinkedInSettings();
+      return;
+    }
+
+    const validation = this.validateLinkedInUrl(rawUrl);
+    if (!validation.isValid) {
+      if (msg) {
+        msg.textContent = validation.error;
+        msg.className = 'text-xs text-danger mt-1 block';
+      }
+      this.showToast(validation.error, 'error');
+      return;
+    }
+
+    this.studentData.linkedinUrl = validation.formattedUrl;
+    if (!this.studentData.links) this.studentData.links = {};
+    this.studentData.links.linkedin = validation.formattedUrl;
+    this.saveStudentState();
+
+    if (msg) {
+      msg.textContent = '✓ Verified LinkedIn profile saved!';
+      msg.className = 'text-xs text-emerald-400 mt-1 block';
+    }
+
+    this.showToast('LinkedIn profile link saved and verified!', 'success');
+    this.renderProfile();
+  }
+
+  removeLinkedInSettings() {
+    const input = document.getElementById('setting-linkedin-input');
+    const msg = document.getElementById('setting-linkedin-msg');
+    if (input) input.value = '';
+
+    this.studentData.linkedinUrl = '';
+    if (this.studentData.links) this.studentData.links.linkedin = '';
+    this.saveStudentState();
+
+    if (msg) {
+      msg.textContent = 'LinkedIn link removed.';
+      msg.className = 'text-xs text-muted mt-1 block';
+    }
+
+    this.showToast('LinkedIn profile link removed.', 'info');
+    this.renderProfile();
+  }
+
+  openLinkedInModal() {
+    const modal = document.getElementById('edit-linkedin-modal');
+    if (!modal) return;
+    const input = document.getElementById('modal-linkedin-url');
+    if (input) {
+      input.value = this.studentData.linkedinUrl || (this.studentData.links && this.studentData.links.linkedin) || '';
+      setTimeout(() => input.focus(), 100);
+    }
+    const errBox = document.getElementById('modal-linkedin-error');
+    if (errBox) errBox.classList.add('hidden');
+    modal.classList.add('active');
+  }
+
+  closeLinkedInModal() {
+    const modal = document.getElementById('edit-linkedin-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  submitQuickLinkedIn(e) {
+    if (e) e.preventDefault();
+    const input = document.getElementById('modal-linkedin-url');
+    const errBox = document.getElementById('modal-linkedin-error');
+    if (!input) return;
+
+    const raw = input.value.trim();
+    if (raw) {
+      const validation = this.validateLinkedInUrl(raw);
+      if (!validation.isValid) {
+        if (errBox) {
+          errBox.textContent = validation.error;
+          errBox.classList.remove('hidden');
+        }
+        return;
+      }
+      this.studentData.linkedinUrl = validation.formattedUrl;
+      if (!this.studentData.links) this.studentData.links = {};
+      this.studentData.links.linkedin = validation.formattedUrl;
+      this.showToast('LinkedIn profile updated!', 'success');
+    } else {
+      this.studentData.linkedinUrl = '';
+      if (this.studentData.links) this.studentData.links.linkedin = '';
+      this.showToast('LinkedIn profile cleared.', 'info');
+    }
+
+    this.saveStudentState();
+    this.closeLinkedInModal();
+    this.renderProfile();
+    this.renderSettings();
+  }
+
   // 8. Settings View
   renderSettings() {
     // Sync current dark theme toggle
     const themeToggle = document.getElementById('setting-theme-toggle');
     if (themeToggle) {
       themeToggle.checked = document.body.classList.contains('dark-theme');
+    }
+
+    // Sync LinkedIn setting input
+    const linkedinInput = document.getElementById('setting-linkedin-input');
+    if (linkedinInput) {
+      linkedinInput.value = this.studentData.linkedinUrl || (this.studentData.links && this.studentData.links.linkedin) || '';
     }
   }
 
@@ -1145,12 +1799,36 @@ ORDER BY total_offers DESC, gpa DESC;`,
     };
   }
 
+  // Get verified company official website (100% real verified URLs; null if unconfirmed)
+  getVerifiedCompanyUrl(orgName) {
+    if (!orgName) return null;
+    const clean = orgName.trim().toLowerCase()
+      .replace(/\s+(inc\.?|llc\.?|ltd\.?|pvt\.?|corporation|corp\.?|technologies|solutions)$/i, '')
+      .trim();
+
+    const dir = (SkillBridgeData && SkillBridgeData.verifiedCompanies) || {};
+    if (dir[clean]) return dir[clean];
+    if (dir[orgName.toLowerCase()]) return dir[orgName.toLowerCase()];
+
+    // Substring lookup for known multi-word brands (e.g. "Google India", "Amazon Web Services")
+    for (const key of Object.keys(dir)) {
+      if (clean.includes(key) || key.includes(clean)) {
+        return dir[key];
+      }
+    }
+    return null;
+  }
+
   /* ========================================================
      CARD TEMPLATE GENERATOR
      ======================================================== */
   createOpportunityCardHtml(opp, isMini = false, showMatchBar = false) {
     const isSaved = (this.studentData.savedOpportunityIds || []).includes(opp.id);
     const matchScore = opp.matchScore || this.calculateMatchScore(opp);
+    const verifiedUrl = this.getVerifiedCompanyUrl(opp.organization);
+    const companyLinkHtml = verifiedUrl
+      ? `<a href="${verifiedUrl}" target="_blank" rel="noopener noreferrer" class="company-view-link" title="Visit verified official website of ${this.escape(opp.organization)}" onclick="event.stopPropagation();"><i class="ph ph-arrow-square-out"></i> View</a>`
+      : `<span class="company-view-link disabled" title="Official link unavailable" onclick="event.stopPropagation();"><i class="ph ph-link-break"></i> Unavailable</span>`;
 
     return `
       <article class="opportunity-card ${opp.featured ? 'featured-card' : ''}" data-id="${opp.id}">
@@ -1169,7 +1847,10 @@ ORDER BY total_offers DESC, gpa DESC;`,
         </div>
 
         <h3 class="opp-title" style="cursor: pointer;" onclick="window.SkillBridge.openOppDetailsModal('${opp.id}')" title="Click to view details">${this.escape(opp.title)}</h3>
-        <div class="opp-organization"><i class="ph ph-buildings"></i> ${this.escape(opp.organization)}</div>
+        <div class="opp-organization flex items-center justify-between" style="display: flex; align-items: center; justify-content: space-between;">
+          <span><i class="ph ph-buildings"></i> ${this.escape(opp.organization)}</span>
+          ${companyLinkHtml}
+        </div>
         <div class="opp-location text-xs text-muted"><i class="ph ph-globe"></i> ${this.escape(opp.location)}</div>
 
         ${showMatchBar ? `
@@ -1290,6 +1971,29 @@ ORDER BY total_offers DESC, gpa DESC;`,
     if (titleEl) titleEl.textContent = opp.title;
     if (orgEl) orgEl.textContent = opp.organization;
     if (avatarEl) avatarEl.textContent = (opp.organization || 'G').charAt(0).toUpperCase();
+
+    // Configure verified company website link
+    const verifiedCompanyUrl = this.getVerifiedCompanyUrl(opp.organization);
+    const orgLinkEl = document.getElementById('detail-org-link');
+    if (orgLinkEl) {
+      if (verifiedCompanyUrl) {
+        orgLinkEl.href = verifiedCompanyUrl;
+        orgLinkEl.target = '_blank';
+        orgLinkEl.rel = 'noopener noreferrer';
+        orgLinkEl.innerHTML = `<i class="ph ph-buildings"></i> Visit Official Site <i class="ph ph-arrow-square-out text-xs"></i>`;
+        orgLinkEl.className = 'btn btn-xs btn-outline';
+        orgLinkEl.style.display = 'inline-flex';
+        orgLinkEl.removeAttribute('title');
+        orgLinkEl.onclick = null;
+      } else {
+        orgLinkEl.href = '#';
+        orgLinkEl.innerHTML = `<i class="ph ph-link-break"></i> Official Site Unavailable`;
+        orgLinkEl.className = 'btn btn-xs btn-outline disabled opacity-50 cursor-not-allowed';
+        orgLinkEl.title = 'Official link cannot be confirmed';
+        orgLinkEl.onclick = (e) => { e.preventDefault(); return false; };
+        orgLinkEl.style.display = 'inline-flex';
+      }
+    }
     if (catBadge) catBadge.textContent = opp.category || 'Tech Opportunity';
     if (locEl) locEl.innerHTML = `<i class="ph ph-map-pin"></i> ${this.escape(opp.location || 'Remote')}`;
     if (salEl) salEl.textContent = opp.stipend || 'Competitive Package';

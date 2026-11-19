@@ -11,6 +11,9 @@
 </head>
 <body>
 
+  <!-- Peer Network Constellation Interactive Canvas Background -->
+  <canvas id="constellation-canvas" aria-hidden="true"></canvas>
+
   <!-- ========================================================
        1. WELCOME / LANDING PAGE VIEW
        ======================================================== -->
@@ -545,16 +548,65 @@
         </section>
 
         <!-- ========================================================
-             VIEW 6: TEAMMATES FINDER
+             VIEW 6: TEAMMATES & HACKATHON TEAMS
              ======================================================== -->
         <section id="view-teammates" class="app-view-panel hidden" aria-labelledby="teammates-heading">
-          <div class="mb-4">
-            <h2 id="teammates-heading" class="text-xl font-bold">Student Teammate Collaboration</h2>
-            <p class="text-muted text-sm">Connect with collegiate builders looking for partners in premier hackathons and open-source programs.</p>
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 id="teammates-heading" class="text-xl font-bold flex items-center gap-2">
+                <i class="ph ph-users-three text-primary"></i> Hackathon Teams & Teammates
+              </h2>
+              <p class="text-muted text-sm">Browse collegiate hackathon teams, find teammates with complementary skills, or create your own squad.</p>
+            </div>
+            <button class="btn btn-primary btn-sm flex items-center gap-1.5 self-start md:self-auto" onclick="window.SkillBridge.openCreateTeamModal()">
+              <i class="ph ph-plus-circle"></i> Create Hackathon Team
+            </button>
           </div>
 
-          <div id="teammates-grid" class="cards-grid-layout">
-            <!-- Dynamically populated -->
+          <!-- Sub-navigation Tabs -->
+          <div class="team-subtabs-bar flex items-center gap-2 mb-4 pb-2 border-b" style="border-color: rgba(148, 163, 184, 0.15);">
+            <button type="button" id="tab-sub-teams" class="btn btn-sm btn-primary flex items-center gap-2" onclick="window.SkillBridge.switchTeammatesTab('teams')">
+              <i class="ph ph-trophy"></i> Hackathon Teams <span id="hackathon-teams-count" class="badge badge-subtle">3</span>
+            </button>
+            <button type="button" id="tab-sub-peers" class="btn btn-sm btn-outline flex items-center gap-2" onclick="window.SkillBridge.switchTeammatesTab('peers')">
+              <i class="ph ph-users"></i> Individual Peers <span id="individual-peers-count" class="badge badge-subtle">5</span>
+            </button>
+          </div>
+
+          <!-- Sub-Panel 1: Hackathon Teams -->
+          <div id="subpanel-hackathon-teams">
+            <!-- Filter Toolbar -->
+            <div class="panel-card mb-4 p-3 flex flex-wrap items-center justify-between gap-3" style="background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(148, 163, 184, 0.18);">
+              <div class="flex flex-wrap items-center gap-2 flex-1">
+                <div class="search-input-wrapper flex-1" style="min-width: 200px;">
+                  <i class="ph ph-magnifying-glass search-icon"></i>
+                  <input type="text" id="team-search-input" class="search-input" placeholder="Search teams by project idea or skills..." oninput="window.SkillBridge.filterHackathonTeams()">
+                </div>
+                <select id="team-hackathon-select" class="filter-select text-xs" style="min-width: 170px;" onchange="window.SkillBridge.filterHackathonTeams()">
+                  <option value="all">All Hackathons</option>
+                  <option value="Smart India Hackathon 2026">Smart India Hackathon 2026</option>
+                  <option value="HackMIT 2026">HackMIT 2026</option>
+                  <option value="MLH Global Hack Week">MLH Global Hack Week</option>
+                  <option value="Microsoft Imagine Cup">Microsoft Imagine Cup</option>
+                </select>
+              </div>
+              <label class="flex items-center gap-2 text-xs cursor-pointer text-muted font-medium">
+                <input type="checkbox" id="team-open-spots-only" onchange="window.SkillBridge.filterHackathonTeams()">
+                <span>Open Spots Only</span>
+              </label>
+            </div>
+
+            <!-- Teams Grid -->
+            <div id="hackathon-teams-grid" class="cards-grid-layout">
+              <!-- Dynamically populated by renderHackathonTeams() -->
+            </div>
+          </div>
+
+          <!-- Sub-Panel 2: Individual Peers -->
+          <div id="subpanel-individual-peers" class="hidden">
+            <div id="teammates-grid" class="cards-grid-layout">
+              <!-- Dynamically populated by renderTeammates() -->
+            </div>
           </div>
         </section>
 
@@ -568,9 +620,12 @@
               <div>
                 <h2 id="prof-name" class="text-xl font-bold">Alex Chen</h2>
                 <div id="prof-email" class="text-sm text-muted">alex.chen@university.edu</div>
-                <div class="flex gap-2 mt-1">
+                <div class="flex flex-wrap items-center gap-2 mt-1">
                   <span class="badge badge-primary"><i class="ph ph-seal-check"></i> Verified Student</span>
                   <span class="badge badge-subtle">Class of <span id="prof-grad-year">2026</span></span>
+                  <div id="prof-linkedin-wrapper" class="inline-flex items-center gap-1.5">
+                    <!-- Dynamically rendered -->
+                  </div>
                 </div>
               </div>
             </div>
@@ -645,6 +700,28 @@
               <label class="cursor-pointer">
                 <input type="checkbox" id="setting-theme-toggle">
               </label>
+            </div>
+          </div>
+
+          <div class="panel-card mb-4">
+            <h3 class="font-bold text-md mb-2 flex items-center gap-2">
+              <i class="ph ph-linkedin-logo" style="color: #0a66c2;"></i> LinkedIn & Professional Profile
+            </h3>
+            <p class="text-xs text-muted mb-3">Add or update your verified LinkedIn profile URL. Validated links appear with a LinkedIn badge on your student profile.</p>
+            <div class="form-group mb-2">
+              <label for="setting-linkedin-input" class="form-label text-xs">LinkedIn Profile URL (Optional)</label>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input type="url" id="setting-linkedin-input" class="input-text text-sm flex-1" placeholder="https://www.linkedin.com/in/alex-chen-2026">
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-primary btn-sm flex-1 sm:flex-none" onclick="window.SkillBridge.saveLinkedInSettings()">
+                    <i class="ph ph-check"></i> Save Link
+                  </button>
+                  <button type="button" class="btn btn-outline btn-sm text-danger" onclick="window.SkillBridge.removeLinkedInSettings()" title="Clear LinkedIn link">
+                    <i class="ph ph-trash"></i> Remove
+                  </button>
+                </div>
+              </div>
+              <span id="setting-linkedin-msg" class="text-xs text-muted mt-1 block">Accepted formats: https://www.linkedin.com/in/username</span>
             </div>
           </div>
 
@@ -914,7 +991,12 @@
               <span class="badge badge-verified" id="detail-verified-badge"><i class="ph ph-seal-check"></i> Verified Listing</span>
             </div>
             <h2 class="modal-title text-xl font-bold" id="detail-opp-title" style="color: #ffffff;">Software Development Engineer</h2>
-            <div class="text-sm font-medium" id="detail-org-name" style="color: #93c5fd;">Google India</div>
+            <div class="flex flex-wrap items-center gap-2 mt-1">
+              <div class="text-sm font-medium" id="detail-org-name" style="color: #93c5fd;">Google India</div>
+              <a id="detail-org-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-xs btn-outline" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
+                <i class="ph ph-buildings"></i> Visit Official Site <i class="ph ph-arrow-square-out text-xs"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -1194,6 +1276,105 @@
         <button class="btn btn-outline flex-1" onclick="window.SkillBridge.closeLogoutModal()">Cancel</button>
         <button class="btn btn-primary flex-1" onclick="window.SkillBridge.confirmLogout()">Confirm Sign Out</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Create Hackathon Team Modal -->
+  <div id="create-team-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="create-team-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeCreateTeamModal()"></div>
+    <div class="modal-card" style="max-width: 520px;">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeCreateTeamModal()" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="create-team-title" class="flex items-center gap-2">
+          <i class="ph ph-plus-circle text-primary"></i> Register Hackathon Team
+        </h2>
+        <p>Form a new student squad and recruit collegiate builders with specific skill sets.</p>
+      </div>
+
+      <form id="create-team-form" onsubmit="window.SkillBridge.submitCreateTeam(event)">
+        <div class="form-group mb-3">
+          <label for="new-team-name" class="form-label">Team Name</label>
+          <input type="text" id="new-team-name" class="input-text" placeholder="e.g. ApexInnovators, CodeCraft AI" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="new-team-hackathon" class="form-label">Target Hackathon</label>
+          <select id="new-team-hackathon" class="input-select" required>
+            <option value="Smart India Hackathon 2026">Smart India Hackathon 2026</option>
+            <option value="HackMIT 2026">HackMIT 2026</option>
+            <option value="MLH Global Hack Week">MLH Global Hack Week</option>
+            <option value="Microsoft Imagine Cup">Microsoft Imagine Cup</option>
+            <option value="ETHIndia 2026">ETHIndia 2026</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="new-team-pitch" class="form-label">Project Idea / Pitch</label>
+          <textarea id="new-team-pitch" class="input-textarea" rows="2" placeholder="Brief 1-2 sentence description of what your team plans to build..." required></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label for="new-team-max-size" class="form-label">Team Size Limit</label>
+            <select id="new-team-max-size" class="input-select">
+              <option value="3">3 Members</option>
+              <option value="4" selected>4 Members</option>
+              <option value="5">5 Members</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="new-team-lead-role" class="form-label">Your Role on Team</label>
+            <input type="text" id="new-team-lead-role" class="input-text" placeholder="e.g. Frontend & UI" value="Frontend & UI Lead">
+          </div>
+        </div>
+
+        <div class="form-group mb-4">
+          <label for="new-team-skills" class="form-label">Skills Sought (Comma separated)</label>
+          <input type="text" id="new-team-skills" class="input-text" placeholder="e.g. React, PyTorch, Node.js, UI/UX" required>
+          <span class="text-xs text-muted mt-1 block">Specify the technologies you need teammates for.</span>
+        </div>
+
+        <div class="flex gap-2">
+          <button type="button" class="btn btn-outline flex-1" onclick="window.SkillBridge.closeCreateTeamModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary flex-1">
+            <i class="ph ph-rocket-launch"></i> Launch Team
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Quick Edit LinkedIn Modal (from Profile View) -->
+  <div id="edit-linkedin-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="edit-linkedin-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeLinkedInModal()"></div>
+    <div class="modal-card" style="max-width: 440px;">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeLinkedInModal()" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="edit-linkedin-title" class="flex items-center gap-2">
+          <i class="ph ph-linkedin-logo" style="color: #0a66c2;"></i> LinkedIn Profile Link
+        </h2>
+        <p>Connect your professional profile to showcase your experience to teammates.</p>
+      </div>
+
+      <form onsubmit="window.SkillBridge.submitQuickLinkedIn(event)">
+        <div class="form-group mb-3">
+          <label for="modal-linkedin-url" class="form-label">LinkedIn URL</label>
+          <input type="url" id="modal-linkedin-url" class="input-text" placeholder="https://www.linkedin.com/in/username">
+          <span id="modal-linkedin-error" class="text-xs text-danger mt-1 hidden block"></span>
+          <span class="text-xs text-muted mt-1 block">Format: https://www.linkedin.com/in/your-profile</span>
+        </div>
+
+        <div class="flex gap-2 mt-4">
+          <button type="button" class="btn btn-outline flex-1" onclick="window.SkillBridge.closeLinkedInModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary flex-1">Save Profile</button>
+        </div>
+      </form>
     </div>
   </div>
 

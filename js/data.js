@@ -262,10 +262,11 @@ const SkillBridgeData = {
     gpa: "3.84 / 4.00",
     location: "Seattle, WA / Remote",
     avatar: "AC",
+    linkedinUrl: "https://www.linkedin.com/in/alex-chen-2026",
     bio: "Passionate about building scalable web applications and contributing to developer tooling. Active participant in collegiate hackathons and open source communities. Seeking Summer 2026 Software Engineer Internships.",
     links: {
       github: "https://github.com",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/alex-chen-2026",
       portfolio: "https://alexchen.dev"
     },
     preferences: {
@@ -406,6 +407,119 @@ const SkillBridgeData = {
       status: "Available for Team"
     }
   ],
+
+  // Sample Hackathon Teams for student collaboration (3 Realistic Benchmark Examples)
+  hackathonTeams: [
+    {
+      id: "team-quantumleap",
+      name: "QuantumLeap",
+      hackathon: "Smart India Hackathon 2026",
+      hackathonSlug: "sih-2026",
+      pitch: "Building an edge-AI smart grid optimizer with predictive load balancing for urban institutions.",
+      lead: "Priya Sharma",
+      maxSize: 4,
+      openSpots: 2,
+      skillsSought: ["Python", "PyTorch", "FastAPI", "React"],
+      members: [
+        { name: "Priya Sharma", role: "Team Lead & ML Engineer", avatarColor: "#3b82f6", initials: "PS", isUser: false },
+        { name: "Marcus Vance", role: "Cloud & DevOps", avatarColor: "#10b981", initials: "MV", isUser: false }
+      ],
+      deadline: "March 30, 2026",
+      status: "Recruiting"
+    },
+    {
+      id: "team-neurocraft",
+      name: "NeuroCraft AI",
+      hackathon: "HackMIT 2026",
+      hackathonSlug: "hackmit-2026",
+      pitch: "Developing a real-time multimodal gesture and speech assistive bridge for neurodivergent students.",
+      lead: "Elena Rostova",
+      maxSize: 4,
+      openSpots: 1,
+      skillsSought: ["WebRTC", "TypeScript", "React", "Accessibility"],
+      members: [
+        { name: "Elena Rostova", role: "Team Lead & Core Engine", avatarColor: "#8b5cf6", initials: "ER", isUser: false },
+        { name: "David Kim", role: "UI/UX & Design Systems", avatarColor: "#ec4899", initials: "DK", isUser: false },
+        { name: "Aisha Patel", role: "Backend Systems", avatarColor: "#f59e0b", initials: "AP", isUser: false }
+      ],
+      deadline: "September 15, 2026",
+      status: "Recruiting"
+    },
+    {
+      id: "team-zeroentropy",
+      name: "ZeroEntropy",
+      hackathon: "MLH Global Hack Week",
+      hackathonSlug: "mlh-ghw",
+      pitch: "Decentralized verifiable student credentials and collegiate hackathon project portfolio registry.",
+      lead: "Liam O'Connor",
+      maxSize: 3,
+      openSpots: 2,
+      skillsSought: ["Node.js", "PostgreSQL", "Next.js", "Web3.js"],
+      members: [
+        { name: "Liam O'Connor", role: "Team Lead & Full-Stack", avatarColor: "#06b6d4", initials: "LO", isUser: false }
+      ],
+      deadline: "Continuous Monthly Sprints",
+      status: "Recruiting"
+    }
+  ],
+
+  // Verified Official Company Links Directory (100% verified domains; unconfirmed are null)
+  verifiedCompanies: {
+    "google": "https://about.google/",
+    "google india": "https://about.google/",
+    "google open source": "https://opensource.google/",
+    "microsoft": "https://www.microsoft.com/",
+    "microsoft india": "https://www.microsoft.com/",
+    "amazon": "https://www.amazon.jobs/",
+    "amazon india": "https://www.amazon.jobs/",
+    "meta": "https://about.meta.com/",
+    "apple": "https://www.apple.com/",
+    "adobe": "https://www.adobe.com/",
+    "cisco": "https://www.cisco.com/",
+    "oracle": "https://www.oracle.com/",
+    "uber": "https://www.uber.com/",
+    "intel": "https://www.intel.com/",
+    "nvidia": "https://www.nvidia.com/",
+    "ibm": "https://www.ibm.com/",
+    "salesforce": "https://www.salesforce.com/",
+    "spotify": "https://www.spotify.com/",
+    "atlassian": "https://www.atlassian.com/",
+    "flipkart": "https://www.flipkartcareers.com/",
+    "swiggy": "https://www.swiggy.com/",
+    "zomato": "https://www.zomato.com/",
+    "razorpay": "https://razorpay.com/",
+    "cred": "https://cred.club/",
+    "meesho": "https://www.meesho.io/",
+    "paytm": "https://paytm.com/",
+    "phonepe": "https://www.phonepe.com/",
+    "browserstack": "https://www.browserstack.com/",
+    "zerodha": "https://zerodha.com/",
+    "inmobi": "https://www.inmobi.com/",
+    "postman": "https://www.postman.com/",
+    "tcs": "https://www.tcs.com/",
+    "tata consultancy services": "https://www.tcs.com/",
+    "infosys": "https://www.infosys.com/",
+    "wipro": "https://www.wipro.com/",
+    "hcl tech": "https://www.hcltech.com/",
+    "tech mahindra": "https://www.techmahindra.com/",
+    "cognizant": "https://www.cognizant.com/",
+    "accenture": "https://www.accenture.com/",
+    "deloitte": "https://www2.deloitte.com/",
+    "capgemini": "https://www.capgemini.com/",
+    "ltimindtree": "https://www.ltimindtree.com/",
+    "major league hacking": "https://mlh.io/",
+    "major league hacking (mlh)": "https://mlh.io/",
+    "the linux foundation": "https://www.linuxfoundation.org/",
+    "linux foundation": "https://www.linuxfoundation.org/",
+    "github": "https://github.com/",
+    "cern": "https://home.cern/",
+    "cern openlab": "https://openlab.cern/",
+    "outreachy": "https://www.outreachy.org/",
+    "mit": "https://www.mit.edu/",
+    "hackmit": "https://hackmit.org/",
+    "smart india hackathon": "https://www.sih.gov.in/",
+    "stanford university": "https://www.stanford.edu/"
+  },
 
   // Career Guidance Rule-Based Knowledge Base
   botKnowledge: [

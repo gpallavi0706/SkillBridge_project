@@ -22,6 +22,7 @@ class UserResponse(BaseModel):
     gpa: Optional[str] = None
     bio: Optional[str] = None
     avatar: Optional[str] = "AC"
+    linkedin_url: Optional[str] = None
 
 class OpportunityCreate(BaseModel):
     title: str = Field(..., min_length=2)
@@ -67,6 +68,7 @@ class ProfileUpdate(BaseModel):
     graduation_year: Optional[str] = None
     gpa: Optional[str] = None
     bio: Optional[str] = None
+    linkedin_url: Optional[str] = None
 
 class ToggleSaveRequest(BaseModel):
     user_id: str
