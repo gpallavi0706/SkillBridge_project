@@ -2629,17 +2629,22 @@ ORDER BY total_offers DESC, gpa DESC;`,
     }
   }
 
-  // Sign in modal handling
-  openSignInModal(defaultRole = 'student') {
+  // Sign in modal handling (Exact 65.0.20.41 Architecture)
+  openSignInModal(defaultRole = 'student', tabMode = 'login') {
     const modal = document.getElementById('signin-modal');
     if (!modal) return;
 
+    this.currentSignInRole = defaultRole;
     this.setSignInRole(defaultRole);
+    this.switchAuthTab(tabMode);
+
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
 
-    const emailInput = document.getElementById('signin-email');
-    if (emailInput) setTimeout(() => emailInput.focus(), 150);
+    const focusInput = tabMode === 'register' 
+      ? document.getElementById('reg-fullname') 
+      : document.getElementById('signin-email');
+    if (focusInput) setTimeout(() => focusInput.focus(), 150);
   }
 
   closeSignInModal() {
@@ -2650,34 +2655,85 @@ ORDER BY total_offers DESC, gpa DESC;`,
     }
   }
 
+  switchAuthTab(tab) {
+    const signinForm = document.getElementById('signin-form');
+    const registerForm = document.getElementById('register-form');
+    const tabBtnSignin = document.getElementById('auth-tab-btn-signin');
+    const tabBtnRegister = document.getElementById('auth-tab-btn-register');
+    const errorBox = document.getElementById('signin-error-box');
+
+    if (errorBox) errorBox.classList.add('hidden');
+
+    if (tab === 'register') {
+      if (signinForm) signinForm.classList.add('hidden');
+      if (registerForm) registerForm.classList.remove('hidden');
+
+      if (tabBtnRegister) {
+        tabBtnRegister.style.background = '#ffffff';
+        tabBtnRegister.style.color = '#101b35';
+        tabBtnRegister.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+        tabBtnRegister.style.fontWeight = '700';
+      }
+      if (tabBtnSignin) {
+        tabBtnSignin.style.background = 'transparent';
+        tabBtnSignin.style.color = '#6b7c97';
+        tabBtnSignin.style.boxShadow = 'none';
+        tabBtnSignin.style.fontWeight = '600';
+      }
+    } else {
+      if (registerForm) registerForm.classList.add('hidden');
+      if (signinForm) signinForm.classList.remove('hidden');
+
+      if (tabBtnSignin) {
+        tabBtnSignin.style.background = '#ffffff';
+        tabBtnSignin.style.color = '#101b35';
+        tabBtnSignin.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+        tabBtnSignin.style.fontWeight = '700';
+      }
+      if (tabBtnRegister) {
+        tabBtnRegister.style.background = 'transparent';
+        tabBtnRegister.style.color = '#6b7c97';
+        tabBtnRegister.style.boxShadow = 'none';
+        tabBtnRegister.style.fontWeight = '600';
+      }
+    }
+  }
+
   setSignInRole(role) {
-    const studentTab = document.getElementById('tab-role-student');
-    const adminTab = document.getElementById('tab-role-admin');
+    this.currentSignInRole = role;
     const roleInput = document.getElementById('signin-role-hidden');
     const modalTitle = document.getElementById('signin-modal-title');
     const modalSub = document.getElementById('signin-modal-subtitle');
     const submitBtn = document.getElementById('signin-submit-btn');
+    const tabBtnRegister = document.getElementById('auth-tab-btn-register');
 
     if (roleInput) roleInput.value = role;
 
     if (role === 'admin') {
-      if (adminTab) adminTab.classList.add('active');
-      if (studentTab) studentTab.classList.remove('active');
-      if (modalTitle) modalTitle.textContent = 'Administrator Portal';
+      if (modalTitle) modalTitle.textContent = 'Website Developer & Admin Portal';
       if (modalSub) modalSub.textContent = 'Secure login for administrative oversight & system controls';
-      if (submitBtn) submitBtn.innerHTML = '<span>Sign In as Admin</span> <i class="ph ph-arrow-right"></i>';
+      if (submitBtn) submitBtn.innerHTML = '<span>Developer Sign In</span> <i class="ph ph-arrow-right"></i>';
+      if (tabBtnRegister) {
+        tabBtnRegister.textContent = 'Pre-provisioned Only';
+        tabBtnRegister.style.pointerEvents = 'none';
+        tabBtnRegister.style.opacity = '0.6';
+      }
     } else {
-      if (studentTab) studentTab.classList.add('active');
-      if (adminTab) adminTab.classList.remove('active');
-      if (modalTitle) modalTitle.textContent = 'Student / Candidate Portal';
-      if (modalSub) modalSub.textContent = 'Sign in or register to access personalized opportunities & dashboard';
+      if (modalTitle) modalTitle.textContent = 'Candidate / Job Seeker Portal';
+      if (modalSub) modalSub.textContent = 'Sign in or register to access features';
       if (submitBtn) submitBtn.innerHTML = '<span>Sign In</span> <i class="ph ph-arrow-right"></i>';
+      if (tabBtnRegister) {
+        tabBtnRegister.textContent = 'Create Candidate Account';
+        tabBtnRegister.style.pointerEvents = 'auto';
+        tabBtnRegister.style.opacity = '1';
+      }
     }
   }
 
   fillDemoCredentials(role) {
     const creds = window.SkillBridgeAuth.getDemoCredentials(role);
     this.setSignInRole(role);
+    this.switchAuthTab('login');
 
     const emailInput = document.getElementById('signin-email');
     const pwdInput = document.getElementById('signin-password');
@@ -2708,6 +2764,40 @@ ORDER BY total_offers DESC, gpa DESC;`,
     }
   }
 
+  async handleRegisterSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('reg-fullname').value;
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+    const email = document.getElementById('reg-email').value;
+    const phone = document.getElementById('reg-phone').value;
+    const headline = document.getElementById('reg-headline').value;
+    const errorBox = document.getElementById('signin-error-box');
+
+    if (errorBox) errorBox.classList.add('hidden');
+
+    const result = window.SkillBridgeAuth.register({
+      name,
+      username,
+      password,
+      email,
+      phone,
+      headline,
+      role: 'student'
+    });
+
+    if (result.success) {
+      this.closeSignInModal();
+      this.showToast(`Welcome, ${name}! Your candidate account was created successfully.`, 'success');
+      this.navigateTo('dashboard');
+    } else {
+      if (errorBox) {
+        errorBox.textContent = (result.errors || []).join(' ');
+        errorBox.classList.remove('hidden');
+      }
+    }
+  }
+
   async handleSignInSubmit(e) {
     e.preventDefault();
     const email = document.getElementById('signin-email').value;
@@ -2717,9 +2807,12 @@ ORDER BY total_offers DESC, gpa DESC;`,
 
     if (errorBox) errorBox.classList.add('hidden');
 
+    // Allow username format by defaulting domain
+    const cleanEmail = email.includes('@') ? email : `${email.trim().toLowerCase()}@skillbridge.edu`;
+
     // If FastAPI & MySQL backend is online, authenticate against MySQL
     if (window.SkillBridgeApi && window.SkillBridgeApi.isOnline) {
-      const apiRes = await window.SkillBridgeApi.login(email, password, role);
+      const apiRes = await window.SkillBridgeApi.login(cleanEmail, password, role);
       if (apiRes && apiRes.success && apiRes.user) {
         window.SkillBridgeAuth.currentUser = apiRes.user;
         try {
@@ -2734,7 +2827,7 @@ ORDER BY total_offers DESC, gpa DESC;`,
     }
 
     // Client-side fallback authentication
-    const result = window.SkillBridgeAuth.signIn(email, password, role);
+    const result = window.SkillBridgeAuth.signIn(cleanEmail, password, role);
 
     if (result.success) {
       this.closeSignInModal();

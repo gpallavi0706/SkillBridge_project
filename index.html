@@ -54,10 +54,10 @@
         <div class="demo-accounts-bar">
           <span><i class="ph ph-sparkle"></i> Quick Demo Credentials:</span>
           <div class="demo-pills-list">
-            <button type="button" class="demo-pill" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student');">
+            <button type="button" class="demo-pill" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student', 'login');">
               🎓 <strong>Alex Chen</strong> <small>(Candidate · Python/DB)</small>
             </button>
-            <button type="button" class="demo-pill" onclick="window.SkillBridge.fillDemoCredentials('admin'); window.SkillBridge.openSignInModal('admin');">
+            <button type="button" class="demo-pill" onclick="window.SkillBridge.fillDemoCredentials('admin'); window.SkillBridge.openSignInModal('admin', 'login');">
               🛡️ <strong>Admin Coordinator</strong> <small>(System Admin · dev@123)</small>
             </button>
           </div>
@@ -80,10 +80,10 @@
             <li><i class="ph ph-check-circle"></i> CV uploads & persistent application tracking</li>
           </ul>
           <div class="portal-actions">
-            <button class="portal-btn-primary" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student');">
+            <button class="portal-btn-primary" onclick="window.SkillBridge.openSignInModal('student', 'login');">
               Sign In as Candidate <i class="ph ph-arrow-right"></i>
             </button>
-            <button class="portal-btn-outline" onclick="window.SkillBridge.openSignInModal('student');">
+            <button class="portal-btn-outline" onclick="window.SkillBridge.openSignInModal('student', 'register');">
               Create Candidate Account
             </button>
           </div>
@@ -103,7 +103,7 @@
             <li><i class="ph ph-check-circle"></i> Full system metrics & interactive DBMS lab</li>
           </ul>
           <div class="portal-actions">
-            <button class="portal-btn-primary" onclick="window.SkillBridge.fillDemoCredentials('admin'); window.SkillBridge.openSignInModal('admin');">
+            <button class="portal-btn-primary" onclick="window.SkillBridge.openSignInModal('admin', 'login');">
               Developer Sign In <i class="ph ph-arrow-right"></i>
             </button>
             <span style="font-size:11px;color:#7e8ea7;text-align:center;padding:4px 0;">Developer accounts are seeded via CLI setup.</span>
@@ -912,68 +912,115 @@
        4. MODALS
        ======================================================== -->
 
-  <!-- Sign In Modal (Matched to 65.0.20.41 Design System) -->
+  <!-- Sign In & Registration Modal (Exact 65.0.20.41 Architecture) -->
   <div id="signin-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="signin-modal-title">
     <div class="modal-backdrop" onclick="window.SkillBridge.closeSignInModal()"></div>
-    <div class="modal-card auth-modal-card">
+    <div class="modal-card auth-modal-card" style="width: min(580px, 94vw); max-height: 90vh; overflow-y: auto; background: #ffffff; border-radius: 18px; box-shadow: 0 24px 60px rgba(11, 23, 53, 0.35); border: 1px solid #e8edf4;">
       <!-- Modal Header: Left Title+Subtitle, Right Close Button -->
-      <div class="auth-modal-header">
+      <div class="auth-modal-header" style="padding: 20px 24px 16px; border-bottom: 1px solid #e8edf4; display: flex; align-items: flex-start; justify-content: space-between;">
         <div class="auth-modal-header-text">
-          <h2 id="signin-modal-title" class="auth-modal-title">Student / Candidate Portal</h2>
-          <p id="signin-modal-subtitle" class="auth-modal-subtitle">Sign in or register to access personalized opportunities & dashboard</p>
+          <h2 id="signin-modal-title" style="font-size: 17px; font-weight: 800; color: #101b35; margin: 0 0 4px; font-family: 'Plus Jakarta Sans', sans-serif;">Candidate / Job Seeker Portal</h2>
+          <p id="signin-modal-subtitle" style="font-size: 11px; color: #77839a; margin: 0;">Sign in or register to access features</p>
         </div>
-        <button class="auth-modal-close-btn" onclick="window.SkillBridge.closeSignInModal()" aria-label="Close Sign In Dialog">
-          <i class="ph ph-x"></i>
+        <button class="auth-modal-close-btn" onclick="window.SkillBridge.closeSignInModal()" aria-label="Close Sign In Dialog" style="width: 32px; height: 32px; border: 1px solid #e8edf4; background: #ffffff; border-radius: 8px; display: grid; place-items: center; color: #53627e; cursor: pointer; transition: 0.15s;">
+          <i class="ph ph-x" style="font-size: 16px;"></i>
         </button>
       </div>
 
-      <!-- Segmented Pill Tabs (Exact 65.0.20.41 Styling) -->
-      <div class="auth-segmented-tabs" role="tablist">
-        <button type="button" id="tab-role-student" class="auth-tab-pill active" onclick="window.SkillBridge.setSignInRole('student')">
-          <i class="ph ph-student"></i> Student Login
-        </button>
-        <button type="button" id="tab-role-admin" class="auth-tab-pill" onclick="window.SkillBridge.setSignInRole('admin')">
-          <i class="ph ph-shield"></i> Admin Login
-        </button>
-      </div>
-
-      <!-- Quick Demo Credentials Pill Strip (From 65.0.20.41) -->
-      <div class="auth-demo-pill-strip">
-        <span class="auth-demo-label"><i class="ph ph-sparkle"></i> Quick Demo Fill:</span>
-        <button type="button" class="auth-demo-pill-btn" onclick="window.SkillBridge.fillDemoCredentials('student')">
-          <span class="demo-pill-emoji">🎓</span> <strong>Alex Chen</strong> <span class="demo-pill-tag">Student</span>
-        </button>
-        <button type="button" class="auth-demo-pill-btn" onclick="window.SkillBridge.fillDemoCredentials('admin')">
-          <span class="demo-pill-emoji">🛡️</span> <strong>Admin</strong> <span class="demo-pill-tag">Coordinator</span>
-        </button>
-      </div>
-
-      <div id="signin-error-box" class="form-error-alert hidden" role="alert"></div>
-
-      <!-- Sign In Form -->
-      <form id="signin-form" class="auth-form" onsubmit="window.SkillBridge.handleSignInSubmit(event)">
-        <input type="hidden" id="signin-role-hidden" value="student">
-
-        <div class="form-group">
-          <label for="signin-email" class="form-label">Email / Username</label>
-          <input type="email" id="signin-email" class="input-text" placeholder="e.g. alex.chen@university.edu" autocomplete="email" required>
+      <!-- Segmented Tabs (Sign In vs Create Candidate Account) -->
+      <div style="padding: 16px 24px 0;">
+        <div id="auth-tabs-container" style="display: flex; gap: 6px; background: #f0f3f8; padding: 4px; border-radius: 10px;">
+          <button type="button" id="auth-tab-btn-signin" class="auth-tab-pill active" onclick="window.SkillBridge.switchAuthTab('login')" style="flex: 1; padding: 8px 12px; font-size: 11.5px; font-weight: 700; border-radius: 8px; border: 0; cursor: pointer; transition: 0.15s; background: #ffffff; color: #101b35; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+            Sign In
+          </button>
+          <button type="button" id="auth-tab-btn-register" class="auth-tab-pill" onclick="window.SkillBridge.switchAuthTab('register')" style="flex: 1; padding: 8px 12px; font-size: 11.5px; font-weight: 600; border-radius: 8px; border: 0; cursor: pointer; transition: 0.15s; background: transparent; color: #6b7c97;">
+            Create Candidate Account
+          </button>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label for="signin-password" class="form-label">Password</label>
-          <div class="input-password-wrapper">
-            <input type="password" id="signin-password" class="input-text" placeholder="Enter your password" autocomplete="current-password" required>
-            <button type="button" class="pwd-toggle-btn" onclick="window.SkillBridge.togglePasswordVisibility()" aria-label="Toggle password visibility">
-              <i id="pwd-toggle-icon" class="ph ph-eye"></i>
+      <div style="padding: 16px 24px 24px;">
+        <div id="signin-error-box" class="form-error-alert hidden" role="alert" style="margin-bottom: 12px; padding: 10px 14px; background: #fff0f0; border: 1px solid #ffd8d8; color: #c64c54; border-radius: 8px; font-size: 11.5px;"></div>
+
+        <!-- 1. SIGN IN FORM -->
+        <form id="signin-form" class="auth-form" onsubmit="window.SkillBridge.handleSignInSubmit(event)">
+          <input type="hidden" id="signin-role-hidden" value="student">
+
+          <!-- Quick Demo Credentials Pill Strip -->
+          <div class="auth-demo-pill-strip" style="margin-bottom: 16px; padding: 10px 12px; background: #f8faff; border: 1px dashed #cfdcfa; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: #5d6d88;"><i class="ph ph-sparkle"></i> Quick Demo Fill:</span>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button type="button" class="auth-demo-pill-btn" onclick="window.SkillBridge.fillDemoCredentials('student')" style="background: #ffffff; border: 1px solid #dce2ec; border-radius: 16px; padding: 4px 10px; font-size: 10.5px; font-weight: 700; color: #3158ce; cursor: pointer;">
+                🎓 Alex Chen <span style="font-weight: 400; color: #77839a;">(Student)</span>
+              </button>
+              <button type="button" class="auth-demo-pill-btn" onclick="window.SkillBridge.fillDemoCredentials('admin')" style="background: #ffffff; border: 1px solid #dce2ec; border-radius: 16px; padding: 4px 10px; font-size: 10.5px; font-weight: 700; color: #3158ce; cursor: pointer;">
+                🛡️ Admin <span style="font-weight: 400; color: #77839a;">(Coordinator)</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label for="signin-email" style="display: block; font-size: 11px; font-weight: 700; color: #536177; margin-bottom: 6px;">Username / Email</label>
+            <input type="text" id="signin-email" class="input-text" placeholder="e.g. asha_dev" style="width: 100%; border: 1px solid #dce2ec; border-radius: 9px; padding: 9px 12px; font-size: 12px; background: #ffffff; color: #17233d; outline: 0;" required>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label for="signin-password" style="display: block; font-size: 11px; font-weight: 700; color: #536177; margin-bottom: 6px;">Password</label>
+            <div class="input-password-wrapper" style="position: relative;">
+              <input type="password" id="signin-password" class="input-text" placeholder="Enter your password" style="width: 100%; border: 1px solid #dce2ec; border-radius: 9px; padding: 9px 38px 9px 12px; font-size: 12px; background: #ffffff; color: #17233d; outline: 0;" required>
+              <button type="button" class="pwd-toggle-btn" onclick="window.SkillBridge.togglePasswordVisibility()" aria-label="Toggle password visibility" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: 0; color: #77839a; cursor: pointer;">
+                <i id="pwd-toggle-icon" class="ph ph-eye"></i>
+              </button>
+            </div>
+            <span style="display: block; font-size: 10.5px; color: #77839a; margin-top: 5px;">Demo password requirement: 6+ characters.</span>
+          </div>
+
+          <button type="submit" id="signin-submit-btn" style="width: 100%; height: 46px; border: 0; border-radius: 10px; background: linear-gradient(135deg, #4169e1 0%, #3158ce 100%); color: #ffffff; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 14px rgba(65, 105, 225, 0.28);">
+            <span>Sign In</span> <i class="ph ph-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- 2. CREATE CANDIDATE ACCOUNT FORM (Exact 65.0.20.41 Architecture) -->
+        <form id="register-form" class="auth-form hidden" onsubmit="window.SkillBridge.handleRegisterSubmit(event)">
+          <div style="display: grid; gap: 14px;">
+            <div>
+              <label for="reg-fullname" style="display: block; font-size: 11px; font-weight: 700; color: #536177; margin-bottom: 6px;">Full Name</label>
+              <input type="text" id="reg-fullname" placeholder="e.g. John Doe" style="width: 100%; border: 1px solid #dce2ec; border-radius: 9px; padding: 9px 12px; font-size: 12px; background: #ffffff; color: #17233d; outline: 0;" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div>
+                <label for="reg-username" style="display: block; font-size: 11px; font-weight: 700; color: #536177; margin-bottom: 6px;">Choose Username</label>
+                <input type="text" id="reg-username" placeholder="e.g. john_dev" style="width: 100%; border: 1px solid #dce2ec; border-radius: 9px; padding: 9px 12px; font-size: 12px; background: #ffffff; color: #17233d; outline: 0;" required>
+              </div>
+              <div>
+                <label for="reg-password" style="display: block; font-size: 11px; font-weight: 700; color: #536177; margin-bottom: 6px;">Password</label>
+                <input type="password" id="reg-password" placeholder="At least 6 characters" style="width: 100%; border: 1px solid #dce2ec; border-radius: 9px; padding: 9px 12px; font-size: 12px; background: #ffffff; color: #17233d; outline: 0;" required minlength="6">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div>
+                <label for="reg-email" style="display: block; font-size: 11px; font-weight: 700; color: #536177; margin-bottom: 6px;">Email Address (Optional)</label>
+                <input type="email" id="reg-email" placeholder="john@example.com" style="width: 100%; border: 1px solid #dce2ec; border-radius: 9px; padding: 9px 12px; font-size: 12px; background: #ffffff; color: #17233d; outline: 0;">
+              </div>
+              <div>
+                <label for="reg-phone" style="display: block; font-size: 11px; font-weight: 700; color: #536177; margin-bottom: 6px;">Phone Number (Optional)</label>
+                <input type="tel" id="reg-phone" placeholder="+91 ..." style="width: 100%; border: 1px solid #dce2ec; border-radius: 9px; padding: 9px 12px; font-size: 12px; background: #ffffff; color: #17233d; outline: 0;">
+              </div>
+            </div>
+
+            <div>
+              <label for="reg-headline" style="display: block; font-size: 11px; font-weight: 700; color: #536177; margin-bottom: 6px;">Professional Headline</label>
+              <input type="text" id="reg-headline" placeholder="e.g. React & Python Developer" style="width: 100%; border: 1px solid #dce2ec; border-radius: 9px; padding: 9px 12px; font-size: 12px; background: #ffffff; color: #17233d; outline: 0;">
+            </div>
+
+            <button type="submit" id="reg-submit-btn" style="width: 100%; height: 46px; margin-top: 6px; border: 0; border-radius: 10px; background: linear-gradient(135deg, #4169e1 0%, #3158ce 100%); color: #ffffff; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 14px rgba(65, 105, 225, 0.28);">
+              <span>Create Candidate Account</span> <i class="ph ph-check"></i>
             </button>
           </div>
-          <span class="auth-helper-text">Demo password requirement: 6+ characters.</span>
-        </div>
-
-        <button type="submit" id="signin-submit-btn" class="auth-submit-btn">
-          <span>Sign In</span> <i class="ph ph-arrow-right"></i>
-        </button>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 

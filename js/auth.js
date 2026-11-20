@@ -78,6 +78,49 @@ class AuthManager {
     };
   }
 
+  // Candidate Registration action (Matched to 65.0.20.41)
+  register(details) {
+    const { name, username, email, phone, headline, password, role = 'student' } = details;
+    const errors = [];
+
+    if (!name || !name.trim()) errors.push('Please enter your full name.');
+    if (!username || !username.trim()) errors.push('Please choose a username.');
+    if (!password || password.length < 6) errors.push('Password must be at least 6 characters.');
+
+    if (errors.length > 0) {
+      return { success: false, errors };
+    }
+
+    const cleanUsername = username.trim().toLowerCase().replace(/\s+/g, '_');
+    const cleanEmail = (email && email.trim()) ? email.trim().toLowerCase() : `${cleanUsername}@example.com`;
+
+    const userRecord = {
+      id: 'student_' + cleanUsername,
+      name: name.trim(),
+      username: cleanUsername,
+      email: cleanEmail,
+      phone: phone ? phone.trim() : '',
+      role: 'student',
+      headline: (headline && headline.trim()) ? headline.trim() : 'Software Developer Candidate',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256',
+      lastLogin: new Date().toISOString()
+    };
+
+    this.currentUser = userRecord;
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.currentUser));
+    } catch (e) {
+      console.warn('Could not persist session to localStorage:', e);
+    }
+
+    this.notifyAuthChange();
+
+    return {
+      success: true,
+      user: this.currentUser
+    };
+  }
+
   // Demo sign-in action
   signIn(email, password, role = 'student') {
     const validation = this.validateInputs(email, password, role);
