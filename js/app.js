@@ -46,8 +46,6 @@ class SkillBridgeApp {
       this.navigateTo('welcome');
     }
 
-    this.render();
-
     // Initialize FastAPI & MySQL Synchronization
     if (window.SkillBridgeApi) {
       window.SkillBridgeApi.onStatusChange((isOnline, details) => {
