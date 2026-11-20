@@ -26,8 +26,6 @@ class SkillBridgeApp {
   }
 
   init() {
-    // Default to cosmic dark space theme
-    document.body.classList.add('dark-theme');
     this.initConstellationCanvas();
     this.loadState();
     this.bindGlobalEvents();
@@ -496,12 +494,14 @@ class SkillBridgeApp {
     const sidebar = document.getElementById('app-sidebar');
 
     if (viewName === 'welcome') {
+      document.body.classList.remove('dark-theme');
       if (landingEl) landingEl.classList.remove('hidden');
       if (appShellEl) appShellEl.classList.add('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
+    document.body.classList.add('dark-theme');
     if (landingEl) landingEl.classList.add('hidden');
     if (appShellEl) appShellEl.classList.remove('hidden');
 
@@ -2669,12 +2669,14 @@ ORDER BY total_offers DESC, gpa DESC;`,
       if (registerForm) registerForm.classList.remove('hidden');
 
       if (tabBtnRegister) {
+        tabBtnRegister.classList.add('active');
         tabBtnRegister.style.background = '#ffffff';
         tabBtnRegister.style.color = '#101b35';
         tabBtnRegister.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
         tabBtnRegister.style.fontWeight = '700';
       }
       if (tabBtnSignin) {
+        tabBtnSignin.classList.remove('active');
         tabBtnSignin.style.background = 'transparent';
         tabBtnSignin.style.color = '#6b7c97';
         tabBtnSignin.style.boxShadow = 'none';
@@ -2685,12 +2687,14 @@ ORDER BY total_offers DESC, gpa DESC;`,
       if (signinForm) signinForm.classList.remove('hidden');
 
       if (tabBtnSignin) {
+        tabBtnSignin.classList.add('active');
         tabBtnSignin.style.background = '#ffffff';
         tabBtnSignin.style.color = '#101b35';
         tabBtnSignin.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
         tabBtnSignin.style.fontWeight = '700';
       }
       if (tabBtnRegister) {
+        tabBtnRegister.classList.remove('active');
         tabBtnRegister.style.background = 'transparent';
         tabBtnRegister.style.color = '#6b7c97';
         tabBtnRegister.style.boxShadow = 'none';

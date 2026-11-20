@@ -1831,7 +1831,7 @@ body.dark-theme .chatbot-messages-area {
    CAREER TRAJECTORY FLOW - GESTALT GROWTH MOMENTUM
    Clean, modern deep slate background with periwinkle vector gradients
    ======================================================== */
-body {
+body.dark-theme {
   background-color: #0b0f19 !important;
   background-image: 
     radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 65%),
@@ -1844,9 +1844,14 @@ body {
   color: #f8fafc !important;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f8fafd;
+  color: #101b35;
+}
+
 .app-shell-layout,
-.landing-wrapper,
-#landing-view,
 #app-shell,
 .app-main-viewport,
 .welcome-hero,
@@ -2828,6 +2833,7 @@ body {
 /* ============================================================================
    Morning Sky — Clean, Lighter Static Background (Option 3)
    ============================================================================ */
+#landing-view,
 .landing-wrapper {
   min-height: 100vh;
   background: linear-gradient(140deg, #edf2fe 0%, #f1f5fd 35%, #f8fafd 70%, #ffffff 100%) !important;
