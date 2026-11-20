@@ -15,157 +15,126 @@
   <canvas id="constellation-canvas" aria-hidden="true"></canvas>
 
   <!-- ========================================================
-       1. WELCOME / LANDING PAGE VIEW
+       1. WELCOME / LANDING PAGE VIEW (Matched to 65.0.20.41)
        ======================================================== -->
   <div id="landing-view" class="landing-wrapper">
     <!-- Landing Navigation -->
     <header class="landing-nav" role="banner">
-      <div class="flex items-center gap-4">
-        <a href="#" class="brand-logo-group" onclick="window.SkillBridge.navigateTo('welcome'); return false;">
-          <div class="brand-icon-box">
-            <i class="ph ph-compass-tool"></i>
-          </div>
+      <a href="#" class="landing-brand" onclick="window.SkillBridge.navigateTo('welcome'); return false;">
+        <span class="landing-brand-mark">
+          <i class="ph ph-compass-tool"></i>
+        </span>
+        <span class="landing-brand-copy">
           <span>SkillBridge</span>
-        </a>
-        <div class="network-status-badge hidden sm:inline-flex" title="Career Trajectory Flow: Continuous upward periwinkle wave vectors encouraging opportunity exploration">
-          <span class="network-status-dot-pulse"></span>
-          <span>Trajectory Flow: <strong>Growth Momentum</strong></span>
-        </div>
-      </div>
+          <small>FASTAPI & MYSQL PLATFORM</small>
+        </span>
+      </a>
 
-      <nav class="landing-nav-links" aria-label="Main Navigation">
-        <a href="#features">Features</a>
-        <a href="#" onclick="window.SkillBridge.openSignInModal('student'); return false;">Opportunities</a>
-        <a href="#" onclick="window.SkillBridge.openSignInModal('student'); return false;">Mentorship</a>
-        <button class="nav-signin-glass-btn" onclick="window.SkillBridge.openSignInModal('admin')">
-          <i class="ph ph-shield-check"></i> Admin
-        </button>
-        <button class="nav-signin-primary-btn" onclick="window.SkillBridge.openSignInModal('student')">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button class="btn btn-outline" style="color:#ffffff;border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.08);font-size:12px;padding:9px 16px;" onclick="window.SkillBridge.openSignInModal('student')">
           <i class="ph ph-sign-in"></i> Sign In
         </button>
-      </nav>
+      </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero & Portals Section -->
     <main role="main">
       <section class="hero-section" aria-labelledby="hero-heading">
-        <div class="hero-pill-badge">
-          <i class="ph ph-seal-check"></i> 100% Direct Official Sources • Verified Programs 2026-2027
+        <div class="hero-eyebrow">
+          AICTE & NAUKRI VERIFIED OPPORTUNITIES • RELATIONAL DBMS
         </div>
-        <h1 id="hero-heading" class="hero-title">
-          Bridge your skills to <span class="hero-gradient-text">world-class student opportunities</span>.
+        <h1 id="hero-heading" class="landing-hero-title">
+          Turn your technical skills <br><em>into career opportunities.</em>
         </h1>
-        <p class="hero-subtitle">
-          Explore curated internships, global collegiate hackathons, and paid open source mentorships (GSoC, LFX, Outreachy). Track every application milestone in one place.
+        <p class="landing-hero-desc">
+          A beginner-friendly full-stack database application connecting Job Seekers and Coordinators with transparent SQL matching, developer oversight, and 10,240+ verified opportunities.
         </p>
 
-        <div class="hero-cta-group">
-          <button class="btn btn-primary" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student');">
-            <i class="ph ph-rocket-launch"></i> Launch Student Demo
-          </button>
-          <button class="btn btn-outline" onclick="window.SkillBridge.openSignInModal('student')">
-            <i class="ph ph-user-circle"></i> Sign In to Account
-          </button>
-        </div>
-
-        <!-- Quick Demo Credentials Bar (Matched to 65.0.20.41) -->
-        <div class="landing-quick-creds-card">
-          <div class="quick-creds-title">
-            <i class="ph ph-sparkle"></i> Quick Demo Credentials:
-          </div>
-          <div class="quick-creds-pills">
-            <button type="button" class="quick-cred-pill" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student');">
-              <span class="cred-emoji">🎓</span> <strong>Alex Chen</strong> <span class="cred-tag">Student · Python / SQL</span>
+        <!-- Quick Demo Credentials Bar -->
+        <div class="demo-accounts-bar">
+          <span><i class="ph ph-sparkle"></i> Quick Demo Credentials:</span>
+          <div class="demo-pills-list">
+            <button type="button" class="demo-pill" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student');">
+              🎓 <strong>Alex Chen</strong> <small>(Candidate · Python/DB)</small>
             </button>
-            <button type="button" class="quick-cred-pill" onclick="window.SkillBridge.fillDemoCredentials('admin'); window.SkillBridge.openSignInModal('admin');">
-              <span class="cred-emoji">🛡️</span> <strong>Admin Coordinator</strong> <span class="cred-tag">System Admin</span>
+            <button type="button" class="demo-pill" onclick="window.SkillBridge.fillDemoCredentials('admin'); window.SkillBridge.openSignInModal('admin');">
+              🛡️ <strong>Admin Coordinator</strong> <small>(System Admin · dev@123)</small>
             </button>
-          </div>
-        </div>
-
-        <!-- Platform Stats Banner -->
-        <div class="hero-stats-banner" aria-label="Platform Statistics">
-          <div class="stat-item-block">
-            <div class="stat-item-value">10,250+</div>
-            <div class="stat-item-label">Naukri & Global Jobs</div>
-          </div>
-          <div class="stat-item-block">
-            <div class="stat-item-value">100%</div>
-            <div class="stat-item-label">Direct Verified Sources</div>
-          </div>
-          <div class="stat-item-block">
-            <div class="stat-item-value">4.9/5</div>
-            <div class="stat-item-label">Student Match Accuracy</div>
-          </div>
-          <div class="stat-item-block">
-            <div class="stat-item-value">Free</div>
-            <div class="stat-item-label">Open Access For All</div>
           </div>
         </div>
       </section>
 
-      <!-- Key Features Section -->
-      <section id="features" class="features-container" aria-labelledby="features-heading">
-        <div class="section-heading-box">
-          <h2 id="features-heading">Engineered for ambitious student builders</h2>
-          <p class="text-muted">A cohesive platform designed to remove friction from student recruiting and hackathons.</p>
+      <!-- 65.0.20.41 Portal Entry Cards -->
+      <section class="portal-entry-grid" aria-label="Access Portals">
+        <!-- Card 1: Student / Candidate Portal -->
+        <div class="portal-card">
+          <span class="portal-card-badge user">Candidate Portal</span>
+          <div class="portal-icon user">
+            🎓
+          </div>
+          <h3>Job Seeker / Student</h3>
+          <p>Build your technical profile, declare your skills & proficiencies, receive transparent SQL recommendations, upload your CV, and apply with zero duplicates across 10,240+ opportunities.</p>
+          <ul class="portal-features">
+            <li><i class="ph ph-check-circle"></i> Multi-level skill & proficiency profiles</li>
+            <li><i class="ph ph-check-circle"></i> Transparent SQL skill-overlap recommendations</li>
+            <li><i class="ph ph-check-circle"></i> CV uploads & persistent application tracking</li>
+          </ul>
+          <div class="portal-actions">
+            <button class="portal-btn-primary" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student');">
+              Sign In as Candidate <i class="ph ph-arrow-right"></i>
+            </button>
+            <button class="portal-btn-outline" onclick="window.SkillBridge.openSignInModal('student');">
+              Create Candidate Account
+            </button>
+          </div>
         </div>
 
-        <div class="features-grid">
-          <article class="feature-card">
-            <div class="feature-icon-wrapper">
-              <i class="ph ph-seal-check"></i>
-            </div>
-            <h3>Verified High-Signal Listings</h3>
-            <p>Every opportunity links directly to official organizers—including Google Summer of Code, Major League Hacking, AICTE, and Linux Foundation.</p>
-          </article>
+        <!-- Card 2: Administrator / Coordinator Portal -->
+        <div class="portal-card">
+          <span class="portal-card-badge developer">Developer Portal</span>
+          <div class="portal-icon developer">
+            🛠️
+          </div>
+          <h3>Website Developer & Admin</h3>
+          <p>System oversight & database governance. Review and approve or reject opportunities, audit student application records in MySQL schema, inspect transactions, and execute DBMS SQL queries.</p>
+          <ul class="portal-features">
+            <li><i class="ph ph-check-circle"></i> Approve or reject pending recruiter companies</li>
+            <li><i class="ph ph-check-circle"></i> Timestamped review auditing in MySQL schema</li>
+            <li><i class="ph ph-check-circle"></i> Full system metrics & interactive DBMS lab</li>
+          </ul>
+          <div class="portal-actions">
+            <button class="portal-btn-primary" onclick="window.SkillBridge.fillDemoCredentials('admin'); window.SkillBridge.openSignInModal('admin');">
+              Developer Sign In <i class="ph ph-arrow-right"></i>
+            </button>
+            <span style="font-size:11px;color:#7e8ea7;text-align:center;padding:4px 0;">Developer accounts are seeded via CLI setup.</span>
+          </div>
+        </div>
+      </section>
 
-          <article class="feature-card">
-            <div class="feature-icon-wrapper">
-              <i class="ph ph-target"></i>
-            </div>
-            <h3>Intelligent Skill Match Index</h3>
-            <p>SkillBridge analyzes your active technical skills (React, Python, Go, Docker) against listing criteria to generate transparent match scores.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-icon-wrapper">
-              <i class="ph ph-kanban"></i>
-            </div>
-            <h3>Application Milestone Tracker</h3>
-            <p>Monitor your progress from initial application to technical review, interviews, and verified offers with built-in status timelines.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-icon-wrapper">
-              <i class="ph ph-users-three"></i>
-            </div>
-            <h3>Student Teammate Finder</h3>
-            <p>Form balanced teams for premier collegiate hackathons like HackMIT and Microsoft Imagine Cup with peers across global universities.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-icon-wrapper">
-              <i class="ph ph-robot"></i>
-            </div>
-            <h3>Career Guidance Assistant</h3>
-            <p>BridgeBot provides actionable, rule-based tips for resumes, interview prep, open source roadmaps, and hackathon pitching.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-icon-wrapper">
-              <i class="ph ph-shield-check"></i>
-            </div>
-            <h3>Privacy & Trust First</h3>
-            <p>No fake salaries, spam recruiters, or scraped non-existent jobs. Transparent disclosures and sample data tags where applicable.</p>
-          </article>
+      <!-- Platform Statistics Banner -->
+      <section class="landing-stats-row" aria-label="Platform Statistics">
+        <div>
+          <div class="landing-stat-val">10,250+</div>
+          <div class="landing-stat-lbl">Naukri & Global Jobs</div>
+        </div>
+        <div>
+          <div class="landing-stat-val">100%</div>
+          <div class="landing-stat-lbl">Direct Verified Sources</div>
+        </div>
+        <div>
+          <div class="landing-stat-val">4.9/5</div>
+          <div class="landing-stat-lbl">Student Match Accuracy</div>
+        </div>
+        <div>
+          <div class="landing-stat-val">Free</div>
+          <div class="landing-stat-lbl">Open Access For All</div>
         </div>
       </section>
     </main>
 
     <!-- Landing Footer -->
     <footer class="landing-footer" role="contentinfo">
-      <p>© 2026 SkillBridge Project. Open educational prototype. All opportunity links lead to authentic external sources.</p>
+      <p>© 2026 SkillBridge Project · 3NF Normalized Relational DBMS Platform · All opportunity links lead to authentic external sources.</p>
     </footer>
   </div>
 
