@@ -2866,8 +2866,16 @@ ORDER BY total_offers DESC, gpa DESC;`,
   }
 }
 
-// Global initialization on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  window.SkillBridge = new SkillBridgeApp();
-  window.SkillBridge.init();
-});
+// Global initialization on DOM ready or immediate if already loaded
+function initSkillBridgeApp() {
+  if (!window.SkillBridge) {
+    window.SkillBridge = new SkillBridgeApp();
+    window.SkillBridge.init();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSkillBridgeApp);
+} else {
+  initSkillBridgeApp();
+}
