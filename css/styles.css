@@ -1828,30 +1828,26 @@ body.dark-theme .chatbot-messages-area {
 }
 
 /* ========================================================
-   CAREER TRAJECTORY FLOW - GESTALT GROWTH MOMENTUM
-   Clean, modern deep slate background with periwinkle vector gradients
+   MORNING SKY DESIGN SYSTEM (LIGHT BLUE)
+   Clean, luminous morning sky light blue background with gentle dawn gradients
    ======================================================== */
-body.dark-theme {
-  background-color: #0b0f19 !important;
+body {
+  background-color: #bae6fd !important;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 65%),
-    radial-gradient(circle at 12% 85%, rgba(129, 140, 248, 0.14) 0%, transparent 55%),
-    radial-gradient(circle at 88% 65%, rgba(79, 70, 229, 0.16) 0%, transparent 60%) !important;
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.92) 0%, rgba(254, 243, 199, 0.45) 18%, rgba(186, 230, 253, 0.25) 36%, transparent 58%),
+    radial-gradient(circle at 82% 22%, rgba(255, 255, 255, 0.7) 0%, rgba(199, 232, 254, 0.4) 26%, transparent 56%),
+    radial-gradient(circle at 50% 85%, rgba(255, 255, 255, 0.65) 0%, rgba(224, 242, 254, 0.5) 35%, transparent 68%),
+    linear-gradient(175deg, #7ec8f8 0%, #9dd5fa 18%, #bae6fd 38%, #d8effd 62%, #eaf5fe 82%, #f4f9ff 100%) !important;
   background-attachment: fixed !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
-  color: #f8fafc !important;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #f8fafd;
-  color: #101b35;
+  color: #0f172a !important;
 }
 
 .app-shell-layout,
+.landing-wrapper,
+#landing-view,
 #app-shell,
 .app-main-viewport,
 .welcome-hero,
@@ -1859,6 +1855,84 @@ body {
 .main-workspace {
   background: transparent !important;
   background-color: transparent !important;
+}
+
+/* Morning Sky Typography & Heading Enhancements */
+.hero-title,
+body.dark-theme .hero-title {
+  color: #0f172a !important;
+}
+
+.hero-subtitle {
+  color: #334155 !important;
+}
+
+.section-heading-box h2 {
+  color: #0f172a !important;
+}
+
+.section-heading-box p {
+  color: #475569 !important;
+}
+
+/* Landing Navigation on Morning Sky */
+.landing-nav {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(12px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(186, 230, 253, 0.7) !important;
+}
+
+.landing-nav .brand-logo-group span {
+  color: #0f172a !important;
+}
+
+.landing-nav-links a {
+  color: #334155 !important;
+}
+
+.landing-nav-links a:hover {
+  color: #2563eb !important;
+}
+
+.landing-nav .btn-outline {
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
+}
+
+.landing-nav .btn-outline:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+
+/* Landing Cards on Morning Sky */
+.feature-card,
+.hero-stats-banner {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07) !important;
+  color: #0f172a !important;
+}
+
+.feature-card h3 {
+  color: #0f172a !important;
+}
+
+.feature-card p {
+  color: #475569 !important;
+}
+
+.stat-item-label {
+  color: #64748b !important;
+}
+
+.landing-footer {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-top: 1px solid rgba(186, 230, 253, 0.6) !important;
+  color: #475569 !important;
 }
 
 .topbar-header {
@@ -2100,14 +2174,14 @@ body {
   height: 100vh;
   z-index: 1;
   pointer-events: none;
-  opacity: 1 !important;
-  display: block !important;
+  opacity: 0.55;
+  display: block;
 }
 
 @media (prefers-reduced-motion: reduce) {
   #trajectory-canvas,
   #constellation-canvas {
-    opacity: 0.75 !important;
+    opacity: 0.35;
   }
 }
 
@@ -2426,745 +2500,60 @@ body {
 }
 
 /* ========================================================
-   AUTHENTICATION MODAL - DESIGN SYSTEM MATCHED TO 65.0.20.41
+   POLISHED LOGIN MODAL (STUDENT & ADMIN)
    ======================================================== */
-#signin-modal .modal-backdrop {
-  position: fixed !important;
-  inset: 0 !important;
-  background: rgba(16, 27, 53, 0.65) !important;
-  backdrop-filter: blur(4px) !important;
-  -webkit-backdrop-filter: blur(4px) !important;
-  z-index: 99998 !important;
+#signin-modal .modal-card {
+  background: rgba(11, 17, 33, 0.94);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 1px solid rgba(147, 197, 253, 0.28);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 35px rgba(56, 189, 248, 0.15);
 }
 
-#signin-modal .modal-card,
-.auth-modal-card {
-  position: relative !important;
-  z-index: 100000 !important;
-  background: #ffffff !important;
-  color: #17233d !important;
-  border-radius: 18px !important;
-  border: 1px solid #e8edf4 !important;
-  box-shadow: 0 24px 60px rgba(11, 23, 53, 0.35) !important;
-  width: min(540px, 94vw) !important;
-  max-width: 540px !important;
-  padding: 24px 26px !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
-}
-
-.auth-modal-header {
-  display: flex !important;
-  align-items: flex-start !important;
-  justify-content: space-between !important;
-  gap: 16px !important;
-  padding-bottom: 16px !important;
-  border-bottom: 1px solid #e8edf4 !important;
-  margin-bottom: 18px !important;
-}
-
-.auth-modal-header-text {
-  flex: 1 !important;
-}
-
-.auth-modal-title {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-  font-size: 20px !important;
-  font-weight: 800 !important;
-  color: #17233d !important;
-  letter-spacing: -0.3px !important;
-  margin: 0 0 4px 0 !important;
-  line-height: 1.25 !important;
-}
-
-.auth-modal-subtitle {
-  font-size: 13px !important;
-  color: #77839a !important;
-  margin: 0 !important;
-  line-height: 1.4 !important;
-}
-
-.auth-modal-close-btn {
-  width: 38px !important;
-  height: 38px !important;
-  border-radius: 10px !important;
-  border: 1px solid #e8edf4 !important;
-  background: #ffffff !important;
-  color: #64748b !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 18px !important;
-  cursor: pointer !important;
-  transition: all 0.15s ease !important;
-  flex-shrink: 0 !important;
-}
-
-.auth-modal-close-btn:hover {
-  background: #f4f6fb !important;
-  color: #4169e1 !important;
-  border-color: #cbd5e1 !important;
-}
-
-/* Segmented Pill Tabs Container */
-.auth-segmented-tabs {
-  display: flex !important;
-  background: #f0f3f8 !important;
-  border-radius: 12px !important;
-  padding: 4px !important;
-  gap: 6px !important;
-  margin-bottom: 16px !important;
-}
-
-.auth-tab-pill {
-  flex: 1 !important;
-  padding: 9px 16px !important;
-  border: none !important;
-  border-radius: 9px !important;
-  background: transparent !important;
-  color: #6b7c97 !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  cursor: pointer !important;
-  transition: all 0.18s ease !important;
-}
-
-.auth-tab-pill:hover {
-  color: #17233d !important;
-}
-
-.auth-tab-pill.active {
-  background: #ffffff !important;
-  color: #17233d !important;
-  font-weight: 700 !important;
-  box-shadow: 0 2px 8px rgba(16, 27, 53, 0.08) !important;
-}
-
-/* Quick Demo Fill Pill Strip */
-.auth-demo-pill-strip {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  align-items: center !important;
-  gap: 8px !important;
-  background: #f8fafc !important;
-  border: 1px dashed #dce2ec !important;
-  border-radius: 12px !important;
-  padding: 10px 14px !important;
-  margin-bottom: 18px !important;
-}
-
-.auth-demo-label {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: #64748b !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-}
-
-.auth-demo-pill-btn {
-  background: #ffffff !important;
-  border: 1px solid #dce2ec !important;
-  border-radius: 9999px !important;
-  padding: 5px 12px !important;
-  font-size: 12px !important;
-  color: #334155 !important;
-  cursor: pointer !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  transition: all 0.15s ease !important;
-}
-
-.auth-demo-pill-btn:hover {
-  background: #eef2ff !important;
-  border-color: #818cf8 !important;
-  color: #4169e1 !important;
-  transform: translateY(-1px) !important;
-}
-
-.demo-pill-tag {
-  font-size: 10px !important;
-  padding: 2px 6px !important;
-  border-radius: 9999px !important;
-  background: #f1f5f9 !important;
-  color: #64748b !important;
-  font-weight: 600 !important;
-}
-
-/* Form Controls */
-.auth-form .form-group {
-  margin-bottom: 16px !important;
-}
-
-.auth-form .form-label {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: #536177 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.6px !important;
-  margin-bottom: 6px !important;
-  display: block !important;
-}
-
-.auth-form .input-text {
-  background: #ffffff !important;
-  border: 1px solid #dce2ec !important;
-  border-radius: 9px !important;
-  padding: 11px 14px !important;
-  font-size: 13.5px !important;
-  color: #17233d !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  transition: all 0.15s ease !important;
-}
-
-.auth-form .input-text::placeholder {
-  color: #9aa6ba !important;
-}
-
-.auth-form .input-text:focus {
-  border-color: #7f9cf5 !important;
-  box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.12) !important;
-  outline: none !important;
-}
-
-.auth-form .input-password-wrapper {
-  position: relative !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-.auth-form .pwd-toggle-btn {
-  position: absolute !important;
-  right: 12px !important;
-  background: transparent !important;
-  border: none !important;
-  color: #9aa6ba !important;
-  font-size: 18px !important;
-  cursor: pointer !important;
-  padding: 4px !important;
-  border-radius: 4px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transition: color 0.15s ease !important;
-}
-
-.auth-form .pwd-toggle-btn:hover {
-  color: #4169e1 !important;
-}
-
-.auth-helper-text {
-  font-size: 11.5px !important;
-  color: #94a3b8 !important;
-  margin-top: 4px !important;
-  display: block !important;
-}
-
-/* Primary Submit Button matching 65.0.20.41 */
-.auth-submit-btn {
-  background: #4169e1 !important;
-  background: linear-gradient(135deg, #4169e1 0%, #3158ce 100%) !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  height: 46px !important;
-  border-radius: 10px !important;
-  width: 100% !important;
-  border: none !important;
-  cursor: pointer !important;
-  box-shadow: 0 6px 16px rgba(65, 105, 225, 0.22) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  margin-top: 18px !important;
-  transition: all 0.18s ease !important;
-}
-
-.auth-submit-btn:hover {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 8px 22px rgba(65, 105, 225, 0.32) !important;
-  filter: brightness(1.04) !important;
-}
-
-.auth-submit-btn:active {
-  transform: translateY(0) !important;
-}
-
-/* Error Banner */
-#signin-error-box.form-error-alert {
-  background: #fef2f2 !important;
-  border: 1px solid #fecaca !important;
-  color: #b91c1c !important;
-  border-radius: 9px !important;
-  font-size: 12.5px !important;
-  font-weight: 600 !important;
-  padding: 10px 14px !important;
-  margin-bottom: 14px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-#signin-error-box.hidden {
-  display: none !important;
-}
-
-/* Landing Page Buttons matching 65.0.20.41 */
-.nav-signin-glass-btn {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  color: #ffffff !important;
-  border-radius: 10px !important;
-  padding: 8px 16px !important;
-  font-weight: 600 !important;
-  font-size: 13px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  cursor: pointer !important;
-  transition: all 0.18s ease !important;
-}
-
-.nav-signin-glass-btn:hover {
-  background: rgba(255, 255, 255, 0.16) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  transform: translateY(-1px) !important;
-}
-
-.nav-signin-primary-btn {
-  background: linear-gradient(135deg, #4169e1 0%, #3158ce 100%) !important;
-  border: none !important;
-  color: #ffffff !important;
-  border-radius: 10px !important;
-  padding: 8px 18px !important;
-  font-weight: 700 !important;
-  font-size: 13px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 14px rgba(65, 105, 225, 0.3) !important;
-  transition: all 0.18s ease !important;
-}
-
-.nav-signin-primary-btn:hover {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 6px 18px rgba(65, 105, 225, 0.4) !important;
-  filter: brightness(1.05) !important;
-}
-
-/* Floating Landing Demo Credentials Bar */
-.landing-quick-creds-card {
-  max-width: 760px;
-  margin: 1.75rem auto 2.5rem;
-  padding: 14px 20px;
-  background: #ffffff;
-  border: 1px solid #e3e8f2;
-  border-radius: 14px;
-  box-shadow: 0 8px 28px rgba(23, 42, 79, 0.08);
+.auth-tabs-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  margin-bottom: 1.25rem;
+  gap: 4px;
 }
 
-.quick-creds-title {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.quick-creds-pills {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.quick-cred-pill {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 9999px;
-  padding: 6px 14px;
-  font-size: 12.5px;
-  color: #1e293b;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.15s ease;
-}
-
-.quick-cred-pill:hover {
-  background: #eef2ff;
-  border-color: #818cf8;
-  color: #4169e1;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(65, 105, 225, 0.12);
-}
-
-.cred-emoji {
-  font-size: 14px;
-}
-
-.cred-tag {
-  font-size: 11px;
-  color: #64748b;
-  padding: 2px 8px;
-  background: #e2e8f0;
-  border-radius: 9999px;
-  font-weight: 600;
-}
-
-/* ============================================================================
-   Morning Sky — Clean, Lighter Static Background (Option 3)
-   ============================================================================ */
-#landing-view,
-.landing-wrapper {
-  min-height: 100vh;
-  background: linear-gradient(140deg, #edf2fe 0%, #f1f5fd 35%, #f8fafd 70%, #ffffff 100%) !important;
-  display: flex;
-  flex-direction: column;
-}
-
-#constellation-canvas {
-  opacity: 0.12 !important; /* Gentle, non-distracting subtle wave texture */
-}
-
-.landing-nav {
-  height: 74px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: transparent !important;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.7) !important;
-  position: relative;
-  z-index: 10;
-}
-
-.landing-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #101b35 !important;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: -0.5px;
-}
-.landing-brand-mark {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #4169e1, #2563eb);
-  color: #ffffff;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  font-size: 20px;
-  box-shadow: 0 4px 12px rgba(65, 105, 225, 0.25);
-}
-.landing-brand-copy span {
-  display: block;
-  font-size: 17px;
-  font-weight: 800;
-  color: #101b35 !important;
-  line-height: 1.1;
-}
-.landing-brand-copy small {
-  display: block;
-  font-size: 8.5px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #64748b !important;
-  margin-top: 3px;
-  text-transform: uppercase;
-}
-
-.hero-section {
-  max-width: 1200px;
-  margin: 24px auto 0;
-  padding: 0 24px 20px;
-  text-align: center;
-  color: #101b35;
-  background: transparent !important;
-}
-
-.hero-eyebrow {
-  display: inline-block;
-  font-size: 10px;
-  letter-spacing: 1.65px;
-  font-weight: 800;
-  color: #2563eb;
-  background: rgba(37, 99, 235, 0.08);
-  border: 1px solid rgba(37, 99, 235, 0.18);
-  padding: 4px 14px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-
-.landing-hero-title {
-  font-size: clamp(32px, 4.2vw, 52px);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -1.5px;
-  margin: 0 auto 16px;
-  color: #0f172a !important;
-}
-.landing-hero-title em {
-  font-style: normal;
-  background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.landing-hero-desc {
-  font-size: 15.5px;
-  color: #475569 !important;
-  max-width: 680px;
-  margin: 0 auto 28px;
-  line-height: 1.65;
-}
-
-/* 65.0.20.41 Quick Demo Credentials Floating Card */
-.demo-accounts-bar {
-  max-width: 960px;
-  margin: 0 auto 36px;
-  padding: 12px 20px;
-  background: #ffffff;
-  border: 1px solid #dce4f0;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  box-shadow: 0 8px 24px rgba(16, 27, 53, 0.06);
-}
-.demo-accounts-bar span {
-  font-size: 11px;
-  font-weight: 700;
-  color: #475569;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.demo-pills-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.demo-pill {
-  border: 1px solid #d0dcee;
-  background: #f8faff;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #2563eb;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.demo-pill:hover {
-  background: #edf2ff;
-  border-color: #93c5fd;
-  transform: translateY(-1px);
-}
-.demo-pill small {
-  color: #64748b;
-  font-weight: 500;
-}
-
-/* 65.0.20.41 2-Entry Portal Cards */
-.portal-entry-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  max-width: 960px;
-  margin: 0 auto 36px;
-  padding: 0 24px;
-  position: relative;
-  z-index: 10;
-}
-.portal-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 18px;
-  padding: 28px 24px 24px;
-  box-shadow: 0 14px 35px rgba(16, 27, 53, 0.08);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  transition: all 0.25s ease;
-  text-align: left;
-}
-.portal-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 45px rgba(16, 27, 53, 0.13);
-  border-color: #b4c7f7;
-}
-.portal-card-badge {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  font-size: 9px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  padding: 4px 9px;
-  border-radius: 14px;
-}
-.portal-card-badge.user { background: #edf2ff; color: #3559bd; }
-.portal-card-badge.developer { background: #fff3e6; color: #c06915; }
-
-.portal-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 13px;
-  display: grid;
-  place-items: center;
-  margin-bottom: 16px;
-  font-size: 24px;
-}
-.portal-icon.user { background: #edf2ff; color: #4169e1; }
-.portal-icon.developer { background: #fff3e6; color: #d87b20; }
-
-.portal-card h3 {
-  font-size: 19px;
-  font-weight: 800;
-  margin: 0 0 8px;
-  color: #17233d;
-}
-.portal-card p {
-  font-size: 12.5px;
-  color: #667690;
-  line-height: 1.6;
-  margin: 0 0 20px;
+.auth-tab-btn {
   flex: 1;
-}
-
-.portal-features {
-  list-style: none;
-  padding: 16px 0 0;
-  margin: 0 0 24px;
-  display: grid;
-  gap: 8px;
-  border-top: 1px solid #edf0f5;
-}
-.portal-features li {
-  font-size: 11.5px;
-  color: #55657e;
-  display: flex;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: calc(var(--radius-md) - 2px);
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.84rem;
+  font-weight: 600;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-}
-.portal-features li i {
-  color: #159b73;
-  font-size: 15px;
-  flex-shrink: 0;
+  justify-content: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.portal-actions {
-  display: grid;
-  gap: 8px;
+.auth-tab-btn:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.portal-btn-primary {
-  background: linear-gradient(135deg, #4169e1 0%, #3158ce 100%);
+.auth-tab-btn.active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.85), rgba(59, 130, 246, 0.7));
   color: #ffffff;
-  border: 0;
-  border-radius: 10px;
-  padding: 12px 18px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 6px 14px rgba(65, 105, 225, 0.28);
-  transition: all 0.18s ease;
-}
-.portal-btn-primary:hover {
-  background: #3158ce;
-  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  border: 1px solid rgba(147, 197, 253, 0.4);
 }
 
-.portal-btn-outline {
-  background: #ffffff;
-  border: 1px solid #dce2ec;
-  color: #40506e;
-  border-radius: 10px;
-  padding: 11px 18px;
-  font-size: 12.5px;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.18s ease;
+#tab-role-admin.active {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.85), rgba(168, 85, 247, 0.7));
+  box-shadow: 0 4px 14px rgba(147, 51, 234, 0.35);
+  border-color: rgba(216, 180, 254, 0.4);
 }
-.portal-btn-outline:hover {
-  background: #f8fafd;
-  border-color: #cfd8e5;
-}
-
-.landing-stats-row {
-  max-width: 960px;
-  margin: 0 auto 36px;
-  padding: 16px 24px;
-  background: #ffffff;
-  border: 1px solid #e8edf4;
-  border-radius: 16px;
-  box-shadow: 0 4px 18px rgba(16, 27, 53, 0.04);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  text-align: center;
-}
-.landing-stat-val {
-  font-size: 22px;
-  font-weight: 800;
-  color: #4169e1;
-  letter-spacing: -0.5px;
-}
-.landing-stat-lbl {
-  font-size: 10.5px;
-  font-weight: 700;
-  color: #718098;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-
-@media (max-width: 800px) {
-  .portal-entry-grid { grid-template-columns: 1fr; }
-  .landing-stats-row { grid-template-columns: repeat(2, 1fr); }
-  .demo-accounts-bar { flex-direction: column; align-items: flex-start; }
-}
-
 
 
 
