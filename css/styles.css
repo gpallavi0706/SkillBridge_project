@@ -2826,13 +2826,17 @@ body {
 }
 
 /* ============================================================================
-   Job Matcher / 65.0.20.41 Exact Gateway Design System
+   Morning Sky — Clean, Lighter Static Background (Option 3)
    ============================================================================ */
 .landing-wrapper {
   min-height: 100vh;
-  background: linear-gradient(180deg, #101b35 0%, #152445 420px, #f5f7fb 420px, #f5f7fb 100%) !important;
+  background: linear-gradient(140deg, #edf2fe 0%, #f1f5fd 35%, #f8fafd 70%, #ffffff 100%) !important;
   display: flex;
   flex-direction: column;
+}
+
+#constellation-canvas {
+  opacity: 0.12 !important; /* Gentle, non-distracting subtle wave texture */
 }
 
 .landing-nav {
@@ -2845,7 +2849,7 @@ body {
   align-items: center;
   justify-content: space-between;
   background: transparent !important;
-  border-bottom: 0 !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7) !important;
   position: relative;
   z-index: 10;
 }
@@ -2854,7 +2858,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #ffffff;
+  color: #101b35 !important;
   text-decoration: none;
   font-weight: 800;
   font-size: 18px;
@@ -2864,19 +2868,19 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #f0c96f, #e5b340);
-  color: #13213e;
+  background: linear-gradient(135deg, #4169e1, #2563eb);
+  color: #ffffff;
   display: grid;
   place-items: center;
   flex-shrink: 0;
   font-size: 20px;
-  box-shadow: 0 4px 12px rgba(240, 201, 111, 0.3);
+  box-shadow: 0 4px 12px rgba(65, 105, 225, 0.25);
 }
 .landing-brand-copy span {
   display: block;
   font-size: 17px;
   font-weight: 800;
-  color: #ffffff;
+  color: #101b35 !important;
   line-height: 1.1;
 }
 .landing-brand-copy small {
@@ -2884,27 +2888,32 @@ body {
   font-size: 8.5px;
   font-weight: 700;
   letter-spacing: 1.5px;
-  color: #9eafd0;
+  color: #64748b !important;
   margin-top: 3px;
   text-transform: uppercase;
 }
 
 .hero-section {
   max-width: 1200px;
-  margin: 20px auto 0;
+  margin: 24px auto 0;
   padding: 0 24px 20px;
   text-align: center;
-  color: #ffffff;
+  color: #101b35;
   background: transparent !important;
 }
 
 .hero-eyebrow {
+  display: inline-block;
   font-size: 10px;
   letter-spacing: 1.65px;
   font-weight: 800;
-  color: #aebff4;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  padding: 4px 14px;
+  border-radius: 20px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .landing-hero-title {
@@ -2913,18 +2922,18 @@ body {
   line-height: 1.15;
   letter-spacing: -1.5px;
   margin: 0 auto 16px;
-  color: #ffffff;
+  color: #0f172a !important;
 }
 .landing-hero-title em {
   font-style: normal;
-  background: linear-gradient(90deg, #f0c96f, #ffdd87);
+  background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .landing-hero-desc {
-  font-size: 15px;
-  color: #b6c6e0;
+  font-size: 15.5px;
+  color: #475569 !important;
   max-width: 680px;
   margin: 0 auto 28px;
   line-height: 1.65;
@@ -2936,19 +2945,19 @@ body {
   margin: 0 auto 36px;
   padding: 12px 20px;
   background: #ffffff;
-  border: 1px solid #e3e8f2;
+  border: 1px solid #dce4f0;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  box-shadow: 0 10px 30px rgba(11, 23, 53, 0.22);
+  box-shadow: 0 8px 24px rgba(16, 27, 53, 0.06);
 }
 .demo-accounts-bar span {
   font-size: 11px;
   font-weight: 700;
-  color: #5d6d88;
+  color: #475569;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -2959,13 +2968,13 @@ body {
   gap: 8px;
 }
 .demo-pill {
-  border: 1px solid #dbe3f1;
+  border: 1px solid #d0dcee;
   background: #f8faff;
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 700;
-  color: #31519a;
+  color: #2563eb;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2974,11 +2983,11 @@ body {
 }
 .demo-pill:hover {
   background: #edf2ff;
-  border-color: #a5bef7;
+  border-color: #93c5fd;
   transform: translateY(-1px);
 }
 .demo-pill small {
-  color: #7e8ea7;
+  color: #64748b;
   font-weight: 500;
 }
 
