@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SkillBridge | Interactive Student Opportunities Hub</title>
   <meta name="description" content="Verified student internships, collegiate hackathons, open source mentorships, and peer collaboration.">
-  <link rel="stylesheet" href="css/styles.css?v=2.2">
+  <link rel="stylesheet" href="css/styles.css?v=2.3">
 <!-- Phosphor Icons for crisp, lightweight, accessible UI symbols -->
   <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
 </head>
@@ -37,11 +37,11 @@
         <a href="#features">Features</a>
         <a href="#" onclick="window.SkillBridge.openSignInModal('student'); return false;">Opportunities</a>
         <a href="#" onclick="window.SkillBridge.openSignInModal('student'); return false;">Mentorship</a>
-        <button class="btn btn-outline btn-sm" onclick="window.SkillBridge.openSignInModal('admin')">
-          <i class="ph ph-shield-check"></i> Coordinator Login
+        <button class="nav-signin-glass-btn" onclick="window.SkillBridge.openSignInModal('admin')">
+          <i class="ph ph-shield-check"></i> Admin
         </button>
-        <button class="btn btn-primary btn-sm" onclick="window.SkillBridge.openSignInModal('student')">
-          <i class="ph ph-sign-in"></i> Student Sign In
+        <button class="nav-signin-primary-btn" onclick="window.SkillBridge.openSignInModal('student')">
+          <i class="ph ph-sign-in"></i> Sign In
         </button>
       </nav>
     </header>
@@ -66,6 +66,21 @@
           <button class="btn btn-outline" onclick="window.SkillBridge.openSignInModal('student')">
             <i class="ph ph-user-circle"></i> Sign In to Account
           </button>
+        </div>
+
+        <!-- Quick Demo Credentials Bar (Matched to 65.0.20.41) -->
+        <div class="landing-quick-creds-card">
+          <div class="quick-creds-title">
+            <i class="ph ph-sparkle"></i> Quick Demo Credentials:
+          </div>
+          <div class="quick-creds-pills">
+            <button type="button" class="quick-cred-pill" onclick="window.SkillBridge.fillDemoCredentials('student'); window.SkillBridge.openSignInModal('student');">
+              <span class="cred-emoji">🎓</span> <strong>Alex Chen</strong> <span class="cred-tag">Student · Python / SQL</span>
+            </button>
+            <button type="button" class="quick-cred-pill" onclick="window.SkillBridge.fillDemoCredentials('admin'); window.SkillBridge.openSignInModal('admin');">
+              <span class="cred-emoji">🛡️</span> <strong>Admin Coordinator</strong> <span class="cred-tag">System Admin</span>
+            </button>
+          </div>
         </div>
 
         <!-- Platform Stats Banner -->
@@ -928,71 +943,66 @@
        4. MODALS
        ======================================================== -->
 
-  <!-- Sign In Modal -->
+  <!-- Sign In Modal (Matched to 65.0.20.41 Design System) -->
   <div id="signin-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="signin-modal-title">
     <div class="modal-backdrop" onclick="window.SkillBridge.closeSignInModal()"></div>
-    <div class="modal-card">
-      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeSignInModal()" aria-label="Close Sign In Dialog">
-        <i class="ph ph-x"></i>
-      </button>
-
-      <div class="modal-header">
-        <h2 id="signin-modal-title">Sign In to SkillBridge</h2>
-        <p>Access your personalized student dashboard, saved opportunities, and milestone tracking.</p>
-      </div>
-
-      <!-- Demo Mode Notice -->
-      <div class="demo-mode-notice-banner">
-        <i class="ph ph-shield-warning"></i>
-        <div>
-          <strong>Demo Mode Simulation:</strong> Client-side authentication for preview purposes. Never enter real passwords or confidential credentials. Real passwords are never transmitted.
+    <div class="modal-card auth-modal-card">
+      <!-- Modal Header: Left Title+Subtitle, Right Close Button -->
+      <div class="auth-modal-header">
+        <div class="auth-modal-header-text">
+          <h2 id="signin-modal-title" class="auth-modal-title">Student / Candidate Portal</h2>
+          <p id="signin-modal-subtitle" class="auth-modal-subtitle">Sign in or register to access personalized opportunities & dashboard</p>
         </div>
-      </div>
-
-      <!-- Quick Demo Fill Helpers -->
-      <div class="demo-quick-fill-box">
-        <button type="button" class="btn btn-outline btn-xs flex-1" onclick="window.SkillBridge.fillDemoCredentials('student')">
-          <i class="ph ph-user"></i> Fill Student Demo
-        </button>
-        <button type="button" class="btn btn-outline btn-xs flex-1" onclick="window.SkillBridge.fillDemoCredentials('admin')">
-          <i class="ph ph-shield-check"></i> Fill Admin Demo
+        <button class="auth-modal-close-btn" onclick="window.SkillBridge.closeSignInModal()" aria-label="Close Sign In Dialog">
+          <i class="ph ph-x"></i>
         </button>
       </div>
 
-      <!-- Role Selector Tabs -->
-      <div class="auth-tabs-row" role="tablist">
-        <button type="button" id="tab-role-student" class="auth-tab-btn active" onclick="window.SkillBridge.setSignInRole('student')">
+      <!-- Segmented Pill Tabs (Exact 65.0.20.41 Styling) -->
+      <div class="auth-segmented-tabs" role="tablist">
+        <button type="button" id="tab-role-student" class="auth-tab-pill active" onclick="window.SkillBridge.setSignInRole('student')">
           <i class="ph ph-student"></i> Student Login
         </button>
-        <button type="button" id="tab-role-admin" class="auth-tab-btn" onclick="window.SkillBridge.setSignInRole('admin')">
+        <button type="button" id="tab-role-admin" class="auth-tab-pill" onclick="window.SkillBridge.setSignInRole('admin')">
           <i class="ph ph-shield"></i> Admin Login
+        </button>
+      </div>
+
+      <!-- Quick Demo Credentials Pill Strip (From 65.0.20.41) -->
+      <div class="auth-demo-pill-strip">
+        <span class="auth-demo-label"><i class="ph ph-sparkle"></i> Quick Demo Fill:</span>
+        <button type="button" class="auth-demo-pill-btn" onclick="window.SkillBridge.fillDemoCredentials('student')">
+          <span class="demo-pill-emoji">🎓</span> <strong>Alex Chen</strong> <span class="demo-pill-tag">Student</span>
+        </button>
+        <button type="button" class="auth-demo-pill-btn" onclick="window.SkillBridge.fillDemoCredentials('admin')">
+          <span class="demo-pill-emoji">🛡️</span> <strong>Admin</strong> <span class="demo-pill-tag">Coordinator</span>
         </button>
       </div>
 
       <div id="signin-error-box" class="form-error-alert hidden" role="alert"></div>
 
       <!-- Sign In Form -->
-      <form id="signin-form" onsubmit="window.SkillBridge.handleSignInSubmit(event)">
+      <form id="signin-form" class="auth-form" onsubmit="window.SkillBridge.handleSignInSubmit(event)">
         <input type="hidden" id="signin-role-hidden" value="student">
 
         <div class="form-group">
-          <label for="signin-email" class="form-label">Email Address</label>
+          <label for="signin-email" class="form-label">Email / Username</label>
           <input type="email" id="signin-email" class="input-text" placeholder="e.g. alex.chen@university.edu" autocomplete="email" required>
         </div>
 
         <div class="form-group">
           <label for="signin-password" class="form-label">Password</label>
           <div class="input-password-wrapper">
-            <input type="password" id="signin-password" class="input-text" placeholder="••••••••" autocomplete="current-password" required>
+            <input type="password" id="signin-password" class="input-text" placeholder="Enter your password" autocomplete="current-password" required>
             <button type="button" class="pwd-toggle-btn" onclick="window.SkillBridge.togglePasswordVisibility()" aria-label="Toggle password visibility">
               <i id="pwd-toggle-icon" class="ph ph-eye"></i>
             </button>
           </div>
-          <span class="text-xs text-muted mt-1 block">Demo password requirement: 6+ characters.</span>
+          <span class="auth-helper-text">Demo password requirement: 6+ characters.</span>
         </div>
 
-        <button type="submit" class="btn btn-primary w-full mt-2">
-          <i class="ph ph-sign-in"></i> Sign In to Dashboard
+        <button type="submit" id="signin-submit-btn" class="auth-submit-btn">
+          <span>Sign In</span> <i class="ph ph-arrow-right"></i>
         </button>
       </form>
     </div>
@@ -1406,11 +1416,11 @@
   <div id="toast-container" class="toast-stack-container" aria-live="assertive"></div>
 
   <!-- Application Scripts (Cache-Busted) -->
-  <script src="js/data.js?v=2.2"></script>
-  <script src="js/naukri_data.js?v=2.2"></script>
-  <script src="js/api.js?v=2.2"></script>
-  <script src="js/auth.js?v=2.2"></script>
-  <script src="js/chatbot.js?v=2.2"></script>
-  <script src="js/app.js?v=2.2"></script>
+  <script src="js/data.js?v=2.3"></script>
+  <script src="js/naukri_data.js?v=2.3"></script>
+  <script src="js/api.js?v=2.3"></script>
+  <script src="js/auth.js?v=2.3"></script>
+  <script src="js/chatbot.js?v=2.3"></script>
+  <script src="js/app.js?v=2.3"></script>
 </body>
 </html>

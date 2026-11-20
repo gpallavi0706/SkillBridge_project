@@ -2656,18 +2656,24 @@ ORDER BY total_offers DESC, gpa DESC;`,
     const studentTab = document.getElementById('tab-role-student');
     const adminTab = document.getElementById('tab-role-admin');
     const roleInput = document.getElementById('signin-role-hidden');
-    const roleNotice = document.getElementById('signin-role-notice');
+    const modalTitle = document.getElementById('signin-modal-title');
+    const modalSub = document.getElementById('signin-modal-subtitle');
+    const submitBtn = document.getElementById('signin-submit-btn');
 
     if (roleInput) roleInput.value = role;
 
     if (role === 'admin') {
       if (adminTab) adminTab.classList.add('active');
       if (studentTab) studentTab.classList.remove('active');
-      if (roleNotice) roleNotice.textContent = 'Admin / Coordinator Access Mode';
+      if (modalTitle) modalTitle.textContent = 'Administrator Portal';
+      if (modalSub) modalSub.textContent = 'Secure login for administrative oversight & system controls';
+      if (submitBtn) submitBtn.innerHTML = '<span>Sign In as Admin</span> <i class="ph ph-arrow-right"></i>';
     } else {
       if (studentTab) studentTab.classList.add('active');
       if (adminTab) adminTab.classList.remove('active');
-      if (roleNotice) roleNotice.textContent = 'Student Access Mode';
+      if (modalTitle) modalTitle.textContent = 'Student / Candidate Portal';
+      if (modalSub) modalSub.textContent = 'Sign in or register to access personalized opportunities & dashboard';
+      if (submitBtn) submitBtn.innerHTML = '<span>Sign In</span> <i class="ph ph-arrow-right"></i>';
     }
   }
 
