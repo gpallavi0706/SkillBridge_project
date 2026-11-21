@@ -48,6 +48,15 @@ try:
 except ImportError:
     pass
 
+# Include Multi-Role Auth, Recruiter & Developer Routers
+try:
+    from auth_routes import auth_router, recruiter_router, developer_router
+    app.include_router(auth_router)
+    app.include_router(recruiter_router)
+    app.include_router(developer_router)
+except ImportError:
+    pass
+
 @app.on_event("startup")
 def on_startup():
     print("[Startup] Initializing MySQL connection pool...")
@@ -299,49 +308,8 @@ def execute_dbms_topic_query(topic_num: int):
         raise HTTPException(status_code=500, detail=f"Database execution error on Topic {topic_num}: {str(e)}")
 
 # ========================================================
-# AUTHENTICATION
+# AUTHENTICATION (Handled by auth_router in auth_routes.py)
 # ========================================================
-@app.post("/api/auth/login")
-def login(creds: UserLoginRequest):
-    """Authenticates user against MySQL students / users table."""
-    try:
-        with get_db_cursor() as cursor:
-            # Query students table
-            cursor.execute(
-                """
-                SELECT 
-                    `student_id` AS `id`, `email`, `password_hash`, 
-                    CONCAT(`first_name`, ' ', `last_name`) AS `name`,
-                    `role`, `university`, `degree`, `major`, `graduation_year`, `gpa`, `bio`, `avatar`
-                FROM `students` 
-                WHERE `email` = %s;
-                """,
-                (creds.email.strip().lower(),)
-            )
-            user = cursor.fetchone()
-
-            if not user:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid email or password."
-                )
-
-            # Check demo password match
-            if user["password_hash"] != creds.password and not creds.password.startswith("Demo"):
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid password provided."
-                )
-
-            user.pop("password_hash", None)
-            return {
-                "success": True,
-                "user": user
-            }
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database query error: {str(e)}")
 
 # ========================================================
 # OPPORTUNITIES
