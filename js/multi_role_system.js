@@ -1055,8 +1055,43 @@
     }
 
     openPostJobModal() {
+      const user = window.SkillBridgeAuth ? window.SkillBridgeAuth.getUser() : null;
+      const isRecruiter = user && user.role === 'recruiter';
+
       const m = document.getElementById('modal-post-job');
-      if (m) m.classList.add('active');
+      if (!m) return;
+
+      const companyRow = document.getElementById('job-post-company-row');
+      const companyBadge = document.getElementById('job-post-company-badge');
+      const companyBadgeText = document.getElementById('job-post-company-badge-text');
+
+      if (isRecruiter) {
+        if (companyRow) {
+          companyRow.classList.add('hidden');
+          companyRow.style.display = 'none';
+        }
+        if (companyBadge && companyBadgeText) {
+          companyBadgeText.textContent = `Posting as: ${user.company_name || 'Verified Employer'} (${user.name})`;
+          companyBadge.classList.remove('hidden');
+          companyBadge.style.display = 'inline-flex';
+        }
+      } else {
+        if (companyRow) {
+          companyRow.classList.remove('hidden');
+          companyRow.style.display = 'grid';
+        }
+        if (companyBadge) {
+          companyBadge.classList.add('hidden');
+          companyBadge.style.display = 'none';
+        }
+      }
+
+      m.classList.add('active');
+      m.setAttribute('aria-hidden', 'false');
+      setTimeout(() => {
+        const titleEl = document.getElementById('job-post-title');
+        if (titleEl) titleEl.focus();
+      }, 100);
     }
 
     closeModal(modalId) {
@@ -1191,7 +1226,16 @@
 
     async handlePostJob(e) {
       e.preventDefault();
-      const user = window.SkillBridgeAuth.currentUser || PRESEEDED_ACCOUNTS.priya_google;
+      const currentUser = window.SkillBridgeAuth ? window.SkillBridgeAuth.getUser() : null;
+      const isRecruiter = currentUser && currentUser.role === 'recruiter';
+
+      const companyInput = document.getElementById('job-post-company');
+      const emailInput = document.getElementById('job-post-recruiter-email');
+
+      let companyName = isRecruiter ? (currentUser.company_name || "Google India") : ((companyInput && companyInput.value.trim()) || "Enterprise Employer");
+      let recruiterName = isRecruiter ? currentUser.name : "Company Recruiter";
+      let recruiterEmail = isRecruiter ? currentUser.email : ((emailInput && emailInput.value.trim()) || "recruiter@company.com");
+
       const title = document.getElementById('job-post-title').value.trim();
       const job_type = document.getElementById('job-post-type').value;
       const work_mode = document.getElementById('job-post-mode').value;
@@ -1202,10 +1246,30 @@
       const description = document.getElementById('job-post-desc').value.trim();
       const skills = skillsRaw.split(',').map(s => s.trim()).filter(Boolean);
 
+      // If employer was not logged in, auto-register / set session for this employer
+      if (!isRecruiter) {
+        const newRecruiter = {
+          id: `rec_${Date.now()}`,
+          username: recruiterEmail.split('@')[0],
+          name: recruiterName,
+          email: recruiterEmail,
+          role: "recruiter",
+          company_name: companyName,
+          company_status: "approved",
+          avatar: "HR"
+        };
+        saveCustomAccount(newRecruiter);
+        window.SkillBridgeAuth.currentUser = newRecruiter;
+        window.SkillBridgeAuth.recordLoginAudit(newRecruiter);
+        try {
+          localStorage.setItem(window.SkillBridgeAuth.STORAGE_KEY, JSON.stringify(newRecruiter));
+        } catch(err) {}
+      }
+
       const newJob = {
         opp_id: Date.now(),
-        org_id: user.company_id || 1,
-        company_name: user.company_name || "Enterprise Recruiter",
+        org_id: (currentUser && currentUser.company_id) || 1,
+        company_name: companyName,
         title: title,
         job_type: job_type,
         work_mode: work_mode,
@@ -1262,8 +1326,10 @@
       }
 
       this.closeModal('modal-post-job');
+      window.SkillBridge.applyRoleNavigation('recruiter');
+      window.SkillBridge.navigateTo('recruiter');
       this.renderRecruiterWorkspace();
-      window.SkillBridge.showToast(`Opportunity '${title}' posted live for students!`, 'success');
+      window.SkillBridge.showToast(`Opportunity '${title}' posted live for students by ${companyName}!`, 'success');
     }
 
     changeApplicantStatus(appId, newStatus) {

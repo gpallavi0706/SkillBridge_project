@@ -2600,6 +2600,9 @@ body.dark-theme .hero-title {
         <a href="#features">Features</a>
         <a href="#" onclick="window.SkillBridge.openSignInModal('student'); return false;">Opportunities</a>
         <a href="#" onclick="window.SkillBridge.openSignInModal('student'); return false;">Mentorship</a>
+        <button class="btn btn-outline btn-sm" style="border-color:#10b981; color:#34d399; font-weight:600;" onclick="window.SkillBridge.openPostJobModal()">
+          <i class="ph ph-plus-circle"></i> Employers: Post a Job
+        </button>
         <button class="btn btn-outline btn-sm" onclick="window.SkillBridge.openSignInModal('admin')">
           <i class="ph ph-shield-check"></i> Coordinator Login
         </button>
@@ -2623,14 +2626,17 @@ body.dark-theme .hero-title {
         </p>
 
         <div class="hero-cta-group">
-          <button class="btn btn-primary" onclick="window.SkillBridgeSystem.openRegisterCandidateModal()">
+          <button class="btn btn-primary" onclick="window.SkillBridge.openRegisterCandidateModal()">
             <i class="ph ph-user-plus"></i> Create Student Account
           </button>
-          <button class="btn btn-outline" onclick="window.SkillBridgeSystem.openAuthModal('student', 'login')">
+          <button class="btn btn-outline" onclick="window.SkillBridge.openSignInModal('student')">
             <i class="ph ph-sign-in"></i> Student Sign In
           </button>
-          <button class="btn btn-outline" style="border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7;" onclick="window.SkillBridgeSystem.openAuthModal('recruiter', 'login')">
+          <button class="btn btn-outline" style="border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7;" onclick="window.SkillBridge.openSignInModal('recruiter')">
             <i class="ph ph-briefcase"></i> Employer Sign In
+          </button>
+          <button class="btn btn-primary" style="background: #059669; border-color: #059669; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);" onclick="window.SkillBridge.openPostJobModal()">
+            <i class="ph ph-plus-circle"></i> Post a Job Opening (Employers)
           </button>
         </div>
 
@@ -2796,6 +2802,15 @@ body.dark-theme .hero-title {
           <span class="sidebar-badge" style="background:#2563eb; color:#ffffff;">8</span>
         </a>
 
+        <!-- Employer Quick Action for Visiting Employers / Students -->
+        <a href="#" class="sidebar-nav-item nav-role-student" id="sidebar-nav-student-post-job" style="background: rgba(16, 185, 129, 0.08); border: 1px dashed rgba(16, 185, 129, 0.45); margin: 6px 12px; border-radius: 8px; color: #34d399;" onclick="window.SkillBridge.openPostJobModal(); return false;">
+          <div class="sidebar-nav-item-left">
+            <i class="ph ph-plus-circle" style="color: #10b981; font-size: 1.15rem;"></i>
+            <span style="font-weight: 600;">Employers: Post a Job</span>
+          </div>
+          <span class="sidebar-badge" style="background:#059669; color:#fff;">Hire</span>
+        </a>
+
         <!-- Employer / Recruiter Navigation (Visible ONLY for Recruiters) -->
         <a href="#" class="sidebar-nav-item nav-role-recruiter hidden" id="sidebar-nav-recruiter" data-view="recruiter" data-nav-target="recruiter">
           <div class="sidebar-nav-item-left">
@@ -2893,7 +2908,13 @@ body.dark-theme .hero-title {
             <span id="backend-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f59e0b; margin-right:4px;"></span>
             <span id="backend-status-text">MySQL Status</span>
           </button>
-          <button class="btn btn-outline btn-sm" onclick="window.SkillBridge.navigateTo('opportunities')">
+          <button class="btn btn-primary btn-sm nav-role-recruiter hidden" id="topbar-post-job-btn" style="background:#059669; border-color:#059669; font-weight:600;" onclick="window.SkillBridge.openPostJobModal()">
+            <i class="ph ph-plus-circle"></i> Post a Job
+          </button>
+          <button class="btn btn-outline btn-sm nav-role-student" id="topbar-student-post-job-btn" style="border-color: rgba(16, 185, 129, 0.5); color: #34d399; font-weight: 600;" onclick="window.SkillBridge.openPostJobModal()">
+            <i class="ph ph-plus-circle"></i> Employers: Post a Job
+          </button>
+          <button class="btn btn-outline btn-sm nav-role-student" onclick="window.SkillBridge.navigateTo('opportunities')">
             <i class="ph ph-compass"></i> Explore All
           </button>
           <button class="btn-icon btn-ghost" onclick="window.SkillBridgeChatbot.toggleChat()" title="Open Career Assistant" aria-label="Open Career Assistant">
@@ -2921,9 +2942,14 @@ body.dark-theme .hero-title {
               <h2 id="dash-greeting-heading">Welcome back, <span id="dash-greeting-name">Alex</span>! 👋</h2>
               <p>Your skill compatibility index is active. You have 3 recommended opportunities matching your React & Python skills.</p>
             </div>
-            <button class="btn btn-primary" onclick="window.SkillBridge.navigateTo('opportunities')">
-              <i class="ph ph-compass"></i> Browse Opportunities
-            </button>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <button class="btn btn-primary" onclick="window.SkillBridge.navigateTo('opportunities')">
+                <i class="ph ph-compass"></i> Browse Opportunities
+              </button>
+              <button class="btn btn-outline" style="border-color: #10b981; color: #34d399; font-weight: 600; background: rgba(16, 185, 129, 0.1);" onclick="window.SkillBridge.openPostJobModal()">
+                <i class="ph ph-plus-circle"></i> Employers: Post a Job
+              </button>
+            </div>
           </div>
 
           <!-- Metric Stat Counters -->
@@ -3593,6 +3619,218 @@ body.dark-theme .hero-title {
             Register Account &rarr;
           </button>
         </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       POST A JOB OPENING MODAL (FOR ALL EMPLOYERS & RECRUITERS)
+       ======================================================== -->
+  <div id="modal-post-job" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="post-job-modal-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeModal('modal-post-job')"></div>
+    <div class="modal-card" style="max-width: 640px; background: rgba(11, 17, 33, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(52, 211, 153, 0.35); box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8), 0 0 35px rgba(16, 185, 129, 0.15);">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeModal('modal-post-job')" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+
+      <div class="modal-header">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge badge-success"><i class="ph ph-briefcase"></i> Employer Portal</span>
+          <span class="badge badge-primary">Direct Student Hire</span>
+        </div>
+        <h2 id="post-job-modal-title" style="color: #ffffff; font-size: 1.45rem; font-weight: 700;">
+          <i class="ph ph-plus-circle" style="color: #34d399;"></i> Post a New Job Opening
+        </h2>
+        <p class="text-sm text-muted">Publish your technical opening with required skills. Appears live instantly in the 10,250+ opportunities catalog for all student candidates.</p>
+      </div>
+
+      <!-- Current Company Identifier Badge (when logged in) -->
+      <div id="job-post-company-badge" class="badge badge-success mb-3 hidden" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:0.82rem; width:100%; border-radius:8px;">
+        <i class="ph ph-buildings"></i> <span id="job-post-company-badge-text">Posting as: Google India (Priya Sharma)</span>
+      </div>
+
+      <form id="post-job-form" onsubmit="window.SkillBridgeSystem.handlePostJob(event)">
+        <!-- Company fields (shown when posting from landing page before login) -->
+        <div id="job-post-company-row" class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Company / Organization Name <span class="text-danger">*</span></label>
+            <input type="text" id="job-post-company" class="input-text" placeholder="e.g. Google India, Microsoft, Swiggy" value="Google India">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Official Work Email <span class="text-danger">*</span></label>
+            <input type="email" id="job-post-recruiter-email" class="input-text" placeholder="recruiter@company.com" value="priya.sharma@google.com">
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="form-label">Job Title / Role Name <span class="text-danger">*</span></label>
+          <input type="text" id="job-post-title" class="input-text" placeholder="e.g. Associate Software Engineer (React & Python)" required>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Job Type</label>
+            <select id="job-post-type" class="input-select">
+              <option value="Internship" selected>Internship</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Work Mode</label>
+            <select id="job-post-mode" class="input-select">
+              <option value="Hybrid" selected>Hybrid</option>
+              <option value="Remote">100% Remote</option>
+              <option value="On-site">On-site</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" id="job-post-location" class="input-text" placeholder="e.g. Bengaluru" value="Bengaluru, Karnataka">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Compensation / Stipend Range <span class="text-danger">*</span></label>
+            <input type="text" id="job-post-salary" class="input-text" placeholder="e.g. ₹12 - ₹18 LPA or ₹45,000/mo" value="₹12 - ₹18 LPA" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Application Deadline</label>
+            <input type="date" id="job-post-deadline" class="input-text" value="2027-03-31">
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="form-label">Required Technical Skills (Comma separated) <span class="text-danger">*</span></label>
+          <input type="text" id="job-post-skills" class="input-text" placeholder="e.g. Python, React, SQL, FastAPI, Docker" value="Python, React, SQL, FastAPI" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="form-label">Role Description & Responsibilities <span class="text-danger">*</span></label>
+          <textarea id="job-post-desc" class="input-textarea" rows="3" placeholder="Outline candidate responsibilities, project scope, and hiring expectations..." required>We are looking for motivated software engineering students to build scalable services and interactive interfaces.</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full mt-2" style="background:#059669; border-color:#059669; font-weight:700; font-size:0.95rem; padding:0.75rem;">
+          <i class="ph ph-paper-plane-tilt"></i> Publish Opportunity to Students Instantly
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Recruiter Modal -->
+  <div id="register-recruiter-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="reg-rec-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeModal('register-recruiter-modal')"></div>
+    <div class="modal-card" style="max-width: 560px;">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeModal('register-recruiter-modal')" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+      <div class="modal-header">
+        <h2 id="reg-rec-title"><i class="ph ph-buildings text-primary"></i> Register Employer / Company Account</h2>
+        <p>Any employee can make their company account, post job openings, and review student candidates.</p>
+      </div>
+      <form onsubmit="window.SkillBridgeSystem.handleRecruiterRegister(event)">
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Company Name</label>
+            <input type="text" id="reg-rec-company" class="input-text" placeholder="e.g. Google India" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Recruiter Full Name</label>
+            <input type="text" id="reg-rec-name" class="input-text" placeholder="e.g. Priya Sharma" required>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Official Work Email</label>
+            <input type="email" id="reg-rec-email" class="input-text" placeholder="priya@company.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Designation / Title</label>
+            <input type="text" id="reg-rec-designation" class="input-text" placeholder="Technical Recruiter" value="Technical Recruiter">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" id="reg-rec-username" class="input-text" placeholder="e.g. priya_rec" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="reg-rec-password" class="input-text" placeholder="••••••••" required minlength="6">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Industry</label>
+            <input type="text" id="reg-rec-industry" class="input-text" placeholder="e.g. Software & Cloud" value="Software & Cloud">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" id="reg-rec-location" class="input-text" placeholder="e.g. Bengaluru, India" value="Bengaluru, India">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-full mt-2" style="background:#059669; border-color:#059669;">
+          <i class="ph ph-check"></i> Register Recruiter Account & Open Portal
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Candidate Modal -->
+  <div id="register-candidate-modal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="reg-stu-title">
+    <div class="modal-backdrop" onclick="window.SkillBridge.closeModal('register-candidate-modal')"></div>
+    <div class="modal-card" style="max-width: 560px;">
+      <button class="btn-icon btn-ghost modal-close-btn" onclick="window.SkillBridge.closeModal('register-candidate-modal')" aria-label="Close dialog">
+        <i class="ph ph-x"></i>
+      </button>
+      <div class="modal-header">
+        <h2 id="reg-stu-title"><i class="ph ph-student text-primary"></i> Register Student / Candidate Account</h2>
+        <p>Build your profile, declare your skills, scan your resume with ATS, and apply across 10,250+ opportunities.</p>
+      </div>
+      <form onsubmit="window.SkillBridgeSystem.handleStudentRegister(event)">
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="reg-student-name" class="input-text" placeholder="e.g. M Ram Balaji" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" id="reg-student-username" class="input-text" placeholder="e.g. ram_balaji" required>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="reg-student-email" class="input-text" placeholder="ram@example.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="reg-student-password" class="input-text" placeholder="••••••••" required minlength="6">
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label class="form-label">College / University</label>
+          <input type="text" id="reg-student-university" class="input-text" placeholder="e.g. Gayatri Vidya Parishad College of Engineering" required>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div class="form-group">
+            <label class="form-label">Degree & Branch</label>
+            <input type="text" id="reg-student-degree" class="input-text" placeholder="B.Tech Computer Science" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">CGPA / Percentage</label>
+            <input type="text" id="reg-student-gpa" class="input-text" placeholder="9.5 / 10.0" value="9.5">
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label class="form-label">Technical Skills (Comma separated)</label>
+          <input type="text" id="reg-student-skills" class="input-text" placeholder="e.g. Python, MongoDB, TypeScript, React, SQL" value="Python, MongoDB, TypeScript, React, SQL">
+        </div>
+        <button type="submit" class="btn btn-primary w-full mt-2">
+          <i class="ph ph-check"></i> Register & Open Candidate Dashboard
+        </button>
       </form>
     </div>
   </div>
@@ -8588,6 +8826,42 @@ ORDER BY total_offers DESC, gpa DESC;`,
         errorBox.textContent = (result.errors || ['Authentication failed. Please verify your credentials.']).join(' ');
         errorBox.classList.remove('hidden');
       }
+    }
+  }
+
+  openPostJobModal() {
+    if (window.SkillBridgeSystem && window.SkillBridgeSystem.openPostJobModal) {
+      window.SkillBridgeSystem.openPostJobModal();
+    } else {
+      const m = document.getElementById('modal-post-job');
+      if (m) m.classList.add('active');
+    }
+  }
+
+  closeModal(modalId) {
+    if (window.SkillBridgeSystem && window.SkillBridgeSystem.closeModal) {
+      window.SkillBridgeSystem.closeModal(modalId);
+    } else {
+      const m = document.getElementById(modalId);
+      if (m) m.classList.remove('active');
+    }
+  }
+
+  openRegisterRecruiterModal() {
+    if (window.SkillBridgeSystem && window.SkillBridgeSystem.openRegisterRecruiterModal) {
+      window.SkillBridgeSystem.openRegisterRecruiterModal();
+    } else {
+      const m = document.getElementById('register-recruiter-modal');
+      if (m) m.classList.add('active');
+    }
+  }
+
+  openRegisterCandidateModal() {
+    if (window.SkillBridgeSystem && window.SkillBridgeSystem.openRegisterCandidateModal) {
+      window.SkillBridgeSystem.openRegisterCandidateModal();
+    } else {
+      const m = document.getElementById('register-candidate-modal');
+      if (m) m.classList.add('active');
     }
   }
 
