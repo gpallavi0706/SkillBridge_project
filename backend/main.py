@@ -34,6 +34,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include Chatbot Router (Top 50 Curated Career Questions & Search Engine)
+try:
+    from chatbot_faq import router as chatbot_router
+    app.include_router(chatbot_router)
+except ImportError:
+    pass
+
 @app.on_event("startup")
 def on_startup():
     print("[Startup] Initializing MySQL connection pool...")
