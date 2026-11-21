@@ -275,6 +275,27 @@ def login(creds: UserLoginRequest):
                     raise HTTPException(status_code=401, detail="Invalid username or password.")
 
                 role = account["role"]
+
+                # Record login in DB every time a student or employee logs in
+                try:
+                    cursor.execute(
+                        "UPDATE `accounts` SET `last_login` = CURRENT_TIMESTAMP WHERE `account_id` = %s;",
+                        (account["account_id"],)
+                    )
+                    cursor.execute(
+                        """
+                        INSERT INTO `account_logins` (`account_id`, `username`, `email`, `role`, `ip_address`)
+                        VALUES (%s, %s, %s, %s, '127.0.0.1');
+                        """,
+                        (account["account_id"], account["username"], account["email"], role)
+                    )
+                    if role == "student":
+                        cursor.execute("UPDATE `students` SET `last_login` = CURRENT_TIMESTAMP WHERE `email` = %s;", (account["email"],))
+                    elif role == "recruiter" and account.get("recruiter_id"):
+                        cursor.execute("UPDATE `recruiter_profiles` SET `last_login` = CURRENT_TIMESTAMP WHERE `recruiter_id` = %s;", (account["recruiter_id"],))
+                except Exception:
+                    pass
+
                 # Recruiter check
                 if role == "recruiter":
                     company_status = account.get("company_status") or "approved"
@@ -360,6 +381,17 @@ def login(creds: UserLoginRequest):
                 legacy_student.pop("password_hash", None)
                 if legacy_student.get("gpa"):
                     legacy_student["gpa"] = float(legacy_student["gpa"])
+
+                # Record login in DB
+                try:
+                    cursor.execute("UPDATE `students` SET `last_login` = CURRENT_TIMESTAMP WHERE `student_id` = %s;", (legacy_student["id"],))
+                    cursor.execute(
+                        "INSERT INTO `account_logins` (`username`, `email`, `role`, `ip_address`) VALUES (%s, %s, 'student', '127.0.0.1');",
+                        (legacy_student["email"], legacy_student["email"])
+                    )
+                except Exception:
+                    pass
+
                 return {
                     "success": True,
                     "user": legacy_student
@@ -377,6 +409,29 @@ def login(creds: UserLoginRequest):
 def get_me():
     """Health / session info helper."""
     return {"status": "authenticated", "service": "SkillBridge Auth"}
+
+
+@auth_router.get("/logins")
+def get_login_history(limit: int = 50):
+    """
+    Returns persistent login records saved in MySQL database (account_logins table).
+    Provides timestamped audit trail of all student and employee logins.
+    """
+    try:
+        with get_db_cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT `login_id`, `account_id`, `username`, `email`, `role`, `ip_address`, `login_time`
+                FROM `account_logins`
+                ORDER BY `login_time` DESC
+                LIMIT %s;
+                """,
+                (limit,)
+            )
+            rows = cursor.fetchall() or []
+            return {"success": True, "total": len(rows), "logins": rows}
+    except Exception as e:
+        return {"success": False, "error": str(e), "logins": []}
 
 
 # ==============================================================================

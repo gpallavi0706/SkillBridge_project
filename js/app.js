@@ -37,8 +37,11 @@ class SkillBridgeApp {
     // Check if user already logged in
     if (window.SkillBridgeAuth.isAuthenticated()) {
       const user = window.SkillBridgeAuth.getUser();
-      if (user.role === 'admin') {
-        this.navigateTo('admin');
+      this.applyRoleNavigation(user.role);
+      if (user.role === 'recruiter') {
+        this.navigateTo('recruiter');
+      } else if (user.role === 'admin' || user.role === 'developer') {
+        this.navigateTo('dbms');
       } else {
         this.navigateTo('dashboard');
       }
@@ -231,14 +234,69 @@ class SkillBridgeApp {
     window.SkillBridgeAuth.onAuthChange((user) => {
       this.updateNavbarUserBadge();
       if (user) {
-        if (user.role === 'admin') {
-          this.navigateTo('admin');
+        this.applyRoleNavigation(user.role);
+        if (user.role === 'recruiter') {
+          this.navigateTo('recruiter');
+        } else if (user.role === 'admin' || user.role === 'developer') {
+          this.navigateTo('dbms');
         } else {
           this.navigateTo('dashboard');
         }
       } else {
+        this.applyRoleNavigation(null);
         this.navigateTo('welcome');
       }
+    });
+  }
+
+  applyRoleNavigation(role) {
+    const isRecruiter = (role === 'recruiter');
+
+    // Candidate tabs: Opportunities, Applications, Recommendations, Skills Matrix, Teammates, Profile, DBMS Lab
+    const candidateSelectors = [
+      '.sidebar-nav-item[data-view="dashboard"]',
+      '.sidebar-nav-item[data-view="opportunities"]',
+      '.sidebar-nav-item[data-view="applications"]',
+      '.sidebar-nav-item[data-view="recommendations"]',
+      '.sidebar-nav-item[data-view="skills"]',
+      '.sidebar-nav-item[data-view="teammates"]',
+      '.sidebar-nav-item[data-view="profile"]',
+      '.sidebar-nav-item[data-view="dbms"]',
+      '.nav-role-student'
+    ];
+
+    candidateSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (isRecruiter) {
+          el.classList.add('hidden');
+          el.style.display = 'none';
+        } else {
+          el.classList.remove('hidden');
+          el.style.display = '';
+        }
+      });
+    });
+
+    // Recruiter tabs
+    const recruiterSelectors = [
+      '#sidebar-nav-recruiter',
+      '#sidebar-nav-recruiter-apps',
+      '#sidebar-nav-recruiter-jobs',
+      '#sidebar-nav-recruiter-post',
+      '#sidebar-nav-recruiter-audit',
+      '.nav-role-recruiter'
+    ];
+
+    recruiterSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (isRecruiter) {
+          el.classList.remove('hidden');
+          el.style.display = '';
+        } else {
+          el.classList.add('hidden');
+          el.style.display = 'none';
+        }
+      });
     });
   }
 
@@ -490,6 +548,15 @@ class SkillBridgeApp {
 
   // View Navigation
   navigateTo(viewName) {
+    // Role isolation guard: Recruiters are forbidden from viewing student opportunities & candidate tabs
+    const currentUser = window.SkillBridgeAuth ? window.SkillBridgeAuth.getUser() : null;
+    if (currentUser && currentUser.role === 'recruiter') {
+      const candidateOnlyViews = ['dashboard', 'opportunities', 'applications', 'recommendations', 'skills', 'teammates', 'profile', 'dbms'];
+      if (candidateOnlyViews.includes(viewName)) {
+        viewName = 'recruiter';
+      }
+    }
+
     this.currentView = viewName;
 
     // Toggle landing screen vs app shell
@@ -579,6 +646,11 @@ class SkillBridgeApp {
       case 'dbms':
         this.renderDbmsLab();
         break;
+      case 'recruiter':
+        if (window.SkillBridgeSystem && window.SkillBridgeSystem.renderRecruiterWorkspace) {
+          window.SkillBridgeSystem.renderRecruiterWorkspace();
+        }
+        break;
     }
   }
 
@@ -617,9 +689,23 @@ class SkillBridgeApp {
     const roleBadgeEl = document.getElementById('user-role-badge');
 
     if (user) {
-      if (avatarEl) avatarEl.textContent = user.avatar || 'ST';
-      if (nameEl) nameEl.textContent = user.name || 'Student';
-      if (roleBadgeEl) roleBadgeEl.textContent = user.role === 'admin' ? 'Coordinator' : 'Student';
+      if (avatarEl) avatarEl.textContent = user.avatar || (user.name ? user.name.substring(0, 2).toUpperCase() : 'ST');
+      if (nameEl) nameEl.textContent = user.name || user.username || 'User';
+      if (roleBadgeEl) {
+        if (user.role === 'recruiter') {
+          roleBadgeEl.textContent = user.company_name ? `🏢 ${user.company_name}` : '🏢 Employer';
+          roleBadgeEl.style.background = 'rgba(16, 185, 129, 0.2)';
+          roleBadgeEl.style.color = '#34d399';
+        } else if (user.role === 'admin' || user.role === 'developer') {
+          roleBadgeEl.textContent = '🛠️ Developer';
+          roleBadgeEl.style.background = 'rgba(124, 58, 237, 0.2)';
+          roleBadgeEl.style.color = '#a78bfa';
+        } else {
+          roleBadgeEl.textContent = '🎓 Student';
+          roleBadgeEl.style.background = 'rgba(37, 99, 235, 0.2)';
+          roleBadgeEl.style.color = '#60a5fa';
+        }
+      }
     }
   }
 

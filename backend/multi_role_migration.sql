@@ -41,6 +41,22 @@ ADD COLUMN IF NOT EXISTS `created_by_recruiter_id` INT NULL,
 ADD COLUMN IF NOT EXISTS `work_mode` ENUM('Remote', 'Hybrid', 'On-site') DEFAULT 'Remote',
 ADD COLUMN IF NOT EXISTS `job_type` ENUM('Full-time', 'Part-time', 'Internship', 'Contract') DEFAULT 'Internship';
 
+-- 5. Persistent Login Audit & Session Tracking Table (Every login is recorded)
+CREATE TABLE IF NOT EXISTS `account_logins` (
+    `login_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `account_id` INT NULL,
+    `username` VARCHAR(50) NOT NULL,
+    `email` VARCHAR(100) NOT NULL,
+    `role` VARCHAR(20) NOT NULL,
+    `ip_address` VARCHAR(50) DEFAULT '127.0.0.1',
+    `login_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX `idx_login_user` (`username`, `login_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `last_login` TIMESTAMP NULL DEFAULT NULL;
+ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `last_login` TIMESTAMP NULL DEFAULT NULL;
+ALTER TABLE `recruiter_profiles` ADD COLUMN IF NOT EXISTS `last_login` TIMESTAMP NULL DEFAULT NULL;
+
 -- ========================================================
 -- PRE-SEEDED DEMO ACCOUNTS & PROFILES
 -- ========================================================

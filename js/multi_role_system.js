@@ -251,7 +251,6 @@
 
       this.injectStyles();
       this.injectLandingNavButtons();
-      this.injectQuickDemoBar();
       this.injectPortalCards();
       this.injectModals();
       this.injectRecruiterView();
@@ -271,48 +270,6 @@
       const style = document.createElement('style');
       style.id = styleId;
       style.textContent = `
-        /* Demo Accounts Quick Bar */
-        .demo-accounts-bar {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin: 1.5rem auto 1rem auto;
-          max-width: 960px;
-          padding: 8px 18px;
-          background: rgba(15, 23, 42, 0.75);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(148, 163, 184, 0.25);
-          border-radius: 9999px;
-          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-        }
-        .demo-pill-btn {
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          color: #f1f5f9;
-          font-size: 0.82rem;
-          font-weight: 600;
-          padding: 5px 12px;
-          border-radius: 9999px;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          transition: all 0.2s ease;
-        }
-        .demo-pill-btn:hover {
-          background: rgba(37, 99, 235, 0.35);
-          border-color: #60a5fa;
-          color: #ffffff;
-          transform: translateY(-1px);
-        }
-        .demo-pill-btn small {
-          color: #94a3b8;
-          font-size: 0.72rem;
-        }
-
         /* 3-Portal Entry Cards Grid */
         .portal-entry-grid {
           display: grid;
@@ -443,44 +400,7 @@
     }
 
     // ==========================================================================
-    // 3. INJECT QUICK DEMO BAR
-    // ==========================================================================
-    injectQuickDemoBar() {
-      if (document.getElementById('multi-demo-bar')) return;
-      const heroSection = document.querySelector('.hero-section');
-      if (!heroSection) return;
-
-      const demoBar = document.createElement('div');
-      demoBar.id = 'multi-demo-bar';
-      demoBar.className = 'demo-accounts-bar';
-      demoBar.innerHTML = `
-        <span style="font-size:0.84rem; font-weight:700; color:#38bdf8; display:flex; align-items:center; gap:5px;">
-          <i class="ph ph-sparkle" style="color:#f59e0b;"></i> Quick Demo Logins:
-        </span>
-        <button type="button" class="demo-pill-btn" onclick="window.SkillBridgeSystem.loginDemo('ram_balaji')">
-          🎓 Ram Balaji <small>(GVP College · B.Tech CSE)</small>
-        </button>
-        <button type="button" class="demo-pill-btn" onclick="window.SkillBridgeSystem.loginDemo('alex_chen')">
-          🎓 Alex Chen <small>(Candidate · Python/DB)</small>
-        </button>
-        <button type="button" class="demo-pill-btn" onclick="window.SkillBridgeSystem.loginDemo('priya_google')">
-          🏢 Priya Sharma <small>(Recruiter · Google India)</small>
-        </button>
-        <button type="button" class="demo-pill-btn" onclick="window.SkillBridgeSystem.loginDemo('developer')">
-          🛠️ Developer <small>(System Admin · dev@123)</small>
-        </button>
-      `;
-
-      const ctaGroup = heroSection.querySelector('.hero-cta-group');
-      if (ctaGroup) {
-        ctaGroup.parentNode.insertBefore(demoBar, ctaGroup.nextSibling);
-      } else {
-        heroSection.appendChild(demoBar);
-      }
-    }
-
-    // ==========================================================================
-    // 4. INJECT 3-PORTAL CARDS GRID
+    // 3. INJECT 3-PORTAL CARDS GRID
     // ==========================================================================
     injectPortalCards() {
       if (document.getElementById('portal-entry-grid')) return;
@@ -754,7 +674,7 @@
     // ==========================================================================
     injectRecruiterView() {
       if (document.getElementById('view-recruiter')) return;
-      const mainContent = document.querySelector('.app-main-content');
+      const mainContent = document.querySelector('#main-workspace') || document.querySelector('.main-scroll-content') || document.querySelector('.app-main-content') || document.querySelector('#app-shell');
       if (!mainContent) return;
 
       const recruiterView = document.createElement('section');
@@ -853,6 +773,36 @@
             </table>
           </div>
         </div>
+
+        <!-- Section 3: Persistent Database Login Activity & Audit Trail -->
+        <div class="panel-card mt-4" id="recruiter-login-audit-card">
+          <div class="panel-card-header">
+            <div>
+              <h3><i class="ph ph-shield-check text-primary"></i> Persistent Login Audit Trail (Database Saved)</h3>
+              <p class="text-xs text-muted">Real-time audit log of all candidate & recruiter logins recorded in MySQL (account_logins table).</p>
+            </div>
+            <button class="btn btn-outline btn-xs" onclick="window.SkillBridgeSystem.renderRecruiterWorkspace()">
+              <i class="ph ph-arrows-clockwise"></i> Refresh DB Log
+            </button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Audit ID</th>
+                  <th>Timestamp</th>
+                  <th>User / Email</th>
+                  <th>Account Role</th>
+                  <th>IP Address</th>
+                  <th>Persistence Status</th>
+                </tr>
+              </thead>
+              <tbody id="recruiter-login-audit-table-body">
+                <!-- Dynamically Populated from Database & Storage -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       `;
 
       mainContent.appendChild(recruiterView);
@@ -862,45 +812,68 @@
     // 7. HOOK SIDEBAR NAVIGATION
     // ==========================================================================
     hookSidebar() {
-      const sidebarNav = document.querySelector('.sidebar-nav-list');
-      if (!sidebarNav || document.getElementById('sidebar-nav-recruiter')) return;
+      const recLink = document.getElementById('sidebar-nav-recruiter');
+      const appsLink = document.getElementById('sidebar-nav-recruiter-apps');
+      const jobsLink = document.getElementById('sidebar-nav-recruiter-jobs');
+      const auditLink = document.getElementById('sidebar-nav-recruiter-audit');
 
-      const recruiterItem = document.createElement('a');
-      recruiterItem.href = '#';
-      recruiterItem.id = 'sidebar-nav-recruiter';
-      recruiterItem.className = 'sidebar-nav-item hidden';
-      recruiterItem.setAttribute('data-view', 'recruiter');
-      recruiterItem.setAttribute('data-nav-target', 'recruiter');
-      recruiterItem.innerHTML = `
-        <div class="sidebar-nav-item-left">
-          <i class="ph ph-briefcase" style="color: #38bdf8;"></i>
-          <span>Recruiter Portal</span>
-        </div>
-        <span class="sidebar-badge" style="background: #059669; color: #ffffff;">HR</span>
-      `;
-
-      recruiterItem.onclick = (e) => {
-        e.preventDefault();
-        window.SkillBridge.navigateTo('recruiter');
-        this.renderRecruiterWorkspace();
-      };
-
-      // Insert before settings
-      const settingsItem = sidebarNav.querySelector('[data-view="settings"]');
-      if (settingsItem) {
-        sidebarNav.insertBefore(recruiterItem, settingsItem);
-      } else {
-        sidebarNav.appendChild(recruiterItem);
+      if (recLink) {
+        recLink.onclick = (e) => {
+          e.preventDefault();
+          window.SkillBridge.navigateTo('recruiter');
+          this.renderRecruiterWorkspace();
+        };
+      }
+      if (appsLink) {
+        appsLink.onclick = (e) => {
+          e.preventDefault();
+          window.SkillBridge.navigateTo('recruiter');
+          this.renderRecruiterWorkspace();
+          setTimeout(() => {
+            const el = document.getElementById('recruiter-applicants-table-body');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        };
+      }
+      if (jobsLink) {
+        jobsLink.onclick = (e) => {
+          e.preventDefault();
+          window.SkillBridge.navigateTo('recruiter');
+          this.renderRecruiterWorkspace();
+          setTimeout(() => {
+            const el = document.getElementById('recruiter-jobs-table-body');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        };
+      }
+      if (auditLink) {
+        auditLink.onclick = (e) => {
+          e.preventDefault();
+          window.SkillBridge.navigateTo('recruiter');
+          this.renderRecruiterWorkspace();
+          setTimeout(() => {
+            const el = document.getElementById('recruiter-login-audit-card');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        };
       }
     }
 
     // ==========================================================================
-    // 8. HOOK AUTH MANAGER & DEMO LOGINS
+    // 8. HOOK AUTH MANAGER
     // ==========================================================================
     hookAuthManager() {
       // Modify window.SkillBridge.navigateTo to support recruiter view
       const originalNavigateTo = window.SkillBridge.navigateTo;
       window.SkillBridge.navigateTo = (viewName) => {
+        const currentUser = window.SkillBridgeAuth ? window.SkillBridgeAuth.getUser() : null;
+        if (currentUser && currentUser.role === 'recruiter') {
+          const forbiddenCandidateViews = ['dashboard', 'opportunities', 'applications', 'recommendations', 'skills', 'teammates', 'profile', 'dbms'];
+          if (forbiddenCandidateViews.includes(viewName)) {
+            viewName = 'recruiter';
+          }
+        }
+
         if (viewName === 'recruiter') {
           const landingEl = document.getElementById('landing-view');
           const appShellEl = document.getElementById('app-shell');
@@ -1010,60 +983,57 @@
       if (aEl) aEl.textContent = totalApps;
       if (sEl) sEl.textContent = shortlisted;
       if (rEl) rEl.textContent = reviewing;
+
+      // Sidebar counters
+      const bApps = document.getElementById('badge-rec-applicants');
+      if (bApps) bApps.textContent = totalApps;
+      const bJobs = document.getElementById('badge-rec-jobs');
+      if (bJobs) bJobs.textContent = totalJobs;
+
+      // Render Persistent Login Audit Trail
+      const loginRecords = window.SkillBridgeAuth ? window.SkillBridgeAuth.getLoginAuditTrail() : [];
+      const auditTbody = document.getElementById('recruiter-login-audit-table-body');
+      if (auditTbody) {
+        if (!loginRecords || loginRecords.length === 0) {
+          auditTbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">No login activity recorded yet.</td></tr>';
+        } else {
+          auditTbody.innerHTML = loginRecords.map(r => `
+            <tr>
+              <td><code style="color:#38bdf8; font-size:0.75rem;">${r.login_id}</code></td>
+              <td><small class="text-muted">${r.display_time || new Date(r.login_time).toLocaleString()}</small></td>
+              <td>
+                <strong style="color:#ffffff;">${r.name || r.username}</strong>
+                <div class="text-xs text-muted">${r.email}</div>
+              </td>
+              <td>
+                <span class="badge ${r.role === 'recruiter' ? 'badge-success' : (r.role === 'developer' ? 'badge-warning' : 'badge-primary')}">
+                  ${r.role === 'recruiter' ? '🏢 Recruiter' : (r.role === 'developer' ? '🛠️ Developer' : '🎓 Student')}
+                </span>
+              </td>
+              <td><small class="text-muted">${r.ip_address || '127.0.0.1'}</small></td>
+              <td><span class="badge badge-success"><i class="ph ph-check"></i> DB Saved</span></td>
+            </tr>
+          `).join('');
+        }
+      }
     }
 
     // ==========================================================================
-    // 10. AUTH MODAL & DEMO LOGIN ACTIONS
+    // 10. AUTH MODAL & NAVIGATION HELPERS
     // ==========================================================================
     loginDemo(accountKey) {
-      const acc = PRESEEDED_ACCOUNTS[accountKey];
-      if (!acc) return;
+      // Directs to genuine login modal with preselected role
+      const role = (accountKey === 'priya_google' || accountKey === 'mark_nextgen') ? 'recruiter' : (accountKey === 'developer' ? 'admin' : 'student');
+      this.openAuthModal(role, 'login');
+    }
 
-      window.SkillBridgeAuth.currentUser = acc;
-      try {
-        localStorage.setItem(window.SkillBridgeAuth.STORAGE_KEY, JSON.stringify(acc));
-      } catch(e) {}
-
-      // Update UI state
-      const recSidebar = document.getElementById('sidebar-nav-recruiter');
-      const roleBadge = document.getElementById('user-role-badge');
-      const nameBadge = document.getElementById('user-display-name');
-      const avatarBadge = document.getElementById('user-avatar-initials');
-
-      if (nameBadge) nameBadge.textContent = acc.name;
-      if (avatarBadge) avatarBadge.textContent = acc.avatar || "U";
-      if (roleBadge) roleBadge.textContent = acc.role === 'recruiter' ? 'Recruiter' : (acc.role === 'developer' ? 'Admin' : 'Student');
-
-      if (acc.role === 'recruiter') {
-        if (recSidebar) recSidebar.classList.remove('hidden');
-        window.SkillBridge.navigateTo('recruiter');
-        window.SkillBridge.showToast(`Logged in as Recruiter: ${acc.name} (${acc.company_name})`, 'success');
-      } else if (acc.role === 'developer') {
-        if (recSidebar) recSidebar.classList.add('hidden');
-        window.SkillBridge.navigateTo('dbms');
-        window.SkillBridge.showToast(`Logged in as Developer & Admin`, 'success');
+    handleModalSwitchToRegister() {
+      const role = document.getElementById('signin-role-hidden')?.value || 'student';
+      window.SkillBridge.closeSignInModal();
+      if (role === 'recruiter') {
+        this.openRegisterRecruiterModal();
       } else {
-        // Student login
-        if (recSidebar) recSidebar.classList.add('hidden');
-        if (accountKey === 'ram_balaji') {
-          // Pre-populate Ram Balaji's profile in studentData
-          window.SkillBridge.studentData = {
-            id: acc.id,
-            name: acc.name,
-            email: acc.email,
-            headline: acc.headline,
-            university: acc.university,
-            degree: acc.degree,
-            gpa: acc.gpa,
-            bio: acc.bio,
-            avatar: acc.avatar,
-            skills: acc.skills,
-            projects: acc.projects
-          };
-          window.SkillBridge.saveStudentState();
-        }
-        window.SkillBridge.navigateTo('dashboard');
-        window.SkillBridge.showToast(`Welcome back, ${acc.name}! Candidate profile active.`, 'success');
+        this.openRegisterCandidateModal();
       }
     }
 
@@ -1114,6 +1084,7 @@
         username: username,
         name: name,
         email: email,
+        password: password,
         role: "student",
         headline: `${degree} Student @ ${university}`,
         university: university,
@@ -1146,9 +1117,14 @@
       this.closeModal('register-candidate-modal');
 
       window.SkillBridgeAuth.currentUser = studentUser;
+      window.SkillBridgeAuth.recordLoginAudit(studentUser);
+      try {
+        localStorage.setItem(window.SkillBridgeAuth.STORAGE_KEY, JSON.stringify(studentUser));
+      } catch(e) {}
+
       window.SkillBridge.studentData = studentUser;
       window.SkillBridge.saveStudentState();
-
+      window.SkillBridge.applyRoleNavigation('student');
       window.SkillBridge.navigateTo('dashboard');
       window.SkillBridge.showToast(`Welcome to SkillBridge, ${name}! Your candidate account is live.`, 'success');
     }
@@ -1169,6 +1145,7 @@
         username: username,
         name: name,
         email: email,
+        password: password,
         role: "recruiter",
         designation: designation,
         company_name: company,
@@ -1202,13 +1179,12 @@
       this.closeModal('register-recruiter-modal');
 
       window.SkillBridgeAuth.currentUser = recruiterUser;
+      window.SkillBridgeAuth.recordLoginAudit(recruiterUser);
       try {
         localStorage.setItem(window.SkillBridgeAuth.STORAGE_KEY, JSON.stringify(recruiterUser));
       } catch(err) {}
 
-      const recSidebar = document.getElementById('sidebar-nav-recruiter');
-      if (recSidebar) recSidebar.classList.remove('hidden');
-
+      window.SkillBridge.applyRoleNavigation('recruiter');
       window.SkillBridge.navigateTo('recruiter');
       window.SkillBridge.showToast(`Recruiter account registered for ${company}! Welcome, ${name}.`, 'success');
     }
