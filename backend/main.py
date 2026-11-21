@@ -41,6 +41,13 @@ try:
 except ImportError:
     pass
 
+# Include ATS Scanner Router (Resume vs JD Keyword & Format Matcher)
+try:
+    from ats_scanner.router import router as ats_router
+    app.include_router(ats_router)
+except ImportError:
+    pass
+
 @app.on_event("startup")
 def on_startup():
     print("[Startup] Initializing MySQL connection pool...")
