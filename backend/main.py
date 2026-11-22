@@ -337,86 +337,61 @@ def get_opportunities(
     category: Optional[str] = None,
     type: Optional[str] = None,
     search: Optional[str] = None,
-    limit: int = 1000,
+    limit: int = 500,
     offset: int = 0
 ):
-    """Fetches verified opportunities with skills joined from organizations & categories."""
+    """Fetches verified opportunities from PostgreSQL database (Neon Cloud / Local)."""
     try:
         with get_db_cursor() as cursor:
             query = """
                 SELECT 
-                    o.`opp_id` AS `id`,
-                    o.`title`,
-                    org.`name` AS `organization`,
-                    c.`category_name` AS `category`,
-                    o.`work_type` AS `type`,
-                    o.`location`,
-                    o.`stipend_amount`,
-                    o.`source_url` AS `sourceUrl`,
-                    o.`source_name` AS `sourceName`,
-                    o.`is_verified` AS `isVerified`,
-                    o.`deadline`,
-                    o.`deadline_note` AS `deadlineNote`,
-                    o.`description`,
-                    o.`eligibility`,
-                    o.`featured`,
-                    o.`views_count`
-                FROM `opportunities` o
-                JOIN `organizations` org ON o.`org_id` = org.`org_id`
-                JOIN `categories` c ON o.`category_id` = c.`category_id`
+                    opp_id AS id,
+                    opp_id,
+                    title,
+                    company_name AS organization,
+                    category_name AS category,
+                    work_type AS type,
+                    work_mode,
+                    location,
+                    stipend_amount,
+                    stipend_range,
+                    deadline,
+                    skills_required,
+                    description,
+                    views_count,
+                    created_at
+                FROM opportunities
                 WHERE 1=1
             """
             params = []
 
             if category and category.lower() != "all":
-                query += " AND LOWER(c.`category_name`) LIKE %s"
+                query += " AND LOWER(category_name) LIKE %s"
                 params.append(f"%{category.lower()}%")
 
             if type and type.lower() != "all":
-                query += " AND LOWER(o.`work_type`) = %s"
-                params.append(type.lower())
+                query += " AND (LOWER(work_type) = %s OR LOWER(work_mode) = %s)"
+                params.extend([type.lower(), type.lower()])
 
             if search:
-                query += " AND (LOWER(o.`title`) LIKE %s OR LOWER(org.`name`) LIKE %s OR LOWER(o.`description`) LIKE %s OR LOWER(o.`location`) LIKE %s)"
+                query += " AND (LOWER(title) LIKE %s OR LOWER(company_name) LIKE %s OR LOWER(description) LIKE %s OR LOWER(location) LIKE %s)"
                 term = f"%{search.lower()}%"
                 params.extend([term, term, term, term])
 
-            query += " ORDER BY o.`featured` DESC, o.`created_at` DESC LIMIT %s OFFSET %s;"
+            query += " ORDER BY created_at DESC LIMIT %s OFFSET %s;"
             params.extend([limit, offset])
             cursor.execute(query, tuple(params))
             opps = cursor.fetchall()
 
-            if not opps:
-                return []
-
-            # Retrieve skills for fetched opportunities
-            opp_ids = [opp["id"] for opp in opps]
-            format_strings = ','.join(['%s'] * len(opp_ids))
-            cursor.execute(f"""
-                SELECT os.`opp_id`, sk.`skill_name`
-                FROM `opportunity_skills` os
-                JOIN `skills` sk ON os.`skill_id` = sk.`skill_id`
-                WHERE os.`opp_id` IN ({format_strings});
-            """, tuple(opp_ids))
-            all_skills = cursor.fetchall()
-
-            skills_map = {}
-            for row in all_skills:
-                oid = row["opp_id"]
-                if oid not in skills_map:
-                    skills_map[oid] = []
-                skills_map[oid].append(row["skill_name"])
-
             for opp in opps:
-                opp["skills"] = skills_map.get(opp["id"], [])
-                opp["isVerified"] = bool(opp.get("isVerified", 1))
-                opp["featured"] = bool(opp.get("featured", 0))
+                raw_skills = opp.get("skills_required") or ""
+                opp["skills"] = [s.strip() for s in raw_skills.split(',') if s.strip()]
+                opp["isVerified"] = True
+                opp["featured"] = False
                 if opp.get("deadline"):
                     opp["deadline"] = str(opp["deadline"])
 
             return opps
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching opportunities: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching opportunities: {str(e)}")
 
@@ -429,7 +404,7 @@ def get_saved_opportunities(student_id: str):
     try:
         with get_db_cursor() as cursor:
             cursor.execute(
-                "SELECT `opp_id` FROM `saved_opportunities` WHERE `student_id` = %s;",
+                "SELECT opp_id FROM saved_opportunities WHERE student_id = %s;",
                 (student_id,)
             )
             saved = [row["opp_id"] for row in cursor.fetchall()]
@@ -439,24 +414,24 @@ def get_saved_opportunities(student_id: str):
 
 @app.post("/api/opportunities/save")
 def toggle_save_opportunity(req: ToggleSaveRequest):
-    """Toggles bookmarking of an opportunity for a student in MySQL."""
+    """Toggles bookmarking of an opportunity for a student."""
     try:
         with get_db_cursor(commit=True) as cursor:
             cursor.execute(
-                "SELECT 1 FROM `saved_opportunities` WHERE `student_id` = %s AND `opp_id` = %s;",
+                "SELECT 1 FROM saved_opportunities WHERE student_id = %s AND opp_id = %s;",
                 (req.user_id, req.opportunity_id)
             )
             exists = cursor.fetchone()
 
             if exists:
                 cursor.execute(
-                    "DELETE FROM `saved_opportunities` WHERE `student_id` = %s AND `opp_id` = %s;",
+                    "DELETE FROM saved_opportunities WHERE student_id = %s AND opp_id = %s;",
                     (req.user_id, req.opportunity_id)
                 )
                 return {"saved": False, "message": "Removed from saved opportunities"}
             else:
                 cursor.execute(
-                    "INSERT INTO `saved_opportunities` (`student_id`, `opp_id`) VALUES (%s, %s);",
+                    "INSERT INTO saved_opportunities (student_id, opp_id) VALUES (%s, %s);",
                     (req.user_id, req.opportunity_id)
                 )
                 return {"saved": True, "message": "Saved to opportunities collection"}
@@ -468,27 +443,25 @@ def toggle_save_opportunity(req: ToggleSaveRequest):
 # ========================================================
 @app.get("/api/applications/{student_id}")
 def get_user_applications(student_id: str):
-    """Fetches all applications logged by the student from MySQL."""
+    """Fetches all applications logged by the student."""
     try:
         with get_db_cursor() as cursor:
             cursor.execute(
                 """
                 SELECT 
-                    a.`app_id` AS `id`, 
-                    a.`student_id` AS `userId`, 
-                    a.`opp_id` AS `opportunityId`, 
-                    o.`title`, 
-                    org.`name` AS `organization`,
-                    DATE_FORMAT(a.`applied_date`, '%Y-%m-%d') AS `appliedDate`,
-                    a.`status`, 
-                    a.`status_step` AS `statusStep`, 
-                    a.`notes`, 
-                    o.`source_url` AS `sourceUrl`
-                FROM `applications` a
-                JOIN `opportunities` o ON a.`opp_id` = o.`opp_id`
-                JOIN `organizations` org ON o.`org_id` = org.`org_id`
-                WHERE a.`student_id` = %s
-                ORDER BY a.`applied_date` DESC, a.`created_at` DESC;
+                    a.app_id AS id, 
+                    a.student_id AS userId, 
+                    a.opp_id AS opportunityId, 
+                    COALESCE(o.title, 'General Application') AS title, 
+                    COALESCE(o.company_name, 'Enterprise Partner') AS organization,
+                    TO_CHAR(a.applied_date, 'YYYY-MM-DD') AS appliedDate,
+                    a.status, 
+                    a.status_step AS statusStep, 
+                    a.notes
+                FROM applications a
+                LEFT JOIN opportunities o ON a.opp_id = o.opp_id
+                WHERE a.student_id = %s
+                ORDER BY a.applied_date DESC, a.created_at DESC;
                 """,
                 (student_id,)
             )
@@ -499,7 +472,7 @@ def get_user_applications(student_id: str):
 
 @app.post("/api/applications", status_code=status.HTTP_201_CREATED)
 def record_application(app_data: ApplicationCreate):
-    """Logs or updates a student application milestone in MySQL."""
+    """Logs or updates a student application milestone."""
     try:
         step_map = {
             "Applied": 1,
@@ -511,19 +484,18 @@ def record_application(app_data: ApplicationCreate):
         app_id = f"app-{int(time.time() * 1000)}"
 
         with get_db_cursor(commit=True) as cursor:
-            # Check existing
             if app_data.opportunity_id:
                 cursor.execute(
-                    "SELECT `app_id` FROM `applications` WHERE `student_id` = %s AND `opp_id` = %s;",
+                    "SELECT app_id FROM applications WHERE student_id = %s AND opp_id = %s;",
                     (app_data.user_id, app_data.opportunity_id)
                 )
                 existing = cursor.fetchone()
                 if existing:
                     cursor.execute(
                         """
-                        UPDATE `applications`
-                        SET `applied_date` = %s, `status` = %s, `status_step` = %s, `notes` = %s
-                        WHERE `app_id` = %s;
+                        UPDATE applications
+                        SET applied_date = %s, status = %s, status_step = %s, notes = %s
+                        WHERE app_id = %s;
                         """,
                         (app_data.applied_date, app_data.status, step, app_data.notes, existing["app_id"])
                     )
@@ -531,8 +503,8 @@ def record_application(app_data: ApplicationCreate):
 
             cursor.execute(
                 """
-                INSERT INTO `applications` (
-                    `app_id`, `student_id`, `opp_id`, `applied_date`, `status`, `status_step`, `notes`
+                INSERT INTO applications (
+                    app_id, student_id, opp_id, applied_date, status, status_step, notes
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s);
                 """,
                 (
@@ -541,7 +513,7 @@ def record_application(app_data: ApplicationCreate):
                 )
             )
 
-        return {"success": True, "id": app_id, "message": "Application logged to MySQL!"}
+        return {"success": True, "id": app_id, "message": "Application logged to PostgreSQL!"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -736,12 +708,6 @@ def create_opportunity(payload: dict):
 @app.post("/api/recruiter/jobs")
 def create_recruiter_job(payload: dict):
     return create_opportunity(payload)
-
-@app.get("/api/opportunities")
-def get_all_opportunities():
-    with get_db_cursor() as cur:
-        cur.execute("SELECT opp_id, title, company_name, work_type, work_mode, location, stipend_amount, stipend_range, deadline, skills_required, description, category_name, views_count, created_at FROM opportunities ORDER BY created_at DESC;")
-        return cur.fetchall()
 
 # ========================================================
 # FRONTEND STATIC FILES & SINGLE-PAGE APPLICATION MOUNT
