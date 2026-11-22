@@ -1,6 +1,6 @@
 """
 SkillBridge - PostgreSQL Database Connection Layer
-Uses psycopg2 with connection pooling for PostgreSQL.
+Supports both Neon Cloud PostgreSQL (via DATABASE_URL) and local PostgreSQL.
 """
 
 import os
@@ -11,6 +11,7 @@ from psycopg2 import pool, extras
 
 load_dotenv()
 
+DATABASE_URL = os.getenv("DATABASE_URL")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = int(os.getenv("DB_PORT", "5432"))
 DB_USER = os.getenv("DB_USER", "postgres")
@@ -23,18 +24,40 @@ def init_connection_pool():
     """Initializes the PostgreSQL connection pool."""
     global _pg_pool
     try:
-        _pg_pool = pool.SimpleConnectionPool(
-            1, 20,
-            host=DB_HOST,
-            port=DB_PORT,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            dbname=DB_NAME
-        )
-        print(f"[Startup] PostgreSQL connection pool initialized successfully on {DB_HOST}:{DB_PORT}/{DB_NAME}")
+        if DATABASE_URL:
+            # Check if running locally and needing hostaddr for DNS resolution
+            kwargs = {}
+            if "neon.tech" in DATABASE_URL:
+                # Add hostaddr if local DNS refuses
+                kwargs["hostaddr"] = "3.147.219.177"
+            _pg_pool = pool.SimpleConnectionPool(1, 20, dsn=DATABASE_URL, **kwargs)
+            print("[Startup] PostgreSQL connection pool initialized from DATABASE_URL (Neon Cloud)")
+        else:
+            _pg_pool = pool.SimpleConnectionPool(
+                1, 20,
+                host=DB_HOST,
+                port=DB_PORT,
+                user=DB_USER,
+                password=DB_PASSWORD,
+                dbname=DB_NAME
+            )
+            print(f"[Startup] PostgreSQL connection pool initialized on {DB_HOST}:{DB_PORT}/{DB_NAME}")
     except Exception as e:
-        print(f"[PostgreSQL Error] Could not connect to PostgreSQL database '{DB_NAME}' on {DB_HOST}:{DB_PORT}: {e}")
-        _pg_pool = None
+        print(f"[PostgreSQL Error] Connection failed: {e}")
+        # Fallback to local postgres if DATABASE_URL had an error
+        try:
+            _pg_pool = pool.SimpleConnectionPool(
+                1, 20,
+                host=DB_HOST,
+                port=DB_PORT,
+                user=DB_USER,
+                password=DB_PASSWORD,
+                dbname=DB_NAME
+            )
+            print(f"[Startup] Fallback connection to local {DB_HOST}:{DB_PORT}/{DB_NAME} succeeded!")
+        except Exception as e2:
+            print(f"[PostgreSQL Error] Local fallback failed too: {e2}")
+            _pg_pool = None
 
 def get_connection():
     global _pg_pool
@@ -75,12 +98,14 @@ def check_db_health():
             cur.execute("SELECT COUNT(*) FROM opportunities;")
             res_opp = cur.fetchone()
             opp_count = res_opp['count'] if isinstance(res_opp, dict) else res_opp[0]
+            
+            db_label = "Neon Cloud PostgreSQL" if DATABASE_URL and "neon.tech" in DATABASE_URL else "Local PostgreSQL"
             return {
                 "status": "healthy",
-                "database": "PostgreSQL",
-                "database_name": DB_NAME,
-                "host": DB_HOST,
-                "port": DB_PORT,
+                "database": db_label,
+                "database_name": "neondb" if DATABASE_URL else DB_NAME,
+                "host": "Neon AWS US-East-2" if DATABASE_URL else DB_HOST,
+                "port": 5432,
                 "students_count": count,
                 "opportunities_count": opp_count
             }

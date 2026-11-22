@@ -6019,9 +6019,7 @@ class SkillBridgeApp {
       this.navigateTo('welcome');
     }
 
-    this.render();
-
-    // Initialize FastAPI & MySQL Synchronization
+    // Initialize FastAPI & Database Synchronization
     if (window.SkillBridgeApi) {
       window.SkillBridgeApi.onStatusChange((isOnline, details) => {
         this.updateBackendBadge(isOnline, details);
@@ -6132,9 +6130,11 @@ class SkillBridgeApp {
 
     const isOnline = await window.SkillBridgeApi.checkHealth();
     if (isOnline) {
+      this.updateBackendBadge(true, window.SkillBridgeApi.lastHealthData);
       this.showToast('Successfully connected to FastAPI & PostgreSQL!', 'success');
       this.syncWithBackend();
     } else {
+      this.updateBackendBadge(false, null);
       this.showToast('Backend is offline. Run .\\backend\\run.ps1 to start.', 'warning');
     }
   }
