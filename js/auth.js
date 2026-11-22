@@ -197,9 +197,10 @@ class AuthManager {
       console.warn('Could not save login audit record to localStorage:', e);
     }
 
-    // Attempt fire-and-forget backend MySQL record
+    // Attempt fire-and-forget backend database record
+    const apiBase = (window.SkillBridgeApi && window.SkillBridgeApi.BASE_URL) || 'https://skillbridge-project-nq2q.onrender.com/api';
     try {
-      fetch('http://localhost:8000/api/auth/login', {
+      fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -233,8 +234,9 @@ class AuthManager {
     }
 
     // 1. Try FastAPI backend first if available
+    const apiBase = (window.SkillBridgeApi && window.SkillBridgeApi.BASE_URL) || 'https://skillbridge-project-nq2q.onrender.com/api';
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
+      const response = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username_or_email: rawId, password: rawPw })

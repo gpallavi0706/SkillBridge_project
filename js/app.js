@@ -152,7 +152,7 @@ class SkillBridgeApp {
   async testBackendConnection() {
     if (!window.SkillBridgeApi) return;
     const modalText = document.getElementById('db-modal-status-text');
-    if (modalText) modalText.textContent = 'Testing connection to http://localhost:8000/api/health...';
+    if (modalText) modalText.textContent = `Testing connection to ${window.SkillBridgeApi.BASE_URL}/health...`;
 
     const isOnline = await window.SkillBridgeApi.checkHealth();
     if (isOnline) {
@@ -1690,10 +1690,11 @@ class SkillBridgeApp {
 
     let dataRows = null;
 
-    // Check if FastAPI & MySQL backend is live
+    // Check if FastAPI backend is live
     if (window.SkillBridgeApi && window.SkillBridgeApi.isOnline) {
       try {
-        const res = await fetch(`http://localhost:8000/api/dbms/topics/${topicNum}`);
+        const apiBase = (window.SkillBridgeApi && window.SkillBridgeApi.BASE_URL) || 'https://skillbridge-project-nq2q.onrender.com/api';
+        const res = await fetch(`${apiBase}/dbms/topics/${topicNum}`);
         if (res.ok) {
           const json = await res.json();
           dataRows = json.data;

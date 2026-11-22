@@ -39,12 +39,12 @@ def on_startup():
     print("[Startup] Initializing MySQL connection pool...")
     init_connection_pool()
 
-@app.get("/")
-def root():
+@app.get("/api")
+def api_root():
     return {
         "service": "SkillBridge API",
         "framework": "FastAPI",
-        "database": "MySQL (via mysql-connector-python)",
+        "database": "PostgreSQL (Neon Cloud / Local)",
         "docs_url": "/docs",
         "health_check": "/api/health",
         "dbms_topics": "/api/dbms/topics"
@@ -742,6 +742,21 @@ def get_all_opportunities():
     with get_db_cursor() as cur:
         cur.execute("SELECT opp_id, title, company_name, work_type, work_mode, location, stipend_amount, stipend_range, deadline, skills_required, description, category_name, views_count, created_at FROM opportunities ORDER BY created_at DESC;")
         return cur.fetchall()
+
+# ========================================================
+# FRONTEND STATIC FILES & SINGLE-PAGE APPLICATION MOUNT
+# ========================================================
+import os
+from fastapi.staticfiles import StaticFiles
+
+# Check static directory directly inside backend, or in parent repo directory
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+parent_static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+if os.path.exists(static_dir) and os.path.exists(os.path.join(static_dir, "index.html")):
+    app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+elif os.path.exists(os.path.join(parent_static_dir, "index.html")):
+    app.mount("/", StaticFiles(directory=parent_static_dir, html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn

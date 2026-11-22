@@ -1130,8 +1130,9 @@
       };
 
       // Attempt FastAPI backend registration
+      const apiBase = (window.SkillBridgeApi && window.SkillBridgeApi.BASE_URL) || 'https://skillbridge-project-nq2q.onrender.com/api';
       try {
-        const res = await fetch('http://localhost:8000/api/auth/register', {
+        const res = await fetch(`${apiBase}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1189,8 +1190,9 @@
       };
 
       // Attempt FastAPI backend registration
+      const apiBase = (window.SkillBridgeApi && window.SkillBridgeApi.BASE_URL) || 'https://skillbridge-project-nq2q.onrender.com/api';
       try {
-        const res = await fetch('http://localhost:8000/api/auth/register-recruiter', {
+        const res = await fetch(`${apiBase}/auth/register-recruiter`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1285,8 +1287,9 @@
       };
 
       // Attempt FastAPI backend save
+      const apiBase = (window.SkillBridgeApi && window.SkillBridgeApi.BASE_URL) || 'https://skillbridge-project-nq2q.onrender.com/api';
       try {
-        await fetch('http://localhost:8000/api/recruiter/jobs', {
+        await fetch(`${apiBase}/recruiter/jobs`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1340,8 +1343,9 @@
         saveApplicationsStore(apps);
 
         // Attempt backend PUT
+        const apiBase = (window.SkillBridgeApi && window.SkillBridgeApi.BASE_URL) || 'https://skillbridge-project-nq2q.onrender.com/api';
         try {
-          fetch(`http://localhost:8000/api/recruiter/applications/${appId}/status`, {
+          fetch(`${apiBase}/recruiter/applications/${appId}/status`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status: newStatus })
