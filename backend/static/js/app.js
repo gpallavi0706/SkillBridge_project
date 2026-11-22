@@ -711,23 +711,39 @@ class SkillBridgeApp {
 
   // Calculate Match Score between student skills and opportunity
   calculateMatchScore(opportunity) {
-    if (!opportunity.skills || opportunity.skills.length === 0) return 70;
-    if (!this.studentData.skills || this.studentData.skills.length === 0) return 40;
+    try {
+      if (!opportunity || !opportunity.skills) return 70;
+      const rawOppSkills = Array.isArray(opportunity.skills) ? opportunity.skills : [opportunity.skills];
+      if (rawOppSkills.length === 0) return 70;
 
-    const studentSkillNames = this.studentData.skills.map(s => s.name.toLowerCase());
-    let matchCount = 0;
+      const rawStudentSkills = (this.studentData && Array.isArray(this.studentData.skills)) ? this.studentData.skills : [];
+      if (rawStudentSkills.length === 0) return 50;
 
-    opportunity.skills.forEach(oppSkill => {
-      const lower = oppSkill.toLowerCase();
-      const directMatch = studentSkillNames.some(s => s === lower || s.includes(lower) || lower.includes(s));
-      if (directMatch) {
-        matchCount++;
-      }
-    });
+      const studentSkillNames = rawStudentSkills.map(s => {
+        if (!s) return '';
+        if (typeof s === 'string') return s.toLowerCase().trim();
+        return ((s.name || s.skill_name || s.skill || '') + '').toLowerCase().trim();
+      }).filter(Boolean);
 
-    const ratio = matchCount / opportunity.skills.length;
-    const baseScore = Math.round(ratio * 75) + 20; // 20% to 95%
-    return Math.min(Math.max(baseScore, 35), 98);
+      if (studentSkillNames.length === 0) return 50;
+
+      let matchCount = 0;
+      rawOppSkills.forEach(oppSkill => {
+        if (!oppSkill) return;
+        const lower = (typeof oppSkill === 'string' ? oppSkill : ((oppSkill.name || oppSkill.skill || '') + '')).toLowerCase().trim();
+        if (!lower) return;
+        const directMatch = studentSkillNames.some(s => s === lower || s.includes(lower) || lower.includes(s));
+        if (directMatch) {
+          matchCount++;
+        }
+      });
+
+      const ratio = matchCount / rawOppSkills.length;
+      const baseScore = Math.round(ratio * 75) + 20; // 20% to 95%
+      return Math.min(Math.max(baseScore, 35), 98);
+    } catch (e) {
+      return 70;
+    }
   }
 
   /* ========================================================
@@ -2007,8 +2023,8 @@ ORDER BY total_offers DESC, gpa DESC;`,
       <article class="opportunity-card ${opp.featured ? 'featured-card' : ''}" data-id="${opp.id}">
         <div class="opp-card-top">
           <div class="opp-badges-row">
-            <span class="badge badge-category badge-${opp.category.toLowerCase().replace(/\s+/g, '-')}">${this.escape(opp.category)}</span>
-            <span class="badge badge-type"><i class="ph ph-map-pin"></i> ${this.escape(opp.type)}</span>
+            <span class="badge badge-category badge-${((opp.category || 'tech') + '').toLowerCase().replace(/\s+/g, '-')}">${this.escape(opp.category || 'General')}</span>
+            <span class="badge badge-type"><i class="ph ph-map-pin"></i> ${this.escape(opp.type || opp.work_mode || 'In-Person')}</span>
             ${opp.isVerified ? `<span class="badge badge-verified" title="Official verified source"><i class="ph ph-seal-check"></i> Verified</span>` : ''}
           </div>
           <button class="btn-icon btn-save ${isSaved ? 'saved' : ''}" 
@@ -2418,7 +2434,10 @@ ORDER BY total_offers DESC, gpa DESC;`,
     if (!this.studentData.skills) this.studentData.skills = [];
 
     // Avoid duplicates
-    const exists = this.studentData.skills.some(s => s.name.toLowerCase() === name.toLowerCase());
+    const exists = (this.studentData.skills || []).some(s => {
+      const sName = (typeof s === 'string' ? s : (s && s.name ? s.name : '')) + '';
+      return sName.toLowerCase().trim() === (name + '').toLowerCase().trim();
+    });
     if (exists) {
       this.showToast('You already have this skill listed!', 'warning');
       return;
