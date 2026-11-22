@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SkillBridge - Live PostgreSQL Database Viewer</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; padding: 25px; }
+    .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; }
+    .table { color: #f8fafc; margin-bottom: 0; }
+    .table th { background-color: #0f172a; border-color: #334155; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
+    .table td { border-color: #334155; vertical-align: middle; }
+    .badge-cloud { background-color: #059669; color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+    .pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <div class="container-fluid max-w-7xl">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+      <div>
+        <h2 class="h3 mb-1"><i class="fa-solid fa-database text-info me-2"></i>SkillBridge Live Database Explorer</h2>
+        <p class="text-secondary mb-0">Connected live to Neon Cloud PostgreSQL (AWS US-East-2)</p>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge-cloud"><i class="fa-solid fa-circle text-white me-1 pulse"></i> Cloud DB Connected</span>
+        <button class="btn btn-primary btn-sm" onclick="fetchStudents()"><i class="fa-solid fa-rotate me-1"></i> Refresh Now</button>
+        <div class="form-check form-switch ms-2">
+          <input class="form-check-input" type="checkbox" id="autoRefresh" checked>
+          <label class="form-check-label text-secondary small" for="autoRefresh">Auto-refresh (3s)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-md-3">
+        <div class="card p-3">
+          <div class="text-secondary small text-uppercase">Total Students</div>
+          <div class="h2 mb-0 text-white mt-1" id="studentCount">Loading...</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-3">
+          <div class="text-secondary small text-uppercase">Total Opportunities</div>
+          <div class="h2 mb-0 text-info mt-1">10,249</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-3">
+          <div class="text-secondary small text-uppercase">Database Engine</div>
+          <div class="h2 mb-0 text-warning mt-1">PostgreSQL 16</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-3">
+          <div class="text-secondary small text-uppercase">Last Checked</div>
+          <div class="h5 mb-0 text-secondary mt-1" id="lastSyncTime">--:--:--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-transparent border-secondary py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 text-white"><i class="fa-solid fa-users text-primary me-2"></i>Registered Students Table (<span id="tableBadgeCount">0</span>)</h5>
+        <span class="text-secondary small">Real-time persistence from <a href="https://skillbridge-project-nq2q.onrender.com/" target="_blank" class="text-info text-decoration-none">skillbridge-project-nq2q.onrender.com</a></span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Student ID</th>
+              <th>Full Name</th>
+              <th>Email Address</th>
+              <th>University / College</th>
+              <th>Registered At</th>
+            </tr>
+          </thead>
+          <tbody id="studentRows">
+            <tr><td colspan="6" class="text-center py-4 text-secondary"><i class="fa-solid fa-spinner fa-spin me-2"></i> Fetching records from database...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = '/api/students';
+
+    async function fetchStudents() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('Network response error');
+        const students = await res.json();
+        
+        document.getElementById('studentCount').textContent = students.length;
+        document.getElementById('tableBadgeCount').textContent = students.length;
+        document.getElementById('lastSyncTime').textContent = new Date().toLocaleTimeString();
+
+        const tbody = document.getElementById('studentRows');
+        if (students.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-secondary">No students registered yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = students.map((s, idx) => `
+          <tr>
+            <td class="text-secondary">${idx + 1}</td>
+            <td><code class="text-info">${s.student_id || 'N/A'}</code></td>
+            <td class="fw-semibold text-white">${s.full_name || s.first_name || 'Anonymous'}</td>
+            <td>${s.email || '-'}</td>
+            <td><span class="badge bg-dark border border-secondary text-light">${s.university || 'General'}</span></td>
+            <td class="text-secondary small">${s.created_at ? new Date(s.created_at).toLocaleString() : 'Recent'}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        console.error('Error fetching students:', err);
+      }
+    }
+
+    fetchStudents();
+    setInterval(() => {
+      const isAuto = document.getElementById('autoRefresh').checked;
+      if (isAuto) fetchStudents();
+    }, 3000);
+  </script>
+</body>
+</html>
