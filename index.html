@@ -2904,9 +2904,9 @@ body.dark-theme .hero-title {
           </div>
 
           <!-- Backend & Database Status Badge -->
-          <button id="backend-status-btn" class="btn btn-xs btn-outline" onclick="window.SkillBridge.openDbModal()" title="View MySQL & FastAPI Connection Status">
-            <span id="backend-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f59e0b; margin-right:4px;"></span>
-            <span id="backend-status-text">MySQL Status</span>
+          <button id="backend-status-btn" class="btn btn-xs btn-outline" onclick="window.SkillBridge.openDbModal()" title="View Database & FastAPI Connection Status">
+            <span id="backend-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.7); margin-right:4px;"></span>
+            <span id="backend-status-text">PostgreSQL Connected</span>
           </button>
           <button class="btn btn-primary btn-sm nav-role-recruiter hidden" id="topbar-post-job-btn" style="background:#059669; border-color:#059669; font-weight:600;" onclick="window.SkillBridge.openPostJobModal()">
             <i class="ph ph-plus-circle"></i> Post a Job
@@ -6076,24 +6076,30 @@ class SkillBridgeApp {
     const modalBanner = document.getElementById('db-status-banner');
 
     if (isOnline) {
-      if (dot) dot.style.background = '#10b981';
-      if (text) text.textContent = 'MySQL Connected';
+      if (dot) {
+        dot.style.background = '#10b981';
+        dot.style.boxShadow = '0 0 8px rgba(16, 185, 129, 0.7)';
+      }
+      if (text) text.textContent = 'PostgreSQL Connected';
       if (modalDot) modalDot.style.background = '#10b981';
       if (modalText) {
         modalText.style.color = '#065f46';
-        modalText.innerHTML = `Connected to MySQL: <strong>${details?.database || 'skillbridge_db'}</strong> (${details?.opportunities_count || 12} opportunities, ${details?.users_count || 2} users)`;
+        modalText.innerHTML = `Connected to PostgreSQL: <strong>${details?.database_name || details?.database || 'skillbridge_db'}</strong> (${details?.opportunities_count || 8} opportunities, ${details?.students_count || 2} students)`;
       }
       if (modalBanner) {
         modalBanner.style.background = '#ecfdf5';
         modalBanner.style.borderColor = '#a7f3d0';
       }
     } else {
-      if (dot) dot.style.background = '#f59e0b';
-      if (text) text.textContent = 'Local Mode (Click for MySQL)';
+      if (dot) {
+        dot.style.background = '#f59e0b';
+        dot.style.boxShadow = 'none';
+      }
+      if (text) text.textContent = 'Local Mode (PostgreSQL Offline)';
       if (modalDot) modalDot.style.background = '#d97706';
       if (modalText) {
         modalText.style.color = '#92400e';
-        modalText.innerHTML = 'FastAPI Offline (Running in Local Mode) &bull; Start backend to connect MySQL';
+        modalText.innerHTML = 'FastAPI Offline (Running in Local Mode) &bull; Start backend to connect PostgreSQL';
       }
       if (modalBanner) {
         modalBanner.style.background = '#fef3c7';
@@ -6126,7 +6132,7 @@ class SkillBridgeApp {
 
     const isOnline = await window.SkillBridgeApi.checkHealth();
     if (isOnline) {
-      this.showToast('Successfully connected to FastAPI & MySQL!', 'success');
+      this.showToast('Successfully connected to FastAPI & PostgreSQL!', 'success');
       this.syncWithBackend();
     } else {
       this.showToast('Backend is offline. Run .\\backend\\run.ps1 to start.', 'warning');

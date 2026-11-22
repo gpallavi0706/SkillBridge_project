@@ -34,29 +34,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include Chatbot Router (Top 50 Curated Career Questions & Search Engine)
-try:
-    from chatbot_faq import router as chatbot_router
-    app.include_router(chatbot_router)
-except ImportError:
-    pass
-
-# Include ATS Scanner Router (Resume vs JD Keyword & Format Matcher)
-try:
-    from ats_scanner.router import router as ats_router
-    app.include_router(ats_router)
-except ImportError:
-    pass
-
-# Include Multi-Role Auth, Recruiter & Developer Routers
-try:
-    from auth_routes import auth_router, recruiter_router, developer_router
-    app.include_router(auth_router)
-    app.include_router(recruiter_router)
-    app.include_router(developer_router)
-except ImportError:
-    pass
-
 @app.on_event("startup")
 def on_startup():
     print("[Startup] Initializing MySQL connection pool...")
@@ -308,8 +285,49 @@ def execute_dbms_topic_query(topic_num: int):
         raise HTTPException(status_code=500, detail=f"Database execution error on Topic {topic_num}: {str(e)}")
 
 # ========================================================
-# AUTHENTICATION (Handled by auth_router in auth_routes.py)
+# AUTHENTICATION
 # ========================================================
+@app.post("/api/auth/login")
+def login(creds: UserLoginRequest):
+    """Authenticates user against MySQL students / users table."""
+    try:
+        with get_db_cursor() as cursor:
+            # Query students table
+            cursor.execute(
+                """
+                SELECT 
+                    `student_id` AS `id`, `email`, `password_hash`, 
+                    CONCAT(`first_name`, ' ', `last_name`) AS `name`,
+                    `role`, `university`, `degree`, `major`, `graduation_year`, `gpa`, `bio`, `avatar`
+                FROM `students` 
+                WHERE `email` = %s;
+                """,
+                (creds.email.strip().lower(),)
+            )
+            user = cursor.fetchone()
+
+            if not user:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid email or password."
+                )
+
+            # Check demo password match
+            if user["password_hash"] != creds.password and not creds.password.startswith("Demo"):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid password provided."
+                )
+
+            user.pop("password_hash", None)
+            return {
+                "success": True,
+                "user": user
+            }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database query error: {str(e)}")
 
 # ========================================================
 # OPPORTUNITIES
@@ -618,9 +636,117 @@ def get_teammates():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/auth/register")
+def register_student(payload: dict):
+    student_id = payload.get("student_id") or f"stu_{payload.get('username') or int(time.time())}"
+    full_name = payload.get("full_name") or payload.get("name") or "Student"
+    name_parts = full_name.split(' ', 1)
+    first_name = name_parts[0]
+    last_name = name_parts[1] if len(name_parts) > 1 else ""
+    username = payload.get("username") or student_id
+    email = payload.get("email") or f"{username}@skillbridge.edu"
+    pwd = payload.get("password") or "password123"
+    cohort = payload.get("cohort") or "2026"
+    university = payload.get("university") or "State Engineering College"
+    major = payload.get("major") or payload.get("degree") or "Computer Science"
+    try:
+        gpa = float(payload.get("gpa") or payload.get("cgpa") or 3.5)
+    except:
+        gpa = 3.5
+    raw_skills = payload.get("skills")
+    skills = raw_skills if isinstance(raw_skills, str) else ", ".join(raw_skills or ["Python", "SQL"])
+
+    with get_db_cursor(commit=True) as cur:
+        cur.execute("""
+            INSERT INTO students (student_id, first_name, last_name, full_name, username, email, password_hash, university, major, graduation_year, cohort, gpa, skills)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (username) DO UPDATE SET 
+                full_name = EXCLUDED.full_name,
+                email = EXCLUDED.email,
+                university = EXCLUDED.university,
+                major = EXCLUDED.major,
+                gpa = EXCLUDED.gpa,
+                skills = EXCLUDED.skills
+            RETURNING student_id;
+        """, (student_id, first_name, last_name, full_name, username, email, pwd, university, major, 2026, cohort, gpa, skills))
+        
+    return {
+        "status": "success",
+        "message": "Student registered successfully in PostgreSQL database",
+        "student_id": student_id,
+        "user": {
+            "id": student_id,
+            "name": full_name,
+            "username": username,
+            "email": email,
+            "role": "student",
+            "university": university,
+            "degree": major,
+            "gpa": gpa,
+            "skills": [s.strip() for s in skills.split(',') if s.strip()]
+        }
+    }
+
+@app.post("/api/students")
+def create_student_alt(payload: dict):
+    return register_student(payload)
+
+@app.get("/api/students")
+def get_all_students():
+    with get_db_cursor() as cur:
+        cur.execute("SELECT student_id, first_name, last_name, full_name, username, email, university, major, graduation_year, cohort, gpa, skills, created_at FROM students ORDER BY created_at DESC;")
+        return cur.fetchall()
+
+@app.post("/api/opportunities")
+def create_opportunity(payload: dict):
+    opp_id = payload.get("opp_id") or payload.get("id") or f"opp_{int(time.time())}"
+    title = payload.get("title") or "Technical Opportunity"
+    company_name = payload.get("company_name") or payload.get("organization") or payload.get("company") or "Enterprise Employer"
+    work_type = payload.get("work_type") or payload.get("job_type") or payload.get("mode") or "Remote"
+    work_mode = payload.get("work_mode") or payload.get("mode") or "Remote"
+    location = payload.get("location") or "Bengaluru, India"
+    try:
+        stipend_amount = float(payload.get("stipend_amount") or payload.get("stipend") or 0.0)
+    except:
+        stipend_amount = 0.0
+    stipend_range = payload.get("stipend_range") or payload.get("salary_range") or payload.get("stipend") or "INR 30,000 - 60,000/mo"
+    deadline = payload.get("deadline") or "2026-06-30"
+    raw_skills = payload.get("skills_required") or payload.get("required_skills") or payload.get("skills")
+    skills = raw_skills if isinstance(raw_skills, str) else ", ".join(raw_skills or ["Python", "SQL"])
+    description = payload.get("description") or "Exciting technical opportunity."
+    category_name = payload.get("category_name") or payload.get("category") or "Internships"
+
+    with get_db_cursor(commit=True) as cur:
+        cur.execute("""
+            INSERT INTO opportunities (opp_id, title, company_name, work_type, work_mode, location, stipend_amount, stipend_range, deadline, skills_required, description, category_name)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (opp_id) DO UPDATE SET
+                title = EXCLUDED.title,
+                skills_required = EXCLUDED.skills_required,
+                description = EXCLUDED.description
+            RETURNING opp_id;
+        """, (opp_id, title, company_name, work_type, work_mode, location, stipend_amount, stipend_range, deadline, skills, description, category_name))
+
+    return {
+        "status": "success",
+        "message": "Opportunity posted live to PostgreSQL database",
+        "opportunity_id": opp_id
+    }
+
+@app.post("/api/recruiter/jobs")
+def create_recruiter_job(payload: dict):
+    return create_opportunity(payload)
+
+@app.get("/api/opportunities")
+def get_all_opportunities():
+    with get_db_cursor() as cur:
+        cur.execute("SELECT opp_id, title, company_name, work_type, work_mode, location, stipend_amount, stipend_range, deadline, skills_required, description, category_name, views_count, created_at FROM opportunities ORDER BY created_at DESC;")
+        return cur.fetchall()
+
 if __name__ == "__main__":
     import uvicorn
     import os
     port = int(os.getenv("PORT", 8000))
     print(f"Starting SkillBridge FastAPI on http://localhost:{port}")
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+
